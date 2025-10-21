@@ -14,7 +14,9 @@ Nevertheless, I decided to share these books because I believe they can be of he
 
 ## Contact
 
-If you wish to contact me with any questions, comments or corrections, you can write to me at [scrittinformatica@gmail.com](mailto:scrittinformatica@gmail.com). I will be happy to answer your requests. Thank you for choosing to read these books and good luck with your studies!
+If you wish to contact me with any questions, comments or corrections, you can write to me at [scrittinformatica@gmail.com](mailto:scrittinformatica@gmail.com). I will be happy to answer your requests. 
+
+Thank you for choosing to read these books and good luck with your studies!
 
 ## Contributing
 
