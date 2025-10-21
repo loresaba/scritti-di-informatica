@@ -1,0 +1,1137 @@
+\part{Serie}
+
+\chapter{Introduzione alle serie}
+
+\begin{dimostration*}
+    Sia data una successione di numeri reali ($a_0, a_1, a_2, ..., a_n$) che sono determinati per la relazione $a:\mathbb{N}\rightarrow\mathbb{R}$ che associa ad ogni naturale un reale, definiamo la successione delle somme parziali $S_n$ come:
+    
+    \begin{equation*}
+        S_n=\sum^n_{k=0}a_k=a_0+a_1+a_2+...+a_n
+    \end{equation*}
+    
+    Ovvero: 
+    \begin{itemize}
+        \item[] $S_0=a_0$\hspace{2.5cm}$S_1=a_0+a_1$
+        \item[] $S_2=a_0+a_1+a_2$\hspace{1cm}$S_n=a_0+a_1+...+a_n$
+    \end{itemize}
+    
+\end{dimostration*}
+
+\begin{example}
+    \begin{itemize}
+        \item $a_n\equiv0$\hspace{1cm} $S_n=0$\hspace{1cm} $S_n=\sum^n_{k=0}0=0$
+        \item $a_n\equiv1$\hspace{1cm} $S_n=n+1$\hspace{1cm} $S_n=\sum^n_{k=0}1=n+1$
+        \item $a_n\equiv\frac{1}{n+1}$ allora:\begin{itemize}
+            \item $S_0=\frac{1}{1}=1$
+            \item $S_1=1+a_1=1+\frac{1}{2}=\frac{3}{2}$
+            \item $S_2=1+\frac{1}{2}+\frac{1}{3}=\frac{11}{6}$
+        \end{itemize}
+    \end{itemize}
+\end{example}
+
+\begin{notation*}
+    Con $a_n\equiv0$ si indica che $a_n=0$ $\forall n\in\mathbb{N}$
+\end{notation*}
+
+A questo punto possiamo chiederci cosa succede a $S_n$ per $n$ grande? $\exists\lim_{n\to+\infty}S_n$? Dove $S_n=\sum^n_{k=1}$?
+
+\begin{example}
+    \begin{itemize}
+        \item $a_n=0$\hspace{1cm}$S_n=0$\hspace{1cm}$\lim\to0$ per $n\to+\infty$
+        \item $a_n=1$\hspace{1cm}$S_n=n$\hspace{1cm}$\lim\to+\infty$ per $n\to+\infty$
+        \item $a_n=\frac{1}{n+1}$\hspace{1cm}$S_n=1+\frac{1}{2}+\frac{1}{3}+...+\frac{1}{n+1}$\hspace{1cm}$S_{n+1}=S_n+\frac{1}{(n+1)+1}=S_n+\frac{1}{n+2}>S_n$\\$S_n=1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\frac{1}{5}+\frac{1}{6}+\frac{1}{7}+\frac{1}{8}+...$
+        
+        Possiamo ora affermare che il primo termine è $\geq$ di 1, il secondo $\geq$ di $\frac{1}{2}$, da $\frac{1}{3}$ a $\frac{1}{4}$ i termini sono $\geq$ di $\frac{1}{4}$, infine da $\frac{1}{5}$ a $\frac{1}{8}$ i termini sono $\geq$ di $\frac{1}{8}$.
+        Otteniamo in questo modo una squenza del tipo $1+\frac{1}{2}+\frac{1}{4}+\frac{1}{4}+\frac{1}{8}+\frac{1}{8}+\frac{1}{8}+\frac{1}{8}$ che con qualche calcolo algebrico ci portano prima ad una sequenza di $\frac{1}{2}$ e infine ad $1+1+1+...$.
+        
+        Anche per questo caso, essendo $S_n\geq1+1+1+...$\\
+        $\lim\to+\infty$ per $n\to+\infty$\hspace{1cm} $S_n=\sum^n_{k=0}\frac{1}{k+1}$ è una serie divergente
+        
+        \item $a_n=(-1)^n$\hspace{1cm}$\{1,-1,1,-1\}$
+        \begin{itemize}
+            \item[] $S_0=1$\hspace{2.3cm}$S_1=1-1=0$
+            \item[] $S_2=0+1=1$\hspace{1cm}$S_3=S_2+a_3=1-1=0$
+        \end{itemize}
+        
+        Quindi:
+        $\begin{cases}
+            1 \text{ se } n \text{ è pari}\\
+            0 \text{ se } n \text{ è dispari}
+        \end{cases}$\hspace{1cm}E' una serie indeterminata: $\nexists\lim_{n\to+\infty}S_n$
+    \end{itemize}
+\end{example}
+
+\begin{definition*}[Serie]
+    Una serie è una scrittura formale. Intuitivamente è la somma di tutti gli elementi di una successione, cioè il limite delle somme parziali. Ma questo è vero solo se il limite esiste.
+\end{definition*}
+
+\chapter{Serie convergenti e divergenti}
+\begin{definition*}[Convergenti e divergenti]
+    $\{a_n\}$ è detta $S_n=\sum^n_{k=0}a_k$ si dice che:
+    \begin{enumerate}
+        \item La serie di termine generico $a_k$ \textbf{converge} se $\exists\lim_{n\to+\infty}S_n\in\mathbb{R}$. Inoltre se il limite esiste allora $S=\lim_{n\to+\infty}\sum^n_{k=0}a_k$.
+        \item La serie di termine generico $a_k$ \textbf{diverge} positivamente$\backslash$negativamente se $\exists\lim_{n\to+\infty}S_n=+\infty\backslash-\infty$. Cioè $\sum^\infty_{k=0}a_k=+\infty\backslash-\infty$.
+        \item La serie non converge nè diverge (è \textbf{indeterminata}) se $\nexists\lim_{n\to+\infty}S_n$.
+    \end{enumerate}
+\end{definition*}
+    
+\begin{example}
+    $a_k=(-1)^k=\{1,-1,1,-1,...\}$
+    
+    La serie di termine generico $(-1)^k$ non converge. Infatti $\sum^\infty_{k=0}(-1)^k$ non ha senso.
+    
+    Perchè posso scrivere:
+    \begin{equation*}S=(1-1)+(1-1)+(1-1)+...\end{equation*} 
+    ed ottenere somme di zeri. Oppure raccogliere il meno, cambiare il segno e scrivere:
+    \begin{equation*}S=1-[-1+1-1+1-1+...]\end{equation*}
+    ottengo così una nuova $S$ che vale zero e quindi $S=1-0=1$. Raggruppando un'altro meno otteniamo $S=2$, ecco che la serie non ha senso, è indeterminata.
+\end{example}
+
+\subsection*{Proprietà delle serie convergenti}
+Siano $\sum^\infty_{k=1}a_k$ e $\sum^\infty_{k=1}b_k$ convergenti allora:
+\begin{itemize}
+    \item $\sum^\infty_{k=1}\lambda a_k+\mu b_k$ è convergente $\forall\lambda, \mu\in\mathbb{R}$
+    \item $\sum^\infty_{k=1}\lambda a_k+\mu b_k=\lambda\sum^\infty_{k=1}a_k+\mu\sum^\infty_{k=1}b_k$
+\end{itemize}
+
+\section{Serie importanti}
+Le serie importanti sono serie complesse di cui si conoscono i valori.
+\subsection*{Serie geometrica}
+La progressione o successione geometrica è $a_k=q^k$ con $q\in\mathbb{R}$. Ovvero $\{a_k\}=\{1,q,q^2,q^3,...,q^k,...\}$.
+
+
+$$S_n=\sum^n_{k=0}q^k=\begin{cases}
+        \frac{1-q^{n+1}}{1-q}\hspace{1cm}\text{se }q\neq1\\
+        n+1\hspace{1.2cm}\text{se }q=1
+\end{cases}$$
+
+Infatti se:
+\begin{itemize}
+    \item $q\neq1$:\begin{equation*}S_n=1+q+q^2+q^3+...+q^n\end{equation*}Se moltiplico per $q$ ottengo:\begin{equation*}qS_n=q+q^2+q^3+q^4+...+q^n+q^{n+1}\end{equation*}Calcoliamo $S_n-qS_n=1-q^{n+1}$, quindi:\begin{equation*}S_n=\frac{1-q^{n+1}}{1-q}\end{equation*}
+    \item q=1:\begin{equation*}S_n=1+1+1+...+1=n+1\end{equation*}
+\end{itemize}
+
+Studiamo la convergenza e divergenza. $\exists\lim_{n\to+\infty}S_n$? Sia $A\in\mathbb{R}$, poniamo $S_n=A^n$, cosa fa quando $n\to+\infty$?
+$$\lim_{n\to+\infty}A^n\begin{cases}
+    0\hspace{1.4cm}\text{se } -1<A<1\\
+    1\hspace{1.4cm}\text{se }  A=1\\
+    +\infty\hspace{1cm}\text{se } A>1\\
+    \nexists\hspace{1.4cm}\text{se } A\leq-1
+\end{cases}$$
+
+Tornando alla serie geometrica abbiamo che:
+$$\lim_{n\to+\infty}S_n\begin{cases}
+    \lim_{n\to+\infty}\frac{1}{1-q}-\frac{q^{n+1}}{1-q}\hspace{1cm}q\neq1\\
+    \lim_{n\to+\infty}n+1\hspace{1.8cm}q=1
+\end{cases}$$
+
+\begin{enumerate}
+    \item Per il primo limite otteniamo:
+    $$\lim_{n\to+\infty}\frac{1}{1-q}-\frac{q^{n+1}}{1-q}\begin{cases}
+        \frac{1}{1-q}-0\hspace{1.2cm}\text{se }-1<q<1\\
+        \frac{1}{1-q}-\infty\hspace{1cm}\text{se }q>1\\
+        \frac{1}{1-q}+\nexists\hspace{1.1cm}\text{se }q\leq-1
+    \end{cases}$$
+    
+    \item Per il secondo limite otteniamo:
+    \begin{equation*}
+        \lim_{n\to+\infty}n+1=+\infty
+    \end{equation*}
+\end{enumerate}
+
+Quindi la serie geometrica con termine generico $q^k$ con $q\in\mathbb{R}$ assume valori:
+$$\sum^{+\infty}_{k=0}q^k\begin{cases}
+    +\infty\hspace{1cm}q\geq1\\
+    \frac{1}{1-q}\hspace{1cm}-1<q<1\\
+    \nexists\hspace{1.4cm}q\leq-1
+\end{cases}$$
+
+\begin{osservation*}
+    $\sum^{+\infty}_{k=M}q^k=\frac{q^M}{1-q}$ se $-1<q<1$ con $M\in\mathbb{R}$.
+    
+    Perchè $\sum^{+\infty}_{k=M}q^k=q^{M-M}\sum^{+\infty}_{k=M}q^k$ in quanto sto semplicemente moltiplicando per 1 ($q^{M-M}=q^0$). Ottengo così $q^M\sum^{+\infty}_{k=M}q^{k-M}=q^M\sum^{+\infty}_{k=M}q^k$.
+\end{osservation*}
+
+\begin{example}
+    \begin{itemize}
+        \item $\sum^{+\infty}_{k=0}2^k=+\infty$
+        \item $\sum^{+\infty}_{k=0}\frac{1}{3^k}=\sum^{+\infty}_{k=0}(\frac{1}{3})^k=\frac{1}{1-\frac{1}{3}}=\frac{3}{2}$
+        \item $\sum^{+\infty}_{k=0}\frac{5}{2^k}=\lim_{n\to+\infty}\sum^{+\infty}_{k=0}5(\frac{1}{2})^k=5\lim_{n\to+\infty}\sum^{+\infty}_{k=0}(\frac{1}{2})^k=5\frac{1}{1-\frac{1}{2}}=10$
+    \end{itemize}
+\end{example}
+
+\subsection*{Serie armonica generalizzata}
+$$\alpha\in\mathbb{R}\hspace{1cm}\sum^{+\infty}_{k=0}\frac{1}{k^\alpha}=\begin{cases}
++\infty\hspace{1cm}\text{se }\alpha\leq1\\
+<+\infty\hspace{1cm}\text{se }\alpha>1
+\end{cases}$$
+
+\begin{notation*}
+$<+\infty$ vuol dire che è un numero finito.
+\end{notation*}
+
+Se $\alpha<1$ allora $k^\alpha<k$ implica che $\frac{1}{k^\alpha}\geq\frac{1}{k}$ $\forall k>1$ con $k\in\mathbb{N}$. $S_n(\frac{1}{k^\alpha})=\sum^n_{k=1}\frac{1}{k^\alpha}\geq\sum^n_{k=1}\frac{1}{k}=S_n(\frac{1}{k})\to+\infty$ come abbaimo visto precedentemente.
+
+\begin{osservation*}
+    Se $\alpha>1$ in generale non si riesce a calcolare il limite di $\sum^\infty_{k=1}\frac{1}{k^\alpha}$. Ma di $k=2$ si consce: $\sum^\infty_{k=1}\frac{1}{k^\alpha}=\frac{\pi^2}{6}$.
+\end{osservation*}
+
+\subsection*{Serie telescopica}
+\begin{equation*}
+    \sum^\infty_{k=1}(b_{k+1}-b_k)\hspace{0.5cm}\text{ovvero}\hspace{0.5cm}a_k=b_{k+1}-b_k
+\end{equation*}
+
+\begin{example}
+    \begin{equation*}a_k=\frac{1}{k(k+1)}=\frac{1}{k}-\frac{1}{k+1}\end{equation*}
+    \begin{equation*}S_1=a_1=1-\frac{1}{2}\hspace{1cm}S_2=a_1+a_2=(1-\frac{1}{2})+(\frac{1}{2}-\frac{1}{3})=1-\frac{1}{3}\end{equation*}
+    \begin{equation*}S_3=a_1+a_2+a_3=(1-\frac{1}{2})+(\frac{1}{2}-\frac{1}{3})+(\frac{1}{3}-\frac{1}{4})=1-\frac{1}{4}\end{equation*}
+    
+    Notiamo come consideriamo solo il primo e l'ultimo termine perchè gli altri si semplificano tra di loro.\\
+    \begin{equation*}S_n=a_1+...+a_n=\sum^n_{k=1}\frac{1}{k}-\frac{1}{k+1}=1-\frac{1}{n+1}\end{equation*}
+    
+    Studiamo la serie con il limite:
+    \begin{equation*}
+        S_n=1-\frac{1}{n+1}\hspace{1cm}\sum^\infty_{k=1}\frac{1}{k(k+1)}=\lim_{n\to+\infty}S_n=\lim_{n\to+\infty}(1-\frac{1}{n+1})=1    
+    \end{equation*}
+\end{example}
+
+\chapter{Serie a termini positivi}
+Nelle serie a termini positivi vedremo:
+\begin{itemize}
+    \item Dicotomia delle serie a termini positivi (oppure non negativi), converge oppure diverge positivamente;
+    \item Criteri di convergenza.
+\end{itemize}
+
+\begin{definition*}[Serie a termini positivi]
+    \phantom{a}
+    \begin{itemize}
+        \item[-] Una serie numerica è a termini \textbf{positivi} se $a_k>0$ $\forall k\in\mathbb{N}$;
+        \item[-] Una serie numerica è a termini \textbf{non negativi} se $a_k\geq0$ $\forall k\in\mathbb{N}$;
+        \item[-] Una serie numerica è a termini \textbf{negativi} se $a_k<0$ $\forall k\in\mathbb{N}$;
+        \item[-] Una serie numerica è a termini \textbf{non positivi} se $a_k\leq0$ $\forall k\in\mathbb{N}$.
+    \end{itemize}
+\end{definition*}
+
+
+\section{Dicotomia delle serie}
+Se $a_k\geq0$ $\forall k\in\mathbb{N}$ allora $S_{n+1}-S_n=a_{n+1}\geq0$, implica che $S_{n+1}\geq S_n$. Quindi $0\leq S_n$ è non decrescente$\backslash$crescente o $S_n\to+\infty$ oppure $S_n<+\infty$ (convergente).
+
+\begin{thm}
+    Se $a_k\geq0$ $\forall k\in\mathbb{N}$ allora:
+    \begin{equation*}
+        \sum^{+\infty}_{k=0}a_k=\begin{cases}
+            <+\infty \text{ (converge)}\\
+            +\infty \text{ (diverge positivamente)}
+        \end{cases}
+    \end{equation*}
+    
+    \underline{\textbf{Dicotomia}}\\
+    
+    Se $$a_k\geq0\begin{cases}
+        \sum^{+\infty}_{k=0}a_k<+\infty\hspace{0.9cm}\text{converge}\\
+        \sum^{+\infty}_{k=0}a_k=+\infty\hspace{0.9cm}\text{diverge}
+    \end{cases}$$
+    
+    Ovvero se non diverge allora converge.
+\end{thm}
+
+\textit{\underline{Come sappiamo se converge o diverge?}} Sia $a_k\geq0$ e $a_k$ non tende a $0$ allora $\sum^{+\infty}_{k=0}a_k=+\infty$.
+
+Domanda 1. $a_k>0$? Si.
+
+Domanda 2. $a_k\to0$? No. Allora implica che $\sum^{+\infty}_{k=0}a_k=+\infty$. In caso di risposta affermativa non abbiamo una risposta in quanto può essere $<+\infty$ o $+\infty$.
+
+\begin{example}
+    \begin{equation*}
+        \sum^\infty_{k=0}\frac{k}{k+1}=+\infty\hspace{1cm}a_k=\frac{k}{k+1}\to1\neq0
+    \end{equation*}
+    Perchè? Perchè è una serie a termini positivi $a_k=\frac{k}{k+1}\geq0$ e $a_k$ non tende a $0$, implica che $\sum a_k<+\infty$ non può convergere. Quindi diverge.
+\end{example}
+
+\section{Criteri di convergenza}
+\subsection*{Condizione necessaria per la convergenza}
+Se $\sum a_k$ è convergente, cioè: 
+\begin{equation*}
+    \exists\lim_{n\to+\infty}\sum^n_{k=0}a_n=S\in\mathbb{R}=\lim_{n\to+\infty}S_n=\lim_{n\to+\infty}\sum^n_{k=0}a_k    
+\end{equation*}
+Allora:
+\begin{equation*}
+    S_{n+1}-S_n=\sum^{n+1}_{k=0}a_k-\sum^{n}_{k=0}a_k=a_{n+1}
+\end{equation*}
+Ma se sappiamo che $S_n\to S\in\mathbb{R}$ vuol dire che anche $S_{n+1}\to S$, allora $S_{n+1}-S_n=a_{n+1}$ implica $S-S=0$ quindi $a_{n+1}\to0$.
+
+\begin{thm}\label{thm:convergenza_serie}
+    Se la serie $\sum a_k$ è convergente allora per forza $\lim_{k\to+\infty}a_k=0$.
+\end{thm}
+
+\underline{\textit{Come possiamo usare questo teorema?}}
+E' un criterio negativo, ovvero se $a_k$ non tende a $0$, allora la serie corrispondente non può convergere.
+
+\begin{notation*}
+    $a_k$ si dice infinitesima se $a_k$ tende a $0$. $a_k$ si dice non infinitesima se $a_k$ non tende a $0$.
+\end{notation*}
+
+\underline{\textit{E' una condizione sufficiente?}}
+No! Ovvero se $\sum a_k<+\infty$ (convergente) allora $a_k$ deve tendere a $0$. Ma se $a_k\to0$ non implica che $\sum a_k<+\infty$. Non possiamo dir nulla sul carattere della serie, cioè potrebbe essere convergente, divergente o irregolare.
+
+\begin{example}
+    $\sum^{+\infty}_{k=1}\frac{1}{k}=+\infty$ anche se $a_k=\frac{1}{k}\to0$.
+\end{example}
+\subsubsection{Esempi di uso}
+\begin{itemize}
+    \item $\sum^\infty_{k=0}\frac{k}{k+1}\hspace{1cm}a_k=\frac{k}{k+1}\to1\neq0$
+    \item $\sum^\infty_{k=1}\cos(\frac{1}{k})\hspace{1cm}a_k=\cos(\frac{1}{k})\to1\neq0$
+    \item $\sum^\infty_{k=1}(\frac{2^k}{3^k}+\frac{3^k}{2^k})\hspace{1cm}a_k=(\frac{2^k}{3^k}+\frac{3^k}{2^k})\to+\infty\neq0$
+    \item $\sum^\infty_{k=1}\sin(k)\hspace{1cm}a_k=\sin(k)\to\nexists\lim$
+\end{itemize}
+Questi esempi di serie non possono convergere perchè, secondo il Teorema \ref{thm:convergenza_serie}, il $\lim_{k\to+\infty}a_k\neq0$.
+
+\subsection*{Altri criteri per la convergenza}
+\subsubsection{Criterio del confronto}
+\begin{example}
+    \begin{equation*}\sum^{+\infty}_{k=1}\sin(\frac{1}{k^2})\end{equation*}
+    E' positiva? Si, $a_k=\sin(\frac{1}{k^2})\geq0$ quindi secondo la dicotomia delle serie è o convergente o divergente. Vediamo a cosa tende $a_k$. 
+    \begin{equation*}\lim_{k\to+\infty}a_k=\lim_{k\to+\infty}\sin(\frac{1}{k^2})=0\end{equation*}
+    Non possiamo dire niente sul carattere della serie.
+    
+    Possiamo, per tanto, confrontarla con un'altra serie:
+    \begin{equation*}
+        0\leq\sin(\frac{1}{k^2})\leq \frac{1}{k^2}\hspace{1cm}0\leq\sum^{+\infty}_{k=1}\sin(\frac{1}{k^2})\leq\sum^{+\infty}_{k=1}\frac{1}{k^2}
+    \end{equation*}
+    Dove $\sum^{+\infty}_{k=1}\frac{1}{k^2}$ rappresenta la serie armonica con $\alpha=2>1$ quindi la serie converge.
+\end{example}
+
+\begin{thm}[Confronto]
+    Siano $\sum a_k$ e $\sum b_k$ due serie a termini \underline{non negativi}. $\text{Se } 0\leq a_k\leq b_k\text{, }\forall k\in\mathbb{N}$:
+    $$\begin{cases}
+        \sum^{+\infty}_{k=k_0}b_k<+\infty\hspace{0.5cm}\text{ allora }\hspace{0.5cm}\sum^{+\infty}_{k=k_0}a_k<+\infty\\
+        \sum^{+\infty}_{k=k_0}a_k=+\infty\hspace{0.5cm}\text{ allora }\hspace{0.5cm}\sum^{+\infty}_{k=k_0}b_k=+\infty
+    \end{cases}$$
+\end{thm}
+Quindi se $b_k$ converge, anche $a_k$ converge. Mentre se $a_k$ diverge, diverge anche $b_k$.
+
+Questo ci fornisce due informazioni riguardo la convergenza e stima dall'alto.
+
+\begin{example}
+    \begin{equation*}\sum^{+\infty}_{k=1}\sin(\frac{1}{k})\end{equation*}
+    
+    E' positiva? Si perchè $a_k=\sin(\frac{1}{k})\geq0$ quindi o converge o diverge.
+    Calcoliamo il limite: $\sin(\frac{1}{k})\to0$, ma non mi dice nulla sul carattere della serie. Allora posso scrivere:
+    \begin{equation*}
+        0\leq\sin(\frac{1}{k})\leq \frac{1}{k}\hspace{1cm}0\leq\sum^{+\infty}_{k=1}\sin(\frac{1}{k})\leq\sum^{+\infty}_{k=1}\frac{1}{k}
+    \end{equation*}
+    Ma dato che la $\sum^{+\infty}_{k=1}\frac{1}{k}=+\infty$ (per la serie armonica con $\alpha\leq1$) non mi dice nulla (perchè non è possibile applicare la regola del confronto), ricordiamo la formula $\lim_{y\to0}\frac{\sin(y)}{y}=1$ dove sappiamo che $\sin(y)\approx y$, allora anche per k abbastanza grande sappiamo che $\sin(\frac{1}{k})\approx\frac{1}{k}$. Quindi da:
+    \begin{equation*}
+        \sum^{+\infty}_{k=1}\sin(\frac{1}{k})\approx\sum^{+\infty}_{k=0}\frac{1}{k}
+    \end{equation*}
+    dove la seconda somma abbiamo visto che va a $+\infty$, ricaviamo che $ \sum^{+\infty}_{k=1}\sin(\frac{1}{k})=+\infty$.
+\end{example}
+
+\begin{thm}[Confronto asintotico]
+    Siano $\sum a_k$ e $\sum b_k$ due serie a termini non negativi, cioè, $a_k,b_k\geq0$ $\forall k$. Se $\lim_{k\to+\infty}\frac{a_k}{b_k}=L\in(0,+\infty)$, allora:
+    \begin{equation*}
+        \sum^{+\infty}_{k=0}b_k<+\infty\hspace{0.5cm}\text{implica che}\hspace{0.5cm}\sum^{+\infty}_{k=0}a_k<+\infty
+    \end{equation*}
+    oppure 
+    \begin{equation*}
+        \sum^{+\infty}_{k=0}b_k=+\infty\hspace{0.5cm}\text{implica che}\hspace{0.5cm}\sum^{+\infty}_{k=0}a_k=+\infty
+    \end{equation*}
+\end{thm}
+
+\subsubsection{Linearità}
+
+Se $\sum a_k$ e $\sum b_k$ sono convergenti, allora $\sum\lambda a_k+\mu b_k$ è convergente $\forall\lambda, \mu\in\mathbb{R}$. Perchè, nel caso fossero negativi, posso portare il meno fuori e studiarla a termini positivi. $\sum-a_k$ dove $a_k\geq0$ diventa $-\sum a_k$.
+
+Per usare la linearità per scrivere $\sum a_k+b_k=\sum a_k+\sum b_k$ dobbiamo sapere che $\sum a_k<+\infty$ e $\sum b_k<+\infty$.
+
+\subsubsection{Criterio della radice}
+
+Se $\lim_{k\to+\infty}\sqrt[k]{a_k}=L$ e se:
+$$L=
+\begin{cases}
+    <1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\sum^{+\infty}_{k=1}a_k<+\infty\\
+    =1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\text{non dice niente}\\
+    >1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\sum^{+\infty}_{k=1}a_k=+\infty
+\end{cases}$$
+
+\subsubsection{Criterio del rapporto}
+
+Se $\lim_{k\to+\infty}\frac{a_{k+1}}{a_k}=L$ e se:
+$$L=
+\begin{cases}
+    <1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\sum^{+\infty}_{k=1}a_k<+\infty\\
+    =1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\text{non dice niente}\\
+    >1\hspace{0.5cm}\text{allora}\hspace{0.5cm}\sum^{+\infty}_{k=1}a_k=+\infty
+\end{cases}$$
+\phantom{ }\\
+\underline{\textit{Quando usiamo questi criteri?}}
+
+Se in $a_k$ ci sono termini di tipo $k!$ si usa il rapporto. Se in $a_k$ ci sono termini di tipo $A^k$ con $A\in\mathbb{R}$ si usa la radice.
+
+\subsubsection{Formula di Stirling}
+Con la formula di Stirling possiamo approssimare $n!$ per n abbastanza grande.
+\begin{equation*}
+    \lim_{k\to+\infty}\frac{k!}{k^ke^{-k}\sqrt{2\pi k}}=1
+\end{equation*}
+
+Ovvero $k!\sim\sqrt{2\pi k}(\frac{k}{e})^k$.
+
+\begin{notation*}[Simbolo di Landau]
+Il criterio del confronto dice che $\frac{a_k}{b_k}\to0$, vuol dire che $a_k\to0$ più velocemente di $b_k$.
+
+Sappiamo che se $\sum b_k<+\infty$ allora $\sum a_k<+\infty$. Come notazione si usa $a_k=o(b_k)$ (\textbf{o-piccolo}) per $k\to+\infty$.
+\end{notation*}
+
+
+\chapter{Serie con segno variabile}
+
+Cosa succede se una serie cambia di segno ad es. $a_k=(-1)^kb_k$ dove $b_k\geq0$.
+
+\section{Criterio di Leibniz}
+Se:
+$$a_k=(-1)^kb_k\text{ tale che }\begin{cases}
+    b_k\geq0\\
+    b_{k+1}\leq b_k\\
+    b_k\to 0
+\end{cases}$$
+
+Allora la $\sum^{+\infty}_{k=1}a_k$ converge.
+
+\begin{example}
+    \begin{itemize}
+        \item \begin{equation*}\sum\frac{(-1)^k}{k}\end{equation*}
+        
+        Dove $a_k=(-1)^k\frac{1}{k}$ e $b_k=\frac{1}{k}$ soddisfa le tre condizioni quindi la serie converge.
+        
+        \item \begin{equation*}\sum^{+\infty}_{k=1}\frac{(-1)^k}{k^\alpha}\end{equation*}
+        
+        Con $a_k=(-1)^k\frac{1}{k^\alpha}$ e $b_k=\frac{1}{k^\alpha}$ soddisfa le tre condizioni se $\alpha>0$ e converge.
+        
+    \end{itemize}
+\end{example}
+
+\section{Convergenza assoluta}
+Se una serie non è nella forma $(-1)^kb_k$ e $a_k$ cambia di segno senza regolarità, come ad esempio $\sum^{+\infty}_{k=1}\frac{\sin(k)}{k^2}$, bisogna usare altri metodi per studiare il carattere della serie.
+
+Una serie $\sum^{+\infty}_{k=k_0}a_k$ converge \textbf{assolutamente} se $\sum^{+\infty}_{k=k_0}|a_k|$ converge.
+\begin{thm}[Convergenza assoluta]
+    Se la serie $\sum^{+\infty}_{k=k_0}a_k$ converge assolutamente allora converge semplicemente.
+    
+    Ovvero se $\sum|a_k|<+\infty\to\sum a_k$ è convergente.
+\end{thm}
+
+A questo punto possiamo chiederci se questo teorema vale anche per il contrario. La risposta è ovviamente negativa in quanto la convergenza semplice \underline{non implica} quella assoluta.
+
+\begin{osservation*}
+    La notazione $\sum a_k<+\infty$ non è corretta per le serie che cambiano di segno (è un abuso di notazione). Perchè se $a_k\geq0\to\sum a_k<+\infty$ oppure se $\sum a_k=+\infty$, converge o diverge. Ma se $a_k$ cambia segno, può essere convergente, divergente oppure indeterminata. Quindi potrebbe divergere a $-\infty$ e $\sum a_k<+\infty$ perderebbe il significato di convergenza perchè anche $-\infty<+\infty$.
+\end{osservation*}
+
+\begin{example}
+    \begin{itemize}
+        \item \begin{equation*}\sum^{+\infty}_{k=1}\frac{\sin(k)}{k^2}\hspace{1cm}a_k=\frac{\sin(k)}{k^2}\end{equation*}
+        Capiamo se la serie converge assolutamente:
+        \begin{equation*}
+            \sum^{+\infty}_{k=1}\frac{\sin(k)}{k^2}=\sum^{+\infty}_{k=1}\frac{|\sin(k)|}{k^2}
+        \end{equation*}
+        
+        Quindi confrontiamo $b_k=\frac{|\sin(k)|}{k^2}$ con $\frac{1}{k^2}$  ricordando che $0\leq b_k\leq\frac{1}{k^\alpha}$, $\forall k\in\mathbb{N}$.
+        
+        Per il teorema del confronto $\sum^{+\infty}_{k=1}\frac{\sin(k)}{k^2}$ converge assolutamente. Quindi converge semplicemente.
+        
+        \item \begin{equation*}\sum^{+\infty}_{k=1}\frac{(-1)^k}{k}\end{equation*}
+        
+        Per Leibniz sappiamo che converge semplicemente, ma converge anche assolutamente? No! Perchè:
+        
+        \begin{equation*}\sum^{+\infty}_{k=1}|\frac{(-1)^k}{k}|=\sum\frac{1}{k}=+\infty\hspace{1cm}\text{diverge assolutamente} \end{equation*}
+        
+    \end{itemize}
+\end{example}
+
+\begin{osservation*}
+    Precedentemente abbiamo visto che se $a_k, b_k\geq0$ e $\sum a_k<+\infty, b_k<+\infty$:
+    \begin{equation*}
+        \sum^{+\infty}_{k=1}a_k\pm b_k=\sum^{+\infty}_{k=1}a_k\pm \sum^{+\infty}_{k=1}b_k
+    \end{equation*}
+    
+    Questo vale, allo stesso modo, anche per le serie assolutamente convergenti.
+\end{osservation*}
+
+\subsection*{Riordinamento delle serie}
+Secondo il riordinamento delle serie possiamo dire che:
+\begin{equation*}
+    \sum^{n}_{k=1}a_k=\sum a_j(k)
+\end{equation*}
+per la proprietà commutativa della somma.
+
+\textit{Ma cosa succede per la somma di infiniti termini?}
+\begin{itemize}
+    \item Se $\sum a_k$ è assolutamente convergente $\sum^{+\infty}_{k=1}a_k=\sum^{+\infty}_{k=1}a_j(k)$;
+    \item Se $\sum a_k$ non è assolutamente convergente tutto ciò non vale.
+    
+    Infatti se $\sum^{+\infty}_{k=1}a_k$ converge semplicemente ma non converge assolutamente \textbf{(ovvero converge condizionatamente)} allora $\sum a_k=\sum [a_k]_+-[a_k]_-$: dividiamo i termini positivi da quelli negativi.
+\end{itemize}
+
+\begin{thm}[Riordinamento condizionato]
+    Sia $\sum a_k$ convergente condizionatamente $\forall M\in\mathbb{R}$ esiste un riordinamento $k\to j(k)$ tale che:
+    \begin{equation*}
+        \sum^{+\infty}_{k=1}a_k=M
+    \end{equation*}
+    
+    La convergenza condizionata è "fragile". Riordinando la somma può cambiare.
+\end{thm}
+
+\begin{example}
+    \begin{equation*}
+        \sum \frac{(-1)^k}{k}
+    \end{equation*}
+    
+    Prendiamo $M=0$, dobbiamo trovare $j(k)$ tale che:
+    \begin{equation*}\sum^{+\infty}_{j=0}\frac{(-1)^{j(k)}}{j(k)}=0\end{equation*}
+    
+    \begin{enumerate}
+        \item Poniamo $j_1=1$ con $a_{j_1}=a_1=-1<0$;
+        \item Segliamo i termini pari $(k=pari)\to a_k>0$ e $a_k=\frac{1}{2h}$ con $h\in\mathbb{N}$ fino a superare $M=0$. Ovvero:
+        \begin{equation*}
+            a_{j_1}+a_{j_2}+a_{j_3}+a_{j_4}+a_{j_5}=a_1+a_2+a_4+a_6+a_8=-1+\frac{1}{2}+\frac{1}{4}+\frac{1}{6}+\frac{1}{8}=\frac{1}{24}>0
+        \end{equation*}
+        \item Scegliamo i termini dispari (k=dispari) fino a superare $M=0$. Ovvero:
+        \begin{equation*}
+            a_{j_1}+...+a_{j_5}+a_{j_6}=-1+...+\frac{1}{8}-\frac{1}{3}=\frac{1}{24}-\frac{1}{3}=-\frac{5}{12}<0
+        \end{equation*}
+    \end{enumerate}
+\end{example}
+
+\chapter{Approssimazioni di Taylor}
+\section{Polinomi di Taylor}
+Sia $f[a,b]\to\mathbb{R}$ una funzione e $x_0\in(a,b)$. Se f è derivabile $n\in\mathbb{N}$ volte in $x_0$.
+
+\begin{definition*}[Polinomio di Taylor]
+    Il polinomio di Taylor della funzione $f$ centrata in $x_0$ e di ordine $n$ è definita come:
+    \begin{equation*}
+        T_n(x,x_0):=f(x_0)+f'(x_0)(x-x_0)+...+\frac{1}{n!}f^n(x_0)(x-x_0)^n=\sum^n_{k=0}\frac{1}{k!}f^{(k)}(x_0)(x-x_0)^k
+    \end{equation*}
+\end{definition*}
+
+\begin{example}
+    \begin{itemize}
+        \item $f(x)=\cos(x)$ in centro $x_0=0$ e di ordine 3.
+        
+        \begin{align*}
+            T_3(x,0)=\cos(x)+\sin(x)(x-0)-\frac{\cos(x)}{2}(x-0)^2-\frac{\sin(x)}{3!}(x-0)^3=\\
+            =\cos(0)+\sin(0)x-\frac{\cos(0)}{2}x^2-\frac{\sin(0)}{6}x^3=1-\frac{1}{x^2}
+        \end{align*}
+        
+        \item $f(x)=e^x$ in centro $x_0=0$ e di ordine $n\in\mathbb{N}$.
+        
+        \begin{equation*}
+            f(x)=e^x\to f(x_0)=1\hspace{1cm}f'(x)=e^x\to f'(x_0)=1\hspace{1cm}f''(x)=e^x\to f''(x_0)=1
+        \end{equation*}
+        \begin{equation*}
+            T_n(x,0)=\sum^n_{k=0}\frac{f^{(k)}(0)}{k!}(x-0)^k=\sum^n_{k=0}\frac{1}{k!}x^k
+        \end{equation*}
+    \end{itemize}
+\end{example}
+
+Il polinomio di Taylor di ordine $n$ in $x_0$ di $f$ è la migliore approssimazione polinomiale di grado $\leq n$ della funzione $f$ in un intorno di $x_0$. Cioè:
+\begin{equation*}
+    \lim_{x\to x_0}\frac{f(x)-T_n(x,x_0)}{(x-x_0)^n}=0
+\end{equation*}
+
+\section{Resto in forma di Lagrange}
+Se approssimiamo $f(x)$ con il polinomio $T_n$, in genere commettiamo un errore $R_n$.
+\begin{equation*}
+    R_n(x,x_0)=f(x)-T_n(x,x_0)
+\end{equation*}
+e sappiamo che il $\lim_{x\to x_0}\frac{R_n(x-x_0)}{(x-x_0)^2}=0$.
+
+\begin{thm}[Formula di Taylor con resto di Lagrange]
+    Se $f$ è derivabile $n+1$ volte in $x_0$, allora esiste, un valore $\xi$ fra $x$ e $x_0$ tale che:
+    \begin{equation*}
+        f(x)=\sum^n_{k=0}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}
+    \end{equation*}
+\end{thm}
+
+$\xi$ in generale non si determina in forma esplicita. Per avere una stima bisogna maggiorare il massimo di $f^{(n+1)}(\xi)$.
+
+\begin{example}\label{es:resto_di_Lagrange}
+    $f(x)=e^x$
+    \begin{equation*}
+        T_n(x,0)=\sum^n_{k=0}\frac{f^{(k)}(0)}{k!}(x-0)^k=\sum^n_{k=0}\frac{1}{k!}x^k
+    \end{equation*}
+    \begin{equation*}
+        f(x)=T_n+\frac{f^{(n+1)}(\xi)}{(n+1)!}(x)^{n+1}=\sum^n_{k=0}\frac{1}{k!}x^k+\frac{e^\xi}{(n+1)!}x^{n+1}
+    \end{equation*}
+    per uno $\xi$ tale che $0\leq\xi\leq x$.
+\end{example}
+
+Ora vogliamo studiare il $\lim_{n\to+\infty}$ dell'errore. Riprendendo l'Esempio \ref{es:resto_di_Lagrange}, otteniamo:
+\begin{equation*}
+    \lim_{n\to+\infty}\frac{e^\xi}{(n+1)!}x^{n+1}=e^\xi\lim_{n\to+\infty}\frac{x^{n+1}}{(n+1)!}=0
+\end{equation*}
+
+\section{Serie di Taylor}
+\textit{Che cos'è una serie di Taylor in generale?}
+    
+\begin{definition*}[Serie di Taylor]
+    La serie di Taylor di una funzione $f$ centrata in $x_0$ è:
+\begin{equation*}
+    \sum^{+\infty}_{k=0}\frac{1}{k!}f^{(k)}(x_0)(x-x_0)^k
+\end{equation*}
+Dove $f$ deve essere derivabile infinite volte.
+\end{definition*}
+
+Ora possiamo quindi chiederci: \textit{quando questa serie converge?} 
+\begin{enumerate}
+    \item Se è vero $\forall x\in I$, $f$ è sviluppabile in serie di Taylor nell'intervallo $I$. Ma per il momento non è sempre detto. Vedremo infatti che ci saranno funzioni per cui è verificato, altre per cui non lo è.
+    \item \textit{Se la serie converge equivale a dire che $\lim_{n\to+\infty}R_n(x,x_0)=0$?} Non è detto
+    \begin{osservation*}
+        Se abbiamo una funzione polinomiale di grado p:
+        \begin{equation*}
+            P(x)=a_0+a_1x+a_2x^2+...+a_px^p=\sum^p_{k=0}a_kx^k
+        \end{equation*}
+        Il polinomio di Taylor di ordine $n\geq p$ coincide con $p$. Quindi se $f(x)=P(x)$, le derivate di ordine $\geq p+1$ sono tutte nulle.
+        Con $R_n(x,x_0)=0$ $\forall n\geq p+1$ otteniamo $f(x)=P(x)=T_n(x)=\sum^p_{k=0}\frac{1}{k!}P^{(k)}(x)(x-x_0)^k$, $\forall x\in\mathbb{R}$.
+    \end{osservation*}
+\end{enumerate}
+
+\subsection*{Esempi di serie di Taylor}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline Funzione & Serie\\\hline\hline
+         $\sin(x)$ & $\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{(2k+1)!}$\\\hline
+         $\cos(x)$ & $\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k}}{(2k)!}$\\\hline
+         $e^x$ & $\sum^{+\infty}_{k=0}\frac{x^k}{k!}$\\\hline
+         $\frac{1}{1-x}$ & $\sum^{+\infty}_{k=0}x^k$\\\hline
+         $\frac{1}{1+x}$ & $\sum^{+\infty}_{k=0}(-1)^kx^k$\\\hline
+         $\frac{1}{1+x^2}$ & $\sum^{+\infty}_{k=0}(-1)^kx^{2k}$\\\hline
+         $\ln(1+x)$ & $\sum^{+\infty}_{k=0}\frac{(-1)^k}{k+1}x^{k+1}$\\\hline
+         $\arctan(x)$ & $\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{k+1}$\\\hline
+    \end{tabular}
+    \caption{Serie di Taylor più importanti}
+    \label{tab:sere_di_taylor}
+\end{table}
+
+Possiamo dire con abbastanza certezza che tutte queste serie convergono. Perchè analizzando il resto notiamo che converge sempre a zero.
+
+\begin{example}
+Ad esempio con il $\sin(x)$ sappiamo che:
+
+\begin{equation*}
+    \sin(x)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{(2k+1)!}\hspace{1cm}T_{2n+1}(x,0)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{(2k+1)!}
+\end{equation*}
+
+Da qui il resto, con la stima di Lagrange:
+\begin{equation*}
+    R_{2n+1}(x,0)=\frac{f^{(2n+2)}(\xi)}{(2^{n+2})}(x-x_0)^{2n+2}\leq \frac{|x|^{2n+2}}{(2n+2)!}
+\end{equation*}
+
+Siccome $\frac{|x|^{2n+2}}{(2n+2)!}\to0$ per $n\to+\infty$ anche $R_{2n+1}(x,0)\to0$.
+\end{example}
+
+Ma non sempre è vero!
+\begin{definition*}[Funzione analitica]
+    Una funzione $f:I\in\mathbb{R}\to\mathbb{R}$ derivabile infinite volte e tale che per ogni $x_0\in I$, esiste $r>0$ con $f(x)=\sum^{+\infty}_{k=0}\frac{1}{k!}f^{(k)}(x_0)(x-x_0)^k$, $\forall x\in(x_0-r,x_0+r)$ si dice essere una funzione analitica in $I$.
+    
+    Una funzione è analitica se localmente si esprime come una serie convergente.
+\end{definition*}
+
+\begin{controEsempio*}
+    Non tutte le funzioni sono analitiche:
+\begin{enumerate}
+    \item La serie può non essere convergente;
+    \item Possiamo avere una serie di Taylor convergente ma non coincidente con $f(x)$
+    \begin{example}
+        $f(x)=\begin{cases}
+            e^{-\frac{1}{x}}\hspace{1cm}x\neq0\\
+            0\hspace{1cm}x=0
+        \end{cases}$
+    
+        La serie è convergente, ma coincide con $f(x)$ solo per $x=0$.
+    \end{example}
+\end{enumerate}
+\end{controEsempio*}
+
+\subsection*{Principio di sostituzione}
+Con il principio di sostituzione partiamo da una serie che conosciamo (vedi Tabella \ref{tab:sere_di_taylor}), e sostituiamo nella serie i valori che differiscono nella funzione.\\
+
+\begin{equation*}
+    x^mf(x^p)=x^m\sum^{+\infty}_{k=0}\frac{f^{(k)}(0)}{k!}(x^p)^k=\sum^{+\infty}_{k=0}\frac{f^{(k)}(0)}{k!}x^{pk+m}
+\end{equation*}
+
+Ad esempio con: \begin{equation*}f(x)=xe^{x^2}\end{equation*}
+Otteniamo:
+    \begin{equation*}
+        e^y=\sum^{+\infty}_{k=0}\frac{y^k}{k!}\hspace{1cm}e^{x^2}=\sum^{+\infty}_{k=0}\frac{e^{2^k}}{k!}\hspace{1cm}xe^{x^2}=x\sum^{+\infty}_{k=0}\frac{x^{2k}}{k!}=\sum^{+\infty}_{k=0}\frac{x^{2k+1}}{k!}
+    \end{equation*}
+
+
+\subsection*{Dalle serie di Taylor alle derivate}
+\textit{Come possiamo conoscere le derivate partendo dalle serie di Taylor?}
+\begin{example}
+    \begin{itemize}
+        \item \begin{equation*}f(x)=xe^{x^2}\hspace{1cm}xe^{x^2}=\sum^{+\infty}_{k=0}\frac{x^{2k+1}}{k!}\end{equation*} 
+        \begin{equation*}
+            f(x)=\sum^{+\infty}_{k=0}\frac{x^{2k+1}}{k!}=x+\frac{x^3}{1!}+\frac{x^5}{2!}+\frac{x^7}{3!}+...
+        \end{equation*}
+        
+        Dove il primo termine risponde alla definizione di $T_2(x,0)$, i primi due a $T_3(x,0)=T_4(x,0)$, i primi tre $T_5(x,0)=T_6(x,0)$ ecc.
+        
+        Scriviamo quindi come coefficienti:
+        \begin{equation*}
+            0+1x+0x^2+1x^3+0x^4+\frac{1}{2} x^5+0x^6+\frac{1}{6}x^7
+        \end{equation*}
+        
+        Ma per definizione:
+        \begin{equation*}
+            T(x,0)=\sum^n_{k=0}\frac{f^{(k)(0)}}{k!}x^k=f(0)+f'(0)+\frac{f''(0)x^2}{2}+\frac{f'''(0)x^3}{6}+\frac{f'^V(0)x^4}{24}+...=
+        \end{equation*}
+        \begin{equation*}
+            =f(0)=0\hspace{0.5cm}f'(0)=1\hspace{0.5cm}f''(0)=0\hspace{0.5cm}f'''(0)=6\hspace{0.5cm}f'^V(0)=0\hspace{0.5cm}f^V(0)=60
+        \end{equation*}
+        
+        \begin{osservation*}
+            Se:
+            \begin{equation*}
+                \sum^{+\infty}_{k=0}a_kx^k\hspace{1cm}f^{(k)}(0)=a_k*k!
+            \end{equation*}
+            \begin{equation*}
+                \sum^{+\infty}_{k=0}a_k(x-x_0)^k\hspace{1cm}f^{(k)}(x_0)=a_k*k!
+            \end{equation*}
+        
+        \end{osservation*}
+        
+        \item \begin{equation*}f(x)=x^3\sin(x^3)\hspace{1cm}x^3\sin(x^3)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{6(k+1)}}{(2k+1)!}\end{equation*}
+        \textit{Quanto vale $f''(0)$?}
+        
+        $f''(0)=a_2*2!$ non esiste quindi $=0$. Perchè il grado $=6(k+1)=6k+6$, se $k=0$, grado $=6$, se $k=1$, grado $=12$ ecc.
+        
+        Invece, ad esempio $f^{(12)}(0)$:
+        \begin{equation*}
+            f^{(12)}(0)=a_{12}(12)!=\frac{(-1)^1(12)!}{(2+1)!}=\frac{(-1)12!}{3!}=\frac{(-1)12!}{6}
+        \end{equation*}
+        
+        Perchè con $k=1$ il grado della $x$ è 12.
+        
+        \item \begin{equation*}f(x)=\arctan(x)\hspace{1cm}\arctan(x)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{2k+1}\end{equation*}
+        
+        \textit{$f^{(5)}(0)$?} $a_5*5!$ con $2k+1=5$ e quindi $k=2$, troviamo che:
+        \begin{equation*}
+            a_k=\frac{(-1)^2}{2*2+1}=\frac{1}{5}\hspace{1cm}f^{(5)}(0)=a_5*5!=\frac{1}{5}5!=24
+        \end{equation*}
+        
+    \end{itemize}
+\end{example}
+
+
+\chapter{Serie di potenze}
+Una serie di potenze è: 
+\begin{equation*}
+    \sum^{+\infty}_{k=0}a_k(x-x_0)^k    
+\end{equation*}
+dove $\{a_k\}$ è una successione di numeri reali e $x_0\in\mathbb{R}$.
+\begin{definition*}[Serie di potenze]
+    $\{a_k\}$ è la successione dei coefficienti e $x_0$ è il centro della serie di potenze.
+\end{definition*}
+
+\begin{example}
+    \begin{itemize}
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{x^k}{k!}\hspace{1cm}a_k=\frac{1}{k!}\hspace{1cm}x_0=0\end{equation*}
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{(-1)^k3^{2k}}{(2k)!}x^{6k+2}\hspace{1cm}a_k=\begin{cases}
+            0 \hspace{0.5cm}\text{se } h\neq6k+2\\
+            \frac{(-1)^k3^{2k}}{(2k)!}\hspace{0.5cm}\text{se }h=6k+2
+        \end{cases}\hspace{1cm}x_0=0\end{equation*}
+        
+        \item \begin{equation*}\frac{1}{1+x^2}=\sum^{+\infty}_{k=0}(-1)^hx^{2h}\hspace{1cm}a_k=\begin{cases}
+            0 \hspace{0.5cm}\text{se k è dispari}\\
+            (-1)^h\hspace{0.5cm}\text{se }k=2h
+        \end{cases}\hspace{1cm}x_0=0\end{equation*}
+        
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{(x-3)^k}{(k^2+1)}\hspace{1cm}x_0=3\hspace{1cm}a_k=\frac{1}{k^2+1}\end{equation*}
+        
+    \end{itemize}
+\end{example}
+
+Per studiare una serie di potenze dobbiamo identificare il coefficiente e il centro. Una volta fatto ciò, possiamo studiarne la convergenza.
+
+\section{Convergenza delle serie di potenze}
+In generale $\sum^{+\infty}_{k=0}a_k(x-x_0)^k$ dove converge?
+
+Se definiamo $E=\{x\in\mathbb{R}\text{, la serie converge a x}\}\to\{x_0\}\subseteq E$. Perchè $\sum^{+\infty}_{k=0}a_k(x_0-x_0)^k=a_0$. Dove la serie converge almeno per $x=x_0$.
+
+\begin{thm}
+    Per $\sum^{+\infty}_{k=0}a_k(x-x_0)^k$ con $\{a_k\}\subseteq\mathbb{R}$, $x_0\in\mathbb{R}$:
+    \begin{itemize}
+        \item Sappiamo che $x_0\in E=\{x\in\mathbb{R}\text{ tale che la serie converge in x}\}$;
+        \item Se $\exists x_1\neq x_0$ con $x_1\in E$ allora la serie converge $\forall x\in[x_0,x_1]$ oppure $[x_1,x_0]$;
+        \item Se la serie non converge per $x_2\neq x_0$ allora non converge $\forall x>x_2$ se $x_2>x_0$ oppure $\forall x_2>x$ se $x_2<x_0$.
+    \end{itemize}
+\end{thm}
+
+\begin{definition*}[Intervallo di convergenza]
+    $E=\alpha x\in\mathbb{R}$ è la serie di punti in cui x è un intervallo cioè $\exists\mathbb{R}\geq0$ tale che $E=(x_0-R,x_0+R)$ se $R>0$.
+    R è il raggio di convergenza della serie di potenze che può essere pari a $0$, $0<R<+\infty$ o $+\infty$.
+\end{definition*}
+
+\begin{example}
+     \begin{itemize}
+         \item \begin{equation*}e^x=\sum^{+\infty}_{k=0}\frac{x^k}{k!}\hspace{1cm}x_0=0\hspace{1cm}a_k=\frac{1}{k!}\hspace{1cm}R=+\infty\end{equation*}
+         \item \begin{equation*}\frac{1}{1-x}=\sum^{+\infty}_{k=0}x^k\hspace{1cm}k=1\end{equation*}
+         \item \begin{equation*}\arctan(x)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k+1}}{(2k+1)!}\hspace{1cm}x_0=0\hspace{1cm}R=1\end{equation*}
+     \end{itemize}
+     Dato che $x\in(0-R,0+R)\subseteq E$ possiamo chiederci cosa accade per $\pm1$?
+     $$\begin{cases}
+         \sum^{+\infty}_{k=0}\frac{(-1)^k}{(2k+1)!}<+\infty\hspace{1.2cm}x=1\\
+         \sum^{+\infty}_{k=0}\frac{(-1)^{3k+1}}{(2k+1)!}<+\infty\hspace{1cm}x=-1
+     \end{cases}$$
+\end{example}
+
+\begin{example}
+     \begin{equation*}\sum^{+\infty}_{k=0}k^kx^k\end{equation*}
+     Sappiamo che $x_0=0$ e possiamo affermare che:
+     \begin{itemize}
+         \item[] $\forall x>0\hspace{0.5cm}\sum^{+\infty}_{k=0}k^k1^k=+\infty$
+         \item[] $\forall x=0\hspace{0.5cm}\sum^{+\infty}_{k=0}k^k0^k=<+\infty$
+         \item[] $\forall x<0\hspace{0.5cm}\sum^{+\infty}_{k=0}k^kx^k=\nexists$
+     \end{itemize}
+     Dato che la serie converge solo in $x_0=0$ il raggio di convergenza $R=0$.
+\end{example}
+
+\textit{Ma come calcoliamo il raggio di convergenza?}
+
+\subsection*{Raggio di convergenza}
+\begin{thm}
+    Sia $\sum^{+\infty}_{k=0}a_k(x-x_0)^k$ fissato, definiamo:
+    \begin{equation*}
+        L=\lim_{k\to+\infty}|\frac{a_{k+1}}{a_k}|=\lim_{k\to+\infty}\sqrt[k]{a_k}\hspace{1cm}R=\frac{1}{L}
+    \end{equation*}
+    Quindi se:
+    $$L=\begin{cases}0\\(0,+\infty)\\+\infty\end{cases}\to\hspace{0.5cm} R=\frac{1}{L}=\begin{cases}+\infty\\\frac{1}{L}\\0\end{cases}$$
+\end{thm}
+
+In definitiva per studiare una serie di potenze dobbiamo:
+\begin{enumerate}
+    \item Identificare la serie di potenze: trovare $x_0$ e $a_k$;
+    \item Calcolare $R=\frac{1}{L}$;
+    \item Trovato $R$ vedere la convergenza. Affermare che la serie per $(x_0-R,x_0+R)$ converge, mentre per $(-\infty, x_0-R)\cup(x_0+R,+\infty)$ non converge;
+    \item Se $R\neq0$ e $R\neq+\infty$ studiare i casi $f(x)=x_0+R$ e $f(x)=x_0-R$ per vedere se $\sum a_k(x-x_0)$ converge per i valori $x=x_0\pm R$.
+\end{enumerate}
+
+\begin{example}
+     \begin{itemize}
+         \item \begin{equation*}
+             \sum^{+\infty}_{k=0}\frac{(x-2)^k}{(k+1)(k+2)}
+         \end{equation*}
+         \begin{equation*}
+            x_0=2\hspace{1cm}a_k=\frac{1}{(k+1)(k+2)}\hspace{1cm}
+         \end{equation*}
+         \begin{equation*}
+             L=\lim_{k\to+\infty}(\frac{a_{k+1}}{a_k})=\lim_{k\to+\infty}\frac{(k+1)(k+2)}{(k+2)(k+3)}=\lim_{k\to+\infty}\frac{k+1}{k+3}=1\hspace{1cm}R=\frac{1}{L}=1
+         \end{equation*}
+         
+         Sappiamo che:
+         \begin{itemize}
+             \item[] $|x-2|<1$ $x\in(1,3)$ converge
+             \item[] $|x-2|>1$ $x\in(-\infty,1)\cup(3,+\infty)$ non converge
+         \end{itemize}
+         
+         \begin{equation*}E=(x_0-R,x_0+R)=(1,3)\end{equation*}
+         
+         Cosa accade agli estremi dell'intervallo?\\
+         \begin{itemize}
+             \item[] $f(1)=\frac{(-1)^k}{(k+1)(k+2)}$ converge
+             \item[] $f(3)=\frac{1^k}{(k+1)(k+2)}\approx\frac{1}{k^2}$ converge
+         \end{itemize}
+         
+         Vuol dire che gli estremi sono nell'intervallo di convergenza
+         \begin{equation*}E=\{1\}\cup\{3\}\cup(1,3)=[1,3]\end{equation*}
+         
+         
+         \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{\pi^k(x-\pi)^k}{k+1}\end{equation*}
+         \begin{equation*}x_0=\pi\hspace{1cm}a_k=\frac{\pi^k}{k+1}\end{equation*}
+         \begin{equation*}
+             \lim_{k\to+\infty}\sqrt[k]{a_k}=\frac{\pi}{\sqrt[k]{k+1}}=\lim_{k\to+\infty}\frac{\pi}{\sqrt[k]{k}+1}=\pi\hspace{1cm}R=\frac{1}{L}=\frac{1}{\pi}
+        \end{equation*}
+         \begin{itemize}
+             \item[] La serie converge in $(\pi-\frac{1}{\pi}, \pi+\frac{1}{\pi})$
+             \item[] La serie non converge in $(-\infty,\pi-\frac{1}{\pi})\cup(\pi+\frac{1}{\pi}, +\infty)$
+             \item[] $f(\pi-\frac{1}{\pi})=\frac{\pi^k(\pi-\frac{1}{\pi}-\pi)^k}{k+1}=\frac{\pi^k}{k+1}(\frac{(-1}{\pi})^k=\frac{(-1)^k}{k+1}$ converge
+             \item[] $f(\pi+\frac{1}{\pi})=\frac{\pi^k(\pi+\frac{1}{\pi}-\pi)^k}{k+1}=\frac{\pi^k}{k+1}(\frac{(1}{\pi})^k=\frac{1}{k+1}$ diverge
+         \end{itemize}
+         \begin{center}
+             $E=[\pi-\frac{1}{\pi}, \pi+\frac{1}{\pi})$
+         \end{center}
+         
+         \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{3^k(2x-1)^k}{k!}\end{equation*}
+         Per portarla nella forma standard delle serie di potenze applichiamo: $\sum a_k(\alpha x-x_0)^k\to\sum a_k\alpha^k(x-\frac{x_0}{\alpha})$, $\forall\alpha\in\mathbb{R}\backslash\{0\}$:
+         \begin{equation*}
+             \sum^{+\infty}_{k=0}\frac{3^k(2[x-\frac{1}{2}])^k}{k!}=\sum^{+\infty}_{k=0}\frac{3^k2^k(x-\frac{1}{2})^k}{k!}\hspace{1cm}x_0=\frac{1}{2}\hspace{1cm}a_k=\frac{3^k2^k}{k!}
+         \end{equation*}
+         \begin{equation*}
+             \lim_{k\to+\infty}|\frac{a_{k+1}}{a_k}|=\lim_{k\to+\infty}\frac{3^{k+1}2^{k+1}}{(k+1)!}\frac{k!}{3^k2^k}=\lim_{k\to+\infty}\frac{6}{k+1}=0\hspace{1cm}R=\frac{1}{L}=\frac{1}{0}=+\infty
+         \end{equation*}
+         La serie converge $\forall x\in\mathbb{R}$.
+         
+         \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{(x^2-3)^k}{k^2+2}\end{equation*}
+         Per portarla nella forma canonica delle serie di potenze dobbiamo fare un cambio di variabile:
+         \begin{equation*}
+             y=x^2-3\hspace{1cm}\sum^{+\infty}_{k=0}\frac{y^k}{k^2+2}\hspace{1cm}y_0=0\hspace{1cm}a_k=\frac{1}{k^2+2}
+         \end{equation*}
+         \begin{equation*}
+             L=\lim_{k\to+\infty}\sqrt[k]{a_k}=\lim_{k\to+\infty}\frac{1}{\sqrt[k]{k^2+2}}=1\hspace{1cm}R=\frac{1}{L}=1
+         \end{equation*}
+         $\sum\frac{y^k}{k^2+2}$ è convergente per $-1<y<+1$. Vediamo ora cosa succede agli estremi:
+         \begin{itemize}
+             \item[] $y=1\to\sum^{+\infty}_{k=0}\frac{1}{k^2+2}\approx\frac{1}{k^2}<+\infty$
+             \item[] $y=-1\to\sum^{+\infty}_{k=0}\frac{(-1)^k}{k^2+2}<+\infty$
+         \end{itemize}\begin{equation*}y=[-1,1]\hspace{0.5cm}\text{converge}\end{equation*}
+         Tornando alla serie iniziale e ricordando che $y=x^2-3$:
+         \begin{equation*}-1\leq y\leq1\hspace{1cm}-1\leq x^2-3\leq1\hspace{1cm}-1+3\leq x^2\leq 1+3\hspace{1cm}2\leq x^2\leq 4\end{equation*}
+         \begin{equation*}x\in[-2,-\sqrt{2}]\cup[\sqrt{2}, 2]\end{equation*}
+     \end{itemize}
+\end{example}
+
+\subsection*{Convergenza della derivata}
+Se $f(x)=\sum^{+\infty}_{k=0}a_k(x-x_0)^k$ tale che $(x-x_0)<R$, sappiamo che $f(x)$ è ben definita in $(x_0-R, x_0+R)$. Quindi:
+\begin{equation*}
+    f'(x)=\sum^{+\infty}_{k=1}a_kk(x-x_0)^{k-1}\hspace{1cm}h=k+1\Leftrightarrow k=h+1\hspace{1cm}f'(x)=\sum^{+\infty}_{h=0}a_{h+1}(h+1)(x-x_0)^{h}
+\end{equation*}
+Si ottiene così una serie di potenze con lo stesso centro, ma con $b_h=(h+1)a_{h+1}$.
+\begin{equation*}
+    Lg'=\lim_{h\to+\infty}\sqrt[h]{b_h}=\lim_{h\to+\infty}\sqrt[h]{(h+1)a_{h+1}}=\lim_{h\to+\infty}\sqrt[h]{h+1}\sqrt{a_{h+1}}=1*Lg
+\end{equation*}
+Dove $Lg'$ corrisponde alla serie associata a $f'$. Dato che $Lg'=Lg$ il raggio di convergenza è lo stesso. Ma gli estremi sono sempre da studare.
+
+\begin{thm}
+    Se $f(x)=\sum^{+\infty}_{k=0}a_k(x-x_0)^k$, $\forall x\in\{|x-x_0|<R\}$
+    \begin{enumerate}
+        \item $f$ è derivabile due volte;
+        \item $f^{(j)}(x)=\sum^{+\infty}_{k=j}k(k+1)...(k-j+1)(x-x_0)^{k-j}$, $\forall x\in\{|x-x_0|\in R\}$.
+    \end{enumerate}
+    \begin{example}
+         \begin{equation*}f'(x)=\sum^{+\infty}_{k=0}\frac{x^{k+1}}{k+1}\end{equation*}
+         \begin{equation*}x_0=0\hspace{1cm}a_k=\frac{1}{k+1}\hspace{1cm}L=\lim_{k\to+\infty}\sqrt[k]{\frac{1}{k+1}}=1\hspace{1cm}R=\frac{1}{L}=1\end{equation*}
+         Osserviamo che:
+         \begin{equation*}
+             f'(x)=\sum^{+\infty}_{k=0}\frac{(k+1)x^k}{k+1}=\sum^{+\infty}_{k=0}x^k=\frac{1}{1-x}
+         \end{equation*}
+         Agli estremi non è ben definita per $x=1$, mentre è ben definita per $x=-1$. 
+    \end{example}
+\end{thm}
+Le derivate ci assicurano lo stesso raggio di convergenza, mentre gli estremi vanno studiati separatamente. Ovvero se $f(x)=\sum a_k(x-x_0)^k$ è convergente per $[x_0-R,x_0+R]$, $f'(x)$ è convergente per $(x_0-R,x_0+R)$. Mentre se $f(x)$ è convergente per $(x_0-R,x_0+R)$, anche $f'(x)$ è convergente per $(x_0-R,x_0+R)$.
+
+\begin{example}
+     \begin{equation*}f(x)=\sum^{+\infty}_{k=0}\frac{3^k(2x-1)^k}{k!}=\sum^{+\infty}_{k=0}\frac{6^k(x-\frac{1}{2})^k}{k!}\end{equation*}
+     \begin{equation*}
+         f'(x)=\sum^{+\infty}_{k=1}\frac{k6^k}{k!}(x-\frac{1}{2})^{k-1}=\sum^{+\infty}_{k=1}\frac{k6^k(x-\frac{1}{2})^{k-1}}{k(k-1)!}=6\sum^{+\infty}_{k=0}\frac{6^{k-1}(x-\frac{1}{2})^{k-1}}{(k-1)!}
+     \end{equation*}
+     Per sostituzione otteniamo:
+     \begin{equation*}
+         h=k-1\hspace{1cm}\sum^{+\infty}_{h=0}\frac{6^h(x-\frac{1}{2})^h}{h!}=6f(x)\hspace{1cm}\sum^{+\infty}_{k=0}\frac{6^k(x-\frac{1}{2})^k}{k!}=e^{6x-3}
+     \end{equation*}
+     è la soluzione di $f'(x)=6f(x)$. $f(\frac{1}{2})=1$ infatti $f(x)=e^{6x-3}$ e $f'(x)=6e^{6x-3}$ con $f(\frac{1}{2})=e^0=1$.
+     
+\end{example}
+
+
+
+
+\newpage
+\chapter*{Esercizi svolti}
+\addcontentsline{toc}{chapter}{Esercizi svolti}
+\begin{exercise}[Convergenza$\backslash$ divergenza]
+    Dire se le seguenti serie convergono oppure divergono:
+    \begin{enumerate}
+        \item $\sum 3^k$. Serie geometrica convergente.
+        \item $\sum \frac{1}{k\sqrt{k}}=\frac{1}{k^{\frac{3}{2}}}$. Serie armonica convergente.
+        \item $\sum(e^{\frac{1}{k}}-2)$. Dopo un n finito $a_k<0$. Ma $\sum-a_k$ con $-a_k\to-(1-2)=1\neq0$ quindi diverge.
+        \item $\sum (e^{\frac{1}{k}}-1)$. $a_k\geq0$, $a_k=e^{\frac{1}{k}}-1\to0$ non ci dice niente. Applichiamo $\lim_{x\to0}\frac{e^x-1}{x}=1$ ottenendo $\sum e^{\frac{1}{k}}-1\approx\sum\frac{1}{k}=+\infty$ allora $\sum e^{\frac{1}{k}}-1=+\infty$ diverge.
+        \item $\sum \sin^2(\frac{1}{k})$. $\lim_{x\to0}\frac{sin^2(x)}{x}=0$ non ci dice niente. $\lim_{x\to0}\frac{sin^2(x)}{x^2}=1$ allora $\sum \sin^2\frac{1}{k}\approx\sum\sin^2(\frac{1}{k^2})<+\infty$ quindi converge.
+        
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{2^k}{(k+1)!}\end{equation*}
+        Moltiplichiamo e dividiamo per $\frac{1}{2}$:
+        \begin{equation*}\frac{1}{2}\sum^{+\infty}_{k=0}\frac{2^{k+1}}{(k+1)!}\end{equation*}
+        Poniamo $h=k+1$ per ricondurlo alla serie conosciuta $e^x=\sum^{+\infty}_{k=0}\frac{x^k}{k!}$:
+        \begin{equation*}\sum^{+\infty}_{k=0}\frac{1}{2}(e^2-1)<+\infty\end{equation*}
+    \end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Criteri di convergenza]
+    Studiare il carattere delle seguenti serie.
+    \begin{enumerate}
+        \item \begin{equation*}\sum\frac{k^2}{2^k}\end{equation*}
+        
+        $a_k\geq0$, $a_k\to0$, $a_k$ non è una serie geometrica o armonica. Utilizziamo il criterio della radice:
+        \begin{equation*}
+            \lim_{k\to+\infty}\sqrt[k]{a_k}=\lim_{k\to+\infty}\sqrt[k]{\frac{k^2}{2^k}}\hspace{1cm}\lim_{k\to+\infty}\frac{\sqrt[]{k^2}}{\sqrt[k]{2^k}}=\lim_{k\to+\infty}\frac{\sqrt[k]{k^2}}{2}=\frac{1^2}{2}<1
+        \end{equation*}
+        
+    Quindi la serie converge.
+    
+    
+    \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{1}{k!}\end{equation*}
+    
+    $a_k\geq0$, $a_k\to0$, $a_k$ non è una serie geometrica o armonica. Utilizziamo il criterio del rapporto:
+    
+    \begin{equation*}
+        \lim_{k\to+\infty}\frac{a_{k+1}}{a_k}=\frac{\frac{1}{(k+1)!}}{\frac{1}{k!}}=\frac{k!}{(k+1)!}=\frac{k!}{k!(k+1)}\to0<1
+    \end{equation*}
+    
+    La serie converge. Questa è una serie importante perchè $\sum^{+\infty}_{k=0}\frac{1}{k!}=e$ (numero di Nepero).
+    
+    \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{2^k}{k!}\end{equation*}
+    
+    Dopo aver verificato le condizioni precedenti, possiamo notare che:
+    \begin{equation*}
+        e=\sum^{+\infty}_{k=0}\frac{1}{k!}\hspace{1cm}e^A=\sum^{+\infty}_{k=0}\frac{A^k}{k!}\text{ }\forall A\in\mathbb{R}
+    \end{equation*}
+    
+    \begin{definition*}
+        Per $x\geq0$ definiamo la funzione esponenziale come:
+        \begin{equation*}e^x=\sum^{+\infty}_{k=0}\frac{x^k}{k!}\end{equation*}
+    \end{definition*}
+    
+    \item\begin{equation*}\sum^{+\infty}_{k=1}\frac{k^22^k}{k!}\end{equation*}
+    
+    $a_k\geq0$, $a_k\to0$, $a_k$ non è una serie geometrica o armonica. Utilizziamo il criterio del rapporto:
+    
+    \begin{equation*}
+         \lim_{k\to+\infty}\frac{a_{k+1}}{a_k}=\frac{\frac{(k+1)^22^{k+1}}{(k+1)!}}{\frac{k^22^k}{k!}}=\frac{(k+1)^22^{k+1}}{(k+1)!}\frac{k!}{k^22^k}=\frac{2(k+1)}{k^2}\to0<1
+    \end{equation*}
+    
+    Quindi la serie converge.
+    
+    \item \begin{equation*}\sum\frac{k!}{k^k}\end{equation*}
+    
+    Utilizziamo il rapporto:
+    \begin{equation*}
+        \lim_{k\to+\infty}\frac{a_{k+1}}{a_k}=\frac{\frac{(k+1)!}{(k+1)^{k+1}}}{\frac{k!}{k^k}}=\frac{(k+1)k^k}{(k+1)^{k+1}}=\frac{k^k}{(k+1)^k}=(\frac{k}{k+1})^k=\frac{1}{e}
+    \end{equation*}
+    
+    La serie converge ed è uguale ad $\frac{1}{e}$ perchè $(1+\frac{1}{k})\to e$ e quindi $(\frac{k+1}{k})\to e$.
+    
+    \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{k^k}{e^kk!}\end{equation*}
+    
+    Utilizziamo Sterling:
+    \begin{equation*}
+        a_k=\frac{k^k}{e^kk!}\hspace{1cm}b_k=\frac{1}{\sqrt{2\pi k}}\hspace{1cm}\frac{b_k}{a_k}=\frac{\frac{1}{\sqrt{2\pi k}}}{\frac{k^k}{e^kk!}}=\frac{e^kk!}{k^k\sqrt{2\pi k}}\to1
+    \end{equation*}
+    
+    Dato che $\sum b_k\approx \sum a_k$ e $\sum\frac{1}{\sqrt{2\pi k}}\to+\infty$ anche $a_k$ diverge.
+    
+    \item \begin{equation*}\sum(e^{\frac{1}{k}}-1)\end{equation*}
+    
+    Utilizziamo il confronto:
+
+    \begin{equation*}
+        a_k=e^{\frac{1}{k}}-1\hspace{1cm}b_k=\frac{1}{k}\hspace{1cm}\frac{a_k}{b_k}=\frac{e^{\frac{1}{k}}-1}{\frac{1}{k}}=1
+    \end{equation*}
+    
+    Dato che $\sum e^{\frac{1}{k}}-1\approx\sum \frac{1}{k}$ e $\sum\frac{1}{k}=+\infty$, $\sum e^{\frac{1}{k}}-1$ è divergente.
+    
+    \item \begin{equation*}\sum^{+\infty}_{k=1}k(1-\cos(\frac{1}{k^2}))\end{equation*}
+    
+    Abbiamo che $1-\cos(\frac{1}{k^2})\approx\frac{1}{k^4}$, quindi $k\frac{1}{k^4}=\frac{1}{k^3}$ ed essendo una serie armonica, converge.
+    
+    \item \begin{equation*}\sum^{+\infty}_{k=2}\frac{1}{k^\alpha\ln(k)}\end{equation*}
+    
+    Questa serie dipende dai valori di k. Innanzitutto vediamo che $a_k\geq0$ $\forall k\geq2$. $a_k\to0$?
+    \begin{equation*}
+    \begin{cases}
+        \alpha<0\hspace{.5cm}a_n\not\to0\\
+        \alpha\geq0\hspace{.5cm}a_n\to0
+    \end{cases}
+    \end{equation*}
+    Quindi nel primo caso è divergente, nel secondo usiamo il confronto con $b_k=\frac{1}{k^\alpha}$ (serie nota):
+    
+    \begin{equation*}
+        \lim_{k\to+\infty}\frac{a_k}{b_k}=\frac{\frac{1}{k^\alpha\ln(k)}}{\frac{1}{k^\alpha}}=\frac{k^\alpha}{k^\alpha\ln(k)}\to0
+    \end{equation*}
+    
+    Quindi per $\alpha>1$ $\sum b_k<+\infty$ e $\sum a_k<\sum b_k$ quindi $a_k$ converge. Per $\alpha<1$ non dice niente.
+    
+    Confronto con $\sum c_k\frac{1}{k^\beta}$ con $\alpha<\beta<1$.
+    
+    \begin{equation*}
+        \lim_{k\to+\infty}\frac{c_k}{a_k}=\frac{\frac{1}{k^\beta}}{\frac{1}{k^\alpha\ln(k)}}=\frac{\ln(k)k^\alpha}{k^\beta}=\frac{\ln(k)}{k^{\beta-\alpha}}\to0
+    \end{equation*}
+    
+    Perchè $\alpha<\beta<1$ e $\sum a_k>\sum c_k$, con $\sum\frac{1}{k^\beta}=+\infty$ perchè $\beta<1$. Quindi $\sum a_k$ è divergente se $a<1$.
+    \end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Serie con segno variabile]\phantom{}
+    \begin{enumerate}
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{(-1)^k}{k+1}\end{equation*}
+        Questa serie converge semplicemente per Leibniz. Converge anche assolutamente?
+        \begin{equation*}
+            \sum^{+\infty}_{k=0}\frac{1}{k+1}=+\infty
+        \end{equation*}
+        
+        \item \begin{equation*}\sum^{+\infty}_{k=0}\frac{(-1)^k}{k^2+1}\end{equation*}
+        La serie converge assolutamente e quindi anche semplicemente.
+    \end{enumerate}        
+\end{exercise}
+
+
+\begin{exercise}[Serie di Taylor]\phantom{}
+    \begin{enumerate}
+        \item \begin{equation*}f(x)=xe^{x^2}\end{equation*}
+    
+    Dato che sarebbero troppi i calcoli da risolvere per trovare tutte le derivate, posso applicare il principio di sostituzione:
+    \begin{equation*}
+        e^y=\sum^{+\infty}_{k=0}\frac{y^k}{k!}\hspace{1cm}e^{x^2}=\sum^{+\infty}_{k=0}\frac{e^{2^k}}{k!}\hspace{1cm}xe^{x^2}=x\sum^{+\infty}_{k=0}\frac{x^{2k}}{k!}=\sum^{+\infty}_{k=0}\frac{x^{2k+1}}{k!}
+    \end{equation*}
+    
+        
+        \item \begin{equation*}f(x)=x^3\sin(x^3)\end{equation*}
+        
+        Applicando il principio di sostituzione otteniamo:
+        \begin{equation*}
+            \sin(y)=\sum^{+\infty}_{k=0}\frac{(-1)^ky^{2k+1}}{(2k+1)!}\hspace{1cm}\sin(x^3)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{3^{(2k+1)}}}{(2k+1)!}
+        \end{equation*}
+        \begin{equation*}
+            \sin(x^3)=x^3\sum^{+\infty}_{k=0}\frac{(-1)^kx^{3^{(2k+1)}}}{(2k+1)!}=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{6(k+1)}}{(2k+1)!}
+        \end{equation*}
+        
+        
+        \item \begin{equation*}\frac{1}{1-y}\end{equation*}
+        
+        Con le derivate otteniamo:
+        \begin{equation*}
+            f^{(k)}(y)=\frac{k!}{(1-y)^{k+1}}\hspace{1cm}f^{(k)}(0)=k!\hspace{1cm}\sum^{+\infty}_{k=0}\frac{f^{(k)}(0)}{k!}(y-0)^k=y^k
+        \end{equation*}
+        
+        Questa è una serie molto importante perchè possiamo usarla per y = qualsiasi funzione. Ad esempio con $y=-x^2$ otteniamo:
+        \begin{equation*}
+            \frac{1}{1+x^2}=\sum^{+\infty}_{k=0}(-x^2)^k=\sum^{+\infty}_{k=0}(-1)^kx^{2k}
+        \end{equation*}
+        
+        \item \begin{equation*}f(x)=x^2\cos(3x^3)\end{equation*}
+        
+        Applicando il principio della sostituzione:
+        \begin{equation*}
+            \cos(x)=\sum^{+\infty}_{k=0}\frac{(-1)^kx^{2k}}{(2k)!}\hspace{1cm}\cos(3x^3)=\sum^{+\infty}_{k=0}\frac{(-1)^k(3x^3)^{2k}}{(2k)!}
+        \end{equation*}
+        \begin{equation*}
+            x^2\cos(3x^3)=\sum^{+\infty}_{k=0}\frac{(-1)^k3^{2k}x^{6k+2}}{(2k)!}
+        \end{equation*}
+        
+        \begin{itemize}
+            \item $T_8(x,0)$ Con $k=0$ otteniamo $x^2$ mentre per $k=1$, $-\frac{9}{2}x^8$.
+        
+        \begin{equation*}
+            T_8(x,0)=x^2-\frac{9}{2}x^8
+        \end{equation*}
+        
+        \item $T_{13}(x,0)$ è lo stesso di $T_8(x,0)$ perchè altrimenti per $k=2$ il grado $=14$.
+        \begin{equation*}
+            T_{13}(x,0)=x^2-\frac{9}{2}x^8
+        \end{equation*}
+        
+        \item $f^{(6)}(0)=a_66!=0$ in quando non esiste il grado 6 (non è raggiungibile).
+        \item $f^{(14)}(0)=a_{14}14!=\frac{3^4}{4!}14!$
+        \item $f^{(50)}(0)=a_{50}50!=\frac{3^{16}}{16!}50!$
+        \end{itemize}
+    \end{enumerate}
+\end{exercise}

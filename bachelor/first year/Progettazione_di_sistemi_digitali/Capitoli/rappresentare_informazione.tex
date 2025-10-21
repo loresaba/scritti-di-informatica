@@ -1,0 +1,604 @@
+\chapter{Rappresentare l'infomazione}
+Per rappresentare le informazioni si utilizzano un insieme di simboli utili al nostro scopo. Nel caso degli elaboratori questi simboli sono le famosissime cifre 0 e 1.\\$I = $insieme di informazioni $\hspace{0,5cm} \sum = $insieme di simboli $\hspace{0,5cm} C = $insieme di parole
+\begin{itemize}
+    \item Funzione di codifica [$C: I\rightarrow C$];
+    
+    E' proprio questo il processo attraverso cui il nostro elaboratore codifica, con un certo numero di bit, l'informazione. Un esempio di codifica che si verifica ogni giorno avviene quando digitiamo un carattere sulla tastiera del nostro computer.
+    
+    \begin{example}
+        \label{es:frutta} Abbiamo un insieme composto da vari elementi a cui fanno riferimento delle combinazioni di bit 0 e 1.\\ $I = \{mela, pera, arancia, susina\} \hspace{0,5cm} \sum = \{0,1\} \hspace{0,5cm} C = \{00,01,10,11\}$
+    \end{example}
+
+    \item Funzione di decodifica [$D: C\rightarrow F$].
+\end{itemize}    
+I requisiti della codifica/decodifica sono:
+\begin{itemize}
+    \item[-] Insiemi devono essere finiti;
+    \item[-] $|I|=|C|$ codifica efficiente;
+    \item[-] $|I|>|C|$ codifica ambigua;
+    \item[-] $|I|<|C|$ codifica rindondante;
+    \item[-] Usare il minimo numero di simboli che mi permettono di rappresentare l'informazione, come nell'esempio \ref{es:frutta};
+    \item[-] Facilità di esecuzione della codifica/decodifica;
+    \item[-] Facilità di esecuzione delle operazioni.
+\end{itemize}
+
+
+\section{Rappresentazione numerica}
+Quando si parla della rappresentazione delle informazioni, e in particolar modo con i numeri naturali, l'informazione o numero da rappresentare è fortemente dipendente dal sistema di riferimento.
+
+Con il sistema posizionale ogni cifra assume un valore in base alla sua posizione, tra questi rientrano il sistema decimale e gli altrettanti importanti sistemi ottale ed esadecimale.
+Tramite questo sistema posso rappresentare $b^n$ valori ($b =$ base, $n =$ numero di cifre o bit), registrando le cifre comprese tra $\{0,...,b^n-1\}$. La regola generale da seguire è quindi:
+\begin{equation}
+    N=\sum_{i=0}^{n-1}C_i*b^i
+\end{equation}
+
+
+\begin{center}
+    \begin{tabular}{ c | c c c}
+        Base & Numero & Conversione & Risultato\\\hline
+        base 10 & $375$ & $3x10^2+7x10^1+5x10^0$ & $375$\\\hline
+        base 8 & $375$ & $3x8^2+7x8^1+5x8^0$ & $253$\\\hline
+        base 2 & $1011$ & $1x2^3+0x2^2+1x2^1+1x2^0$ & $11$
+    \end{tabular}
+    
+    Nel sistema ottale posso rappresentare i valori tra $\{0,...,7\}$, divido quindi la cifra in blocchi 3 a 3 e parto dalla LSB\footnote{Least Significant Bit o cifra meno significativa}.
+    
+    \begin{tabular}{ c | c }
+        Base & Numero\\\hline
+        base 2 & $101.010.001.011$\\
+        base 8 & $5.2.1.3$
+    \end{tabular}
+    
+    Nel sistema esadecimale posso rappresentare i valori $\{0,...,9, A,...,F\}$, divido quindi la cifra in blocchi 4 a 4 e parto da LSB.
+    
+    \begin{tabular}{ c | c }
+        \hline
+        base 2 & $1010.1000.1011$\\
+        base 16 & $A.8.B$
+    \end{tabular}
+\end{center}
+Per convertire i numeri da decimale a binario si applica la divisione in base $b$ iterata sul quoziente, dove la rappresentazione è data dalla sequenza dei resti presi in ordine inverso.
+\begin{center}
+    \begin{tabular}{ c | c }
+            14 & \\
+            7 & 0\\
+            3 & 1\\
+            1 & 1\\
+            0 & 1\\
+    \end{tabular}
+    $14_{(10)}=1110_{(2)}$    
+\end{center}
+A questo punto possiamo chiederci \textit{quanti bit mi serviranno per rappresentare un dato valore?}
+Applicando la regola con il logaritmo avremo la risposta alla nostra domanda.
+\begin{center}$n = \log_b{N} \approx$ per eccesso\\$N = 1300\hspace{0,5cm}n = \log_2{1300} = 11$\end{center}
+
+Prima di passare al prossimo argomento ci sono delle micro informazioni da tenere a mente.
+\begin{center}
+    \begin{tabular}{ c | c c}
+        1 Byte & 8 bit\\\hline
+        $2^{10}\simeq10^3$ & Kilo & KB\\\hline
+        $2^{20}\simeq10^6$ & Mega & MB\\\hline
+        $2^{30}\simeq10^9$ & Giga & GB
+    \end{tabular}
+\end{center}
+
+\section{Operiazioni in binario}
+\subsection*{Addizione}
+Per addizionare due numeri in binario si parte da LSB e si sommano le cifre nella stessa posizione in base 2.
+\begin{center}
+    \begin{tabular}{c c c}
+        \centering
+        $^10$ & $^11$ & $1$\\
+        $0$ & $0$ & $1$\\\hline
+        $1$ & $0$ & $0$
+    \end{tabular}
+\end{center}
+
+\subsection*{Sottrazione}
+La sottrazione consiste nel sottrare le cifre nella stessa posizione solo se il primo operando è maggiore del secondo.
+\begin{center}
+    \begin{tabular}{c c c}
+        \centering
+        $0$ & $1$ & $1$\\
+        $0$ & $0$ & $1$\\\hline
+        $0$ & $1$ & $0$
+    \end{tabular}\hspace{0,5cm}
+    \begin{tabular}{c c c}
+        \centering
+        $0$ & $^0$\sout{1} & $^10$\\
+        $0$ & $0$ & $1$\\\hline
+        $0$ & $0$ & $1$
+    \end{tabular}\hspace{0,5cm}
+    \begin{tabular}{c c c}
+        \centering
+        $^0$\sout{1} & $^10$ & $^10$\\
+        $0$ & $0$ & $1$\\\hline
+        $0$ & $1$ & $1$
+    \end{tabular}
+\end{center}
+
+\subsection*{Moltiplicazione}
+La moltiplicazione viene rappresentata come una semplice moltiplicazione tra cifre con l'accortezza che, moltiplicando due numeri binari, il risultato avrà bisogno di più bit. Generalmente il doppio. $[0,...,2^n-1]$
+\begin{center}
+    \begin{tabular}{c c c c}
+        \centering
+        & $0$ & $1$ & $0$\\
+        & $0$ & $1$ & $1$\\\hline
+        & $0$ & $1$ & $0$\\
+        $0$ & $1$ & $0$ &\\\hline
+        $0$ & $1$ & $1$ & $0$
+    \end{tabular}\hspace{1cm}
+    \begin{tabular}{c c c c c c c}
+        \centering
+        &&& $1$ & $1$ & $1$ & $1$\\
+        &&& $0$ & $1$ & $1$ & $1$\\\hline
+        && $_1$ & $1$ & $^11$ & $1$ & $1$\\
+        && $^11$ & $1$ & $1$ & $1$&\\
+        $^1$ & $1$ & $1$ & $1$ & $1$&&\\\hline
+        $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$
+    \end{tabular}
+\end{center}
+
+\subsection*{Overflow}
+L'overflow\footnote{In informatica, elaborazione eccedente il limite della capacità di una memoria.} indica un evento che si verifica quando non posso rappresentare in bit il risultato.
+\begin{center}
+    \begin{tabular}{c c c c}
+        \centering
+        &$^11$ & $^10$ & $1$\\
+        &$0$ & $1$ & $1$\\\hline
+        $^{\bullet}1$ & $0$ & $0$ & $0$
+    \end{tabular}
+\end{center}
+
+\section{Rappresentazione dei numeri interi}
+\label{sec:interi}
+\textit{Tutto chiaro fin qui? Bene! Ma se voglio rappresentare anche i numeri negativi in base 2?}
+
+Per rappresentare tutti gli interi si usano due diversi tipi di rappresentazione: il \textbf{Modulo e segno} e il \textbf{Complemento a due} che è il più utilizzato.
+
+\subsection{Modulo e segno}
+Utilizzando il sistema modulo e segno, si assegna ad MSB\footnote{Most Significant Bit o cifra più significativa} il valore 0 se il segno è positivo, il valore 1 se il segno è negativo.
+\begin{center}$1011 = -3$\end{center}
+
+\subsection{Complemento a due}
+Utilizzando il sistema complemento a due, si assegna sempre a MSB il segno meno.
+\begin{equation}-a_{n-1}2^{n-1}+\sum_{i=0}^{n-2}a_1*2^i\end{equation}
+\begin{center}
+    \begin{tabular}{c|c c c}
+        \centering
+        Binario & Decimale & MeS & Ca2\\\hline
+        $000$ & $0$ & $0$ & $0$\\\hline
+        $001$ & $1$ & $1$ & $1$\\\hline
+        $010$ & $2$ & $2$ & $2$\\\hline
+        $011$ & $3$ & $3$ & $3$\\\hline
+        $100$ & $4$ & $-0$ & $-4$\\\hline
+        $101$ & $5$ & $-1$ & $-3$\\\hline
+        $110$ & $6$ & $-2$ & $-2$\\\hline
+        $111$ & $7$ & $-3$ & $-1$
+    \end{tabular}
+\end{center}
+
+\subsubsection*{Proprietà del complemento a due}
+Come già accennato prima il complemento a due è il sistema più usato. \textit{Ma perchè è il più usato se il più "semplice" è modulo e segno?} Ebbene, il complemento a due è il sistema più efficente, con il minor numero di operazioni da svolgere e il più rapido nel calcolare l'opposto di un numero.
+In caso contrario, ovvero adoperando il sistema modulo e segno, si costringerebbe al calcolatore di eseguire un’operazione di verifica in piu` prima di svolgere la codifica.
+\subsubsection*{Opposto di un numero}
+L'opposto di un numero si calcola semplicemente negando tutti i bit della rappresentazione e infine sommando 1.
+\begin{center}$0110 = 6\hspace{0,5cm}$ opposto \begin{tabular}{c c c c}\centering
+     $1$&$0$&$^10$&$1$\\
+     $0$&$0$&$0$&$1$\\\hline
+     $1$&$0$&$1$&$0$\\
+\end{tabular} $\hspace{0,5cm}= -6$\end{center}
+
+\subsubsection*{Estenzione di un numero}
+I numeri binari rappresentati in complemento a due sono potenzialmente estendibili all'infinito, dove per estensione si intende l'aggiunta di MSB.
+\begin{center}
+    $0101 = 5 = 0000101 = 5$\\
+    $1011 = -5 = 1111011 = -5$
+\end{center}
+
+\subsubsection*{Codifica in complemento a due}
+\textit{Ok quindi posso estendere all'infinito il mio numero ma di quanti bit ho vermente bisogno?} Per rappresentare un numero in complemento a due sevono:
+\begin{equation}
+    \log_2 (|N|)+1
+\end{equation}
+\begin{center}
+    $-10 = \log_2 (10)+1 = 4+1 = 5$
+\end{center}
+
+\subsubsection*{Rappresentazione in complemento a due}
+Arrivati a questo punto, con le conoscenze apprese, non sarà molto difficile rappresentare un numero come complemento a due. Basta infatti trasformare il numero in binario, estendere un bit, calcolare l'opposto e sommare 1.
+\begin{center}
+    \begin{tabular}{c|c}
+    \centering
+         $10$&\\
+         $5$&$0$\\
+         $2$&$1$\\
+         $1$&$0$\\
+         $0$&$1$\\
+    \end{tabular}\hspace{0,5cm}
+    \begin{tabular}{c c c c c c}
+         $0$&$1$&$0$&$1$&$0$\\
+         $1$&$0$&$1$&$0$&$1$
+    \end{tabular}
+    \hspace{0,5cm}
+    \begin{tabular}{c c c c c}
+         $1$&$0$&$1$&$^10$&$1$\\
+         $0$&$0$&$0$&$0$&$1$\\\hline
+         $1$&$0$&$1$&$1$&$0$\\
+    \end{tabular}
+\end{center}
+
+\subsubsection*{Addizione e sottrazione}
+La somma funziona sempre a patto che il risultato possa essere contenuto nell'intervallo. Ad esempio, la somma tra un numero positivo e uno negativo genera il risultato corretto.
+
+Si noti inoltre che la somma funziona, a patto di trascurare l’ultimo bit di riporto.
+\begin{center}
+    Risultati corretti.\\
+    \begin{tabular}{c c c c c c }
+         $^1$&$^11$&$^10$&$^11$&$^11$\\
+         &$0$&$1$&$0$&$1$\\\hline
+         &$0$&$0$&$0$&$0$
+    \end{tabular}\hspace{0,5cm}$-5 +5 = 0$\hspace{1cm}
+    \begin{tabular}{c c c c c}
+         $^1$&$^10$&$1$&$1$&$1$\\
+         &$1$&$1$&$0$&$0$\\\hline
+         &$0$&$0$&$1$&$1$
+    \end{tabular}\hspace{0,5cm}$+7 -4 = 3$
+    
+    Risultati non corretti.\\
+    \begin{tabular}{c c c c c}
+         $^10$&$^11$&$^10$&$^11$\\
+         $0$&$1$&$1$&$1$\\\hline
+         $1$&$1$&$0$&$0$
+    \end{tabular}\hspace{0,5cm}$+5 +7 = -12$\hspace{1cm}
+    \begin{tabular}{c c c c c}
+         $^1$&$^11$&$1$&$0$&$0$\\
+         $1$&$0$&$1$&$1$\\\hline
+         $0$&$1$&$1$&$1$
+    \end{tabular}\hspace{0,5cm}$-4 -5 = 9$
+\end{center}
+
+Per la sottrazione, invece, si calcola l'opposto del secondo operando e si esegue la somma.
+\begin{center}
+    $6 - 3 = $\hspace{0,5cm}
+    \begin{tabular}{c c c c}
+    \centering
+         $0$&$1$&$1$&$0$\\
+         $1$&$1$&$0$&$1$\\\hline
+         $0$&$0$&$1$&$1$
+    \end{tabular}
+\end{center}
+
+\section{Rappresentazione dei numeri decimali}
+Per la rappresentazione dei numeri con la virgola dividiamo il numero in due parti. Per la parte intera, nella sezione \ref{sec:interi}, abbiamo visto come rappresentarla. Per la parte decimale serve qualche passaggio in più. Si moltiplica iterando per due sulla parte decimale ottenuta.
+\begin{center}
+    $13,57$\\\medskip\begin{tabular}{c|c|c|c|c}
+         $2^1$&$2^0$&&$2^{-1}$&$2^{-2}$\\\hline
+         $1$&$3$&$,$&$5$&$7$
+    \end{tabular}\\$\swarrow\searrow$\\$1101$\hspace{2cm}\begin{tabular}{c|c}
+        \centering
+        $0,57$&$0$\\\hline
+        $1,14$&$1$\\
+        $0,14$&\\\hline
+        $0,28$&$0$\\\hline
+        $0,56$&$0$\\\hline
+        $1,12$&$1$\\
+        $0,12$&\\\hline
+        $0,24$&$0$\\\hline
+        $0,48$&$0$
+    \end{tabular}
+\end{center}
+
+La rappresentazione finale è data dalla sequenza delle parti intere nell'ordine con cui le abbiamo generate.
+\begin{center}
+    $1101,100100 \approx 13,5625$
+\end{center}
+
+\subsection{Virgola fissa}
+Dati $n$ bit, $k$ li uso per la parte intera, $n-k$ per la parte decimale.
+
+\subsection{Virgola mobile (floating point)}
+Il termine numero in virgola mobile (floating point) in analisi numerica indica il metodo di rappresentazione approssimata dei numeri reali e di elaborazione dei dati usati dai processori per compiere operazioni matematiche.
+
+\subsubsection*{Perchè la virgola mobile?}
+\begin{itemize}
+    \item Per superare le limitazioni della rappresentazione in virgola fissa:
+    \begin{itemize}
+        \item Rappresenta numeri frazionari molto grandi;
+        \item Rappresenta numeri frazioni molto piccoli;
+    \end{itemize}
+    \item La rappresentazione in virgola mobile estende l’intervallo di numeri rappresentati a parità di cifre, rispetto alla notazione in virgola fissa;
+    \item Si può usare la notazione scientifica:
+    \begin{itemize}
+        \item Si esprime $432 000 000 000$ come $4.32 x 10^{11}$. Le 11 posizioni dopo il 4 vengono espresse dall’esponente.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Rappresentazione di un numero in virgola mobile}\label{sec:virgola_mobile}
+
+In generale:
+\begin{center}
+\begin{tabular}{c|c|c}
+     \textbf{s} & \textbf{e} & \textbf{m}\\\hline
+     Segno & Esponente & Mantissa
+\end{tabular}
+\end{center}
+
+Nel corso del tempo le varie case di produzione degli elaboratori, hanno usato la rappresentazione in virgola fissa in maniera arbitratria.
+Finchè non è stato definito uno standard chiamato \textbf{IEEE 745}. Questo standard definisce il formato per la rappresentazione dei numeri in virgola mobile.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|cccc}
+        $N^o$ bit & Nome & Bit di segno & Esponente & Mantissa\\\hline
+        16 bit & Half precision & 1 & 5 & 10\\\hline
+        32 bit & Single precision & 1 & 8 & 23\\\hline
+        64 bit & Double precision & 1 & 11 & 52
+    \end{tabular}
+    \caption{Tabella di conversione in floating point}
+    \label{tab:ieee754}
+\end{table}
+
+
+Dunque per rappresentare in virgola mobile un numero decimale si parte dal fatto che un numero binario è scomponibile come segue:
+\begin{equation} \label{eq:virgola_mobile}
+    (-1)^s*1,m*2^e
+\end{equation}
+Partendo da questa nozione possiamo seguire vari passaggi:
+\begin{itemize}
+    \item Trovo parte intera (P.I.) e parte frazionaria (P.F.) come se fosse un numero in virgola fissa;
+    \item Riscrivo il numero partendo dall'1 più significativo inserendo una virgola subito dopo e moltiplicando per la potenza del 2 con l’esponente relativo allo shift effettuato;
+    \item Uso quanto ottenuto per trovare M ed E;
+    \item Applico le formule previste dalla regola \ref{eq:virgola_mobile};
+    \begin{itemize}
+        \item \textbf{Segno} $(s) = 0$ per i numeri positivi, 1 per quelli negativi;
+        \item \textbf{Esponente} è dato dalla somma dell'esponente e il BIAS,\\$(e) = E + 2^{N-1}-1$. Si converte il risultato in binario.
+        \item \textbf{Mantissa} $(m)$ è data da $M = 1,m$;
+    \end{itemize}
+    \item Infine compongo il risultato aggregando le parti in un’unica stringa:\\$<s,e,m>$.
+\end{itemize}
+
+\begin{example}
+    Come rappresento in virgola mobile, single precision, il numero decimale $13,25_{10}$?
+    \begin{center}
+    \begin{tabular}{cc}
+        Parte intera: $1101_2$ & Parte frazionaria: $1_2$\\
+        \begin{tabular}{c|c}
+             13 & \\
+             6 & 1\\
+             3 & 0\\
+             1 & 1\\
+             0 & 1\\
+        \end{tabular} & \begin{tabular}{cc|c}
+             0,25*2 & 0,5 & 0\\\hline
+             0,5*2 & 1,0 & 1
+        \end{tabular}
+    \end{tabular}
+    $13,25 = 1101,01$
+    \end{center}
+    Lo riscrivo partendo dall’1 più significativo, piazzandogli una virgola subito dopo e moltiplicandolo per la potenza del 2 con l’esponente relativo allo shift effettuato:
+    \begin{center}
+        $1101,01 = 1,10101 * 2^3$
+    \end{center}
+    
+    A questo punto ho trovato $M = 110101$ ed $E = 3$.
+    Applico le formule per ricondurmi alla mantissa e all’esponente:
+    \begin{center}
+        $M = 1,m \Rightarrow m = 10101$\\$e = E + 2^{n-1}-1 \Rightarrow e = 3 + 2^7-1 = 3 + 127 = 130$\\che in binario è: $10000010$. ($^n$ è il numero di cifre riportate nella tabella \ref{tab:ieee754})
+    \end{center}
+        $s = 0$ perché il numero è positivo.
+    \\\large{Risultato finale:}\normalsize{}
+    \begin{center}
+        \begin{tabular}{c|c|c}
+            s & e & m\\\hline
+            0 & 10000010 & 10101 000000000000000000
+        \end{tabular}
+        \begin{tabular}{c c c c c c c c}
+            $<0;100$ & $0001$ & $0;101$ & $0100$ & $0000$ & $0000$ & $0000$ & $0000>$\\\hline
+            4 & 1 & 5 & 4 & 0 & 0 & 0 & 0
+        \end{tabular}\\Conversione in esadecimale
+    \end{center}
+\end{example}
+
+\subsubsection{Addizione e sottrazione in virgola mobile}
+L’\textbf{addizione} di numeri in virgola mobile non è semplice come l’addizione tra numeri in complemento a due. I passaggi per sommare due numeri in virgola mobile sono:
+\begin{enumerate}
+    \item\label{enum:1} Estrarre i bit dell’esponente e quelli della mantissa dei due numeri;
+    \item\label{enum:2} Aggiungere l’1 più significativo per ottenere la mantissa effettiva;
+    \item\label{enum:3} Confrontare gli esponenti. In particolar modo, gli esponenti devono essere gli stessi. Se ciò non è già verificato bisogna sottrarre l’esponente minore dall’esponente maggiore. Il risultato è il numero di bit per il quale il numero minore deve essere traslato a destra affinchè gli esponenti siano uguali;
+    \item\label{enum:4}Traslare se necessario la mantissa con esponente minore;
+    \item\label{enum:5} Sommare le due mantisse;
+    \item\label{enum:6} Normalizzare\footnote{La normalizzazione è un procedimento che obbliga la traslazione dei bit verso destra se il numero in questione è maggiore o uguale a 2.0.} la mantissa risultante sistemando, se necessario, l’esponente;
+    \item\label{enum:7} Arrotondare il risultato se necessario;
+    \item\label{enum:8} Identificare il segno in base alla grandezza degli operandi sommati;
+    \item\label{enum:9} Assemblare segno, esponente e mantissa nella notazione in virgola mobile.
+\end{enumerate}
+
+Capiamo meglio quanto scritto con un esempio.
+\begin{example}[Addizione]
+    Sommare in virgola mobile i numeri $7.875$ e $0.1875$.
+    
+    Dopo aver applicato i procedimenti descritti nella Sezione \ref{sec:virgola_mobile}, rappresento i due numeri:
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline0 & 10000001 & 111 1100 0000 0000 0000 0000\\\hline
+        \hline0 & 01111100 & 100 0000 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 1
+    \begin{center}
+    \ref{enum:1}.\hspace{1cm}
+    \begin{tabular}{|c|c|c|}
+        \hline0 & 10000001 & 111 1100 0000 0000 0000 0000\\\hline
+        \hline0 & 01111100 & 100 0000 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 2
+    \begin{center}
+    \textbf{Esponente} \hspace{2cm} \textbf{Mantissa}\\
+    \ref{enum:2}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 10000001 & \textbf{1.}111 1100 0000 0000 0000 0000\\\hline
+        \hline 01111100 & \textbf{1.}100 0000 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 3
+    \begin{center}
+    \ref{enum:3}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 10000001 & 1.111 1100 0000 0000 0000 0000\\\hline
+        \hline \textbf{01111100} & 1.100 0000 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 4
+    \begin{center}
+    \ref{enum:4}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 10000001 & 1.111 1100 0000 0000 0000 0000\\\hline
+        \hline 01111100 & \textbf{0.000 0}110 0000 0000 0000 0000 00000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 5
+    \begin{center}
+    \ref{enum:5}.\hspace{1cm} 10.000 0010 0000 0000 0000 0000
+    \end{center}
+    Dal momento che la somma ha una mantissa che è maggiore o uguale a 2.0, il risultato viene normalizzato traslandolo verso destra di un bit e aumentando l’esponente.
+    % punto 6
+    \begin{center}
+    \ref{enum:6}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 100000\textbf{10} & \textbf{1.}000 0001 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 7
+    \begin{center}
+    \ref{enum:7}.\hspace{1cm}
+    (non serve arrotondare)
+    \end{center}
+    % punto 8
+    \begin{center}
+    \ref{enum:8}.\hspace{1cm}
+    entrambi numeri positivi, segno = 0
+    \end{center}
+    Il risultato viene quindi immagazzinato in notazione in virgola mobile rimuovendo l’uno più significativo implicito della mantissa e impostando il bit di segno.
+    % punto 9
+    \begin{center}
+    \ref{enum:9}.\hspace{1cm}
+    \begin{tabular}{|c|c|c|}
+        \hline 0 10000010 & 000 0001 0000 0000 0000 0000\\\hline
+    \end{tabular}
+    \end{center}
+\end{example}
+
+
+\begin{example}[Sottrazione]
+    Proviamo ora a svolgere la seguente sottrazione:
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline0 & 11101 & 11101...0\\\hline
+        \hline0 & 11110 & 11011...0\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 1
+    \begin{center}
+    \ref{enum:1}.\hspace{1cm}
+    \begin{tabular}{|c|c|c|}
+        \hline0 & 11101 & 11101...0\\\hline
+        \hline0 & 11110 & 11011...0\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 2
+    \begin{center}
+    \textbf{Esponente} \hspace{0.5cm} \textbf{Mantissa}\\
+    \ref{enum:2}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 11101 & \textbf{1.}11101...0\\\hline
+        \hline 11110 & \textbf{1.}11011...0\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 3
+    \begin{center}
+    $e_r=30-29=1$\\
+    \ref{enum:3}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 11101 & 1.11101...0\\\hline
+        \hline \textbf{11110} & 1.11011...0\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 4
+    \begin{center}
+    \ref{enum:4}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline 11101 & \textbf{0.1}11101\\\hline
+        \hline 11110 & 1.11011...0\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 5
+    \begin{center}
+    \ref{enum:5}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline B-A & 1.110110-\\
+        & 0.111101\\\hline
+        \hline & 0.111001\\\hline
+    \end{tabular}
+    \end{center}
+    % punto 6
+    \begin{center}
+    \ref{enum:6}.\hspace{1cm}
+    \begin{tabular}{|c|}
+        \hline \textbf{$1.11001x2^{29}$}\\\hline
+    \end{tabular}
+    \end{center}
+    \textbf{Risultato:}
+    % punto 9
+    \begin{center}
+    \ref{enum:9}.\hspace{1cm}
+    \begin{tabular}{|c||c|c|c|}
+        \hline A-B & 0 & 11101 & 11001...0\\\hline
+        \hline B-A & 1 & 11101 & 11001...0\\\hline
+    \end{tabular}
+    \end{center}
+\end{example}
+
+\subsubsection{Moltiplicazione e divisione in virgola mobile}
+Per quanto riguarda la moltiplicazione e divisione in virgola mobile, le operazioni da svolgere sono le seguenti:
+\begin{enumerate}
+    \item\label{ennum:1} Estrarre i bit dell’esponente e quelli della mantissa dei due numeri;
+    \item\label{ennum:2} Aggiungere l’1 più significativo per ottenere la mantissa effettiva;
+    \item\label{ennum:3} L'esponente è dato dalla somma o dalla differenza dei due operandi, meno il BIAS ed eventualmente normalizzato;
+    \item La mantissa è data del prodotto o dal quoziente della mantissa dei due opeandi, ed eventualmente normalizzata;
+    \item Il segno è pari a 0 se i segni dei due floating point sono concordi. In caso contrario il segno è pari a 1;
+    \item Assemblare segno, esponente e mantissa nella notazione in virgola mobile.
+\end{enumerate}
+
+\begin{example}[Moltiplicazione]
+    $A=<0;11001;01010...0>$\hspace{1cm}$B=<0;11000;0110...0>$
+    \begin{center}
+    \ref{ennum:1}.\hspace{1cm}
+    \begin{tabular}{|c|c|c|}
+        \hline0 & 11001 & 01010...0\\\hline
+        \hline0 & 11000 & 0110...0\\\hline
+    \end{tabular}
+    \end{center}
+    
+    \begin{center}
+    \ref{ennum:2}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline A & 1,11001\\\hline
+        \hline B & 1,11000\\\hline
+    \end{tabular}
+    \end{center}
+    
+    \begin{center}
+    \ref{ennum:3}.\hspace{1cm}
+    \begin{tabular}{|c|c|}
+        \hline $e_r$ & 11001+11000\\\hline
+        \hline & 25+24-15(BIAS)\\\hline
+        \hline & 34\\\hline
+    \end{tabular}
+    \end{center}
+    
+    Il numero 34 non è rappresentabile con i 5 bit dell'esponente quindi si presenta un Overflow.
+    
+\end{example}
+

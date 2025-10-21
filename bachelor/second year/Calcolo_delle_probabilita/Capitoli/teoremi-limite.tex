@@ -1,0 +1,84 @@
+\chapter{Teoremi limite}
+I risultati più significativi del calcolo delle probabilità sono certamente i teoremi limite. Di questi, i più importanti sono quelli che vengono classificati come \textit{leggi dei grandi numeri} e come \textit{teoremi centrali del limite}.
+
+\section{Legge dei grandi numeri}
+La legge forte dei grandi numeri è probabilmente il risultato più noto del calcolo delle probabilità. Essa stabilisce che la media aritmetica di una successione di variabili aleatorie i.i.d. converge, con probabilità pari a 1, alla media della distribuzione comune.
+
+\begin{Thm}{Legge dei grandi numeri}{}
+    Siano $X_1, X_2,...$ una successione di variabili aleatorie i.i.d., ognuna con media finita $\mu=E(X)$. Allora, con probabilità 1:
+    \begin{equation*}
+        \frac{X_1+X_2+...+X_n}{n}\to\mu\hspace{1cm}\mbox{quando}\hspace{1cm}n\to\infty
+    \end{equation*}
+    E inoltre $\forall\epsilon>0$ vale:
+    \begin{equation*}
+        P\left(\left|\frac{X_1+X_2+...+X_n}{n}-\mu\right|>\epsilon\right)\to0\hspace{1cm}\mbox{per}\hspace{1cm}n\to\infty
+    \end{equation*}
+\end{Thm}
+
+Il valore $\mu=E(X_i)$ e inoltre vale:
+\begin{equation*}
+    E\left(\frac{X_1+X_2+...+X_n}{n}\right)=\frac{E(X_1)+E(X_2)+...+E(X_n)}{n}=\frac{n}{n}\mu=\mu
+\end{equation*}
+
+\begin{Example}{Legge dei grandi numeri}{}
+    \textit{Una compagnia assicurativa contro il furto di motorini stima che in una anno ogni motorino venga rubato con una probabilità $p=0.01$ indipendentemente dagli altri motorini. I clienti dell'assicurazione pagano un canone annuale di 100 euro e in caso di furto, ricevono dall'assicurazione 5000 euro. Supponendo che la compagnia abbia $n$ clienti, dimostrare che la probabilità che la compagnia guadagna meno di $20n$ euro all'anno va a 0 con $n$.}
+
+    La compagnia guadagna per ogni cliente 100 euro all'anno e spende per ogni cliente $\mu=E(X_i)=5000*p=50$ euro all'anno.
+
+    Sia $X_i$ i soldi spesi dalla compagnia per rimborsare il cliente in un anno:
+    \begin{equation*}
+        X_i=\begin{cases}
+            5000\hspace{1cm}p=0.01\\0\hspace{1.3cm}1-p=0.99
+        \end{cases}
+    \end{equation*}
+
+    Vogliamo calcolare la probabilità che la compagnia guadagna meno di $20n$ euro in un anno se ha $n$ clienti:
+    \begin{align*}
+        P\left(100n-\sum^n_{i=1}X_i\leq 20n\right)=P\left(-\sum^n_{i=1}X_i\leq -80n\right)=P\left(\sum^n_{i=1}X_i\geq 80n\right)=P\left(\sum^n_{i=1}\frac{X_i}{n}\geq 80\right)=\\P\left(\sum^n_{i=1}\frac{X_i}{n}-\mu\geq 80\mu\right)=P\left(\sum^n_{i=1}\frac{X_i}{n}-\mu\geq 30\right)\leq P\left(\left|\sum^n_{i=1}\frac{X_i}{n}-\mu\geq 30\right|\right)\to0
+    \end{align*}
+\end{Example}
+
+\begin{Example}{Legge dei grandi numeri}{}
+    \textit{Una sequenza di $n$ input arriva ad un server, il quale può processare un input alla volta. Ogni input viene processato in un tempo $T_i\sim exp(\frac{1}{10})$ secondi. Le variabili $T_1, T_2, ...$ sono indipendenti. Dimostrare che la probabilità che il server riesce a processare $n$ input entro $8n$ secondi va a 0 quando $n$ va a $+\infty$.}
+
+    Il tempo per processare l'i-esimo input in media è $E(T_i)=10$ secondi e ci aspettiamo di processare $n$ input in $10n$ secondi.
+
+    Vogliamo calcolare la probabilità che il server riesce a processare $n$ input entro $8n$ secondi:
+    \begin{align*}
+        P\left(\sum^n_{i=1}T_i\leq 8n\right)=P\left(\frac{\sum^n_{i=1}T_i}{n}\leq 8\right)=P\left(\sum^n_{i=1}\frac{T_i}{n}-\mu\leq8-\mu\right)\leq P\left(\left|\sum^n_{i=1}\frac{T_i}{n}-\mu\right|\geq2\right)\to0
+    \end{align*}
+    
+\end{Example}
+
+\section{Teorema centrale del limite}
+Il teorema centrale del limite è uno dei più importanti risultati della teoria della probabilità. In parole povere, esso asserisce che la somma di un grande numero di variabili aleatorie indipendenti si distribuisce approssimativamente secondo una legge normale.
+\begin{Thm}{Teorema centrale del limite}{}
+    Sia $X_1,X_2,...$ una successione di variabili aleatorie i.i.d., ognuna di media $\mu$ e varianza $\sigma^2$. Allora la distribuzione di
+    \begin{equation*}
+        \frac{X_1+...+X_n-n\mu}{\sigma\sqrt{n}}
+    \end{equation*}
+    tende a una variabile aleatoria normale standard quando $n\to\infty$. Ciò significa che, per $-\infty<a<\infty$,
+    \begin{equation*}
+        P\left\{\frac{X_1+...+X_n-n\mu}{\sigma\sqrt{n}\leq a}\right\}\to\frac{1}{\sqrt{2\pi}}\int^a_{-\infty}e^{\frac{-x^2}{2}}dx
+    \end{equation*}
+    quando $n\to\infty$, con $\Phi(a):=\frac{1}{\sqrt{2\pi}}\int^a_{-\infty}e^{\frac{-x^2}{2}}dx$.
+\end{Thm}
+
+\begin{Example}{Teorema centrale del limite}{}
+    \textit{Un docente deve correggere un pacco di 50 compiti. Il tempo necessario per correggere un compito è indipendente da quello che serve per correggerne un altro, e per ognuno il tempo richiesto è una variabile di media 20 minuti e deviazione standard uguale a 4 minuti. Approssimare la probabilità che il docente corregga almeno 25 compiti nei primi 450 minuti di lavoro.}
+
+    Siano $X_i$ il tempo necessario per correggere il compito $i=1,2,...,50$ con $X_1, X_2,...,X_{50}$ indipendenti e identicamente distribuite (i.i.d.), $\mu=E(X_i)=20$ minuti, $\sigma=\sqrt{Var(X_i)}=4$ minuti, vogliamo calcolare $P(X_1+...+X_{25})\leq450$:
+
+    \begin{align*}
+        P(X_1+...+X_{25}\leq450)=P\left(\frac{X_1+...+X_{25}-n\mu}{\sigma\sqrt{n}}\leq\frac{450-n\mu}{\sigma\sqrt{n}}\right)=P\left(Z_n\leq -\frac{5}{2}\right)\simeq\\\Phi\left(-\frac{5}{2}\right)=1-\Phi(2.5)=0.006
+    \end{align*}
+\end{Example}
+
+\begin{Example}{Teorema centrale del limite}{}
+    \textit{Una compagnia di assicurazioni ha 10000 clienti detentori di una polizza di assicurazioni sull'auto. La richiesta annua di risarcimento per assicurato è in media 240 euro con deviazione standard di 900 euro. Si approssimi la probabilità che le richieste totali di risarcimento superino i 2.7 milioni di euro, assumendo che le richieste siano indipendenti.}
+
+    Sia $X_i$ il risarcimento (in euro) richiesto dal cliente $i$, $\mu=E(X_i)=240$, $\sigma=\sqrt{Var(X_i)=900}$, $n=10000$:
+    \begin{align*}
+        P\left(\sum^n_{i=1}X_i\geq 2.7*10^6\right)=P\left(\frac{\sum^n_{i=1}X_i-n\mu}{\sigma\sqrt{n}}\geq \frac{2.7*10^6-n\mu}{\sigma\sqrt{n}}\right)=P\left(\frac{\sum^n_{i=1}(X_i-\mu)}{\sigma\sqrt{n}}\geq 3.33\right)=\\1-P\left(\frac{\sum^n_{i=1}(X_i-\mu)}{\sigma\sqrt{n}}< 3.33\right)\simeq 1-\Phi(3.33)=0.0004
+    \end{align*}
+\end{Example}

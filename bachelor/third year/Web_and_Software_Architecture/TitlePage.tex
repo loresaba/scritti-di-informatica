@@ -1,0 +1,45 @@
+\begin{titlepage}
+\begin{adjustwidth}{0.5cm}{0.5cm} % Imposta i margini a sinistra e a destra
+\thispagestyle{empty}
+\center 
+
+% Logo
+\begin{figure}
+\vspace{-3cm}
+    \hspace*{-1cm}\includegraphics[width = 0.6\textwidth]{logoSapienza.png}\hspace*{-2cm}
+\end{figure}
+
+% Background picture
+\begin{tikzpicture}[overlay, remember picture]
+\node[anchor=south west, 
+      xshift=-0.2cm, 
+      yshift=-0.2cm] 
+     at (current page.south west)
+     {\includegraphics[width = 1.41\textwidth, height = 11cm]{background.png}}; 
+\end{tikzpicture}
+
+% Layout
+\Huge\textbf{Web and Software Architecture}\\ [0.2cm]
+\LARGE % - \Sottotitolo\\
+\rule[0.3cm]{\linewidth}{0.5mm} \\ [0.5cm]
+\textsc{\LARGE Università degli Studi di Roma "La Sapienza"} \\ [0.7cm]
+\textsc{\Large Facoltà di Ingegneria dell'informazione, Informatica e Statistica} \\ [0.2cm]
+\textsc{\large Corso di Laurea Triennale in Informatica} \\ [1.5cm]
+\begin{minipage}{0.4\textwidth}
+	\begin{flushleft}
+		\large
+		\textit{Autore}\\\textsc{Lorenzo Sabatino} % Your name
+	\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+	\begin{flushright}
+		\large
+		\textit{Basato sulle lezioni di}\\\textsc{Prof. Emanuele Panizzi}
+	\end{flushright}
+\end{minipage}\\ [1cm]
+
+\large\today
+
+\end{adjustwidth}
+\end{titlepage}

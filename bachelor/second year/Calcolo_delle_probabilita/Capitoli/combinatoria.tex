@@ -1,0 +1,152 @@
+\chapter{Analisi combinatoria}
+
+\section{Principio fondamentale del calcolo combinatorio}
+Supponiamo di avere due esperimenti. Il primo dei due ha $n_1$ esiti possibili e, per ogni esito del primo, il secondo esperimento ha $n_2$ esiti possibili. Allora il numero delle coppie ordinate $(a,b)$ date dai due esiti è pari a $n_1*n_2$.
+
+\begin{Example}{}{}
+    \textit{Lancio un dado due volte. Chiamo $(a,b)$ i valori usciti. Voglio calcolare il numero delle coppie $(a,b)$ tale che $a\in\{1,2,...,6\}$ e $b\in\{1,2,...,6\}$.}
+
+    Posso ora dividere il lancio dei dadi in due esperienze dove la prima è rappresentata dal lancio del primo dado, mentre la seconda dal lancio del secondo. Applicando il principio fondamentale del calcolo combinatorio otteniamo che il numero di coppie totali è $6*6=36$.
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Ci sono 100 studenti. Voglio scegliere, tra gli studenti, un rappresentate e un suo vice. In quanti modi lo posso fare?}
+
+    In questo caso la prima esperienza è la scelta del rappresentante che può essere fatta in 100 modi diversi. Mentre la seconda è data dalla scelta del vice che può essere fatta in 99 modi diversi (l'insieme di tutti gli studenti meno il rappresentante scelto). Applicando il principio fondamentale del calcolo combinatorio ottengo che i possibili modi sono pari a $100*99=9900$.
+\end{Example}
+
+
+\begin{Demonstration}{Principio fondamentale del calcolo combinatorio}{}
+    Chiamo $a_1,a_2,...,a_{n_1}$ i possibili esiti del primo esperimento e chiamo $b_1,b_2,...,b_{n_2}$ i possibili esiti del secondo esperimento. Le possibili coppie $(a,b)$ degli esisti realizzati sono date da:
+    \begin{tabular}{c c c c c}
+         $(a_1,b_1)$&$(a_1,b_2)$&$(a_1,b_3)$&...&$(a_1,b_{n_2})$\\
+         $(a_2,b_1)$&$(a_2,b_2)$&$(a_2,b_3)$&...&$(a_2,b_{n_2})$\\
+         ...&&&&\\
+         $(a_{n_1},b_1)$&$(a_{n_1},b_2)$&$(a_{n_1},b_3)$&...&$(a_{n_1},b_{n_2})$\\
+    \end{tabular}
+    
+    Si viene a creare una matrice di $n_1$ righe e $n_2$ colonne. Quindi il numero totale delle coppie è $n_1*n_2$.
+\end{Demonstration}
+
+A questo punto possiamo dare una definizione generale del \textbf{principio fondamentale del calcolo combinatorio}:
+\begin{redbar}
+    Supponiamo di avere $r$ esperimenti. Il primo ha $n_1$ esiti possibili, qualunque sia l'esito del primo, il secondo esperimento ha $n_2$ esisti possibli e così via... Allora il numero delle possibli r-uple ($a_1,a_2,a_r$) che descrivono l'esito complessivo è $n_1*n_2*...*n_r$.
+\end{redbar}
+
+\begin{Example}{}{}
+    \textit{Siano A e B insiemi finiti. Quante sono il numero di funzioni $f:A\rightarrow B$?}
+
+    $A=\{x_1,x_2,...,x_m\}$ $m=|A|\footnote{Cardinalità di A, ovvero il numero di elementi nell'insieme.}$\\
+    $B=\{y_1,y_2,...,y_k\}$ $k=|B|$\\
+    Per descrivere $f$ mi basta decidere i valori di $f(x_1), f(x_2),...,f(x_m)$. La funzione $f:A\rightarrow B$ è codificata dalla m-upla. Quindi per il principio fondamentale del calcolo combinatorio il numero di funzioni $f:A\rightarrow B=k*k*k*...$ m volte $=|B|^m=|B|^{|A|}$
+\end{Example}
+
+Va specificato che non è sempre possibile applicare questo principio:
+\begin{Example}{}{}
+    \textit{In una classe con 8 maschi e 10 femmine in quanti modi posso scegliere un rappresentante e un vice di sesso diverso?}
+
+    Provando ad applicare il principio fondamentale del calcolo combinatorio, per il rappresentante ho una scelta su 18 elementi mentre per il vice, dipende. Ovvero se come prima scelta ho un maschio come seconda avrò 10 femmine, mentre se la scelta ricade su una femmina successivamente dovrò scegliere uno tra gli 8 maschi.
+
+    Per questo motivo possiamo dividere i due insiemi in due parti:\\
+    $F=\{(a,b):a\mbox{ rappresentante maschio}, b\mbox{ vice femmina}\}$\\
+    $G=\{(a,b):a\mbox{ rappresentante femmina}, b\mbox{ vice maschio}\}$\\
+    $|E|=|F|+|G|=8*10+10*8=160$.
+\end{Example}
+
+\section{Permutazioni}
+\begin{redbar}
+    Dato un'insieme di $n$ oggetti distinti una \textbf{permutazione} corrisponde ad un ordinamento degli $n$ oggetti. In generale il numero delle permutazioni dei $n$ oggetti è $n!$.
+\end{redbar}
+
+\begin{Example}{}{}
+    Ci sono tre bambini che devo ordinare da sinistra a destra. Ogni allineamento è una permutazione e il numero delle permutazioni da effettuare è $3!=6$.   
+\end{Example}
+
+\begin{Demonstration}{Permutazioni}{}
+    Applico il principio fondamentale del calcolo combinatorio e faccio $n$ esperimenti, tanti quanti sono gli oggetti.
+
+    Nel caso del primo esperimento ho $n$ possibili esiti, una volta scelto il primo la mia scelta si riduce a $n-1$ possibili esiti e così via fino ad arrivare all'ultimo oggetto che ha solo un possibile esito. Il numero delle permutazioni sarà dato da $n*(n-1)*(n-2)*...*1=n!$.
+\end{Demonstration}
+
+\subsection*{Permutazione con ripetizioni}
+In generale se ho $n$ oggetti di cui $n_1$ di un tipo, $n_2$ do un altro tipo ... fino a $n_k$, allora i possibili ordinamenti sono:
+\begin{equation*}
+    \frac{n!}{n_1!*n_2!*n_k!}
+\end{equation*}
+
+\begin{Example}{}{}
+    \textit{Quanti sono i possibli anagrammi della parola ROCCO?}
+
+    E' sbagliato dire che gli anagrammi sono $5!$ perchè le permutazioni, come abbiamo visto, si possono applicare solo ad oggetti distinti. Posso quindi usare un trucco: modifico le lettere riputute ottenendo $RO_1C_1C_2O_2$.
+    Ora il numero degli anagrammi è $5!$, ovvero una lista di 120 parole che include tutti gli anagrammi di ROCCO anche con ripetizioni.
+    Notiamo come ogni parola nella lista compare ripetuta $2!*2!$ (per la presenza delle doppie C e delle doppie O).
+    Quindi gli anagrammi di ROCCO saranno in totale:
+    \begin{equation*}
+        \frac{5!}{2!*2!}=\frac{120}{4}=30
+    \end{equation*}
+\end{Example}
+
+Nella risoluzione di molti problemi ci troveremo ad utilizzare più metodi a catena, questo ne è un esempio:
+\begin{Example}{}{}
+    \textit{In quanti modi si possono allineare 4 libri di matematica, 3 di chimica, 2 di storia e 1 di grammatica tenendo conto che i libri della stessa materia devono stare vicini?}
+
+    Dato che non posso applicare il principio fondamentale del calcolo combinatorio in modo diretto scelgo prima con che ordine inserire gli argomenti per ogni materia e, successivamente, per ogni materia scelgo l'ordine dei suoi libri.
+
+    Per ordinare le materie ho $4!$ modi possibili. Comunque scelto l'ordine delle materie ho $4!$ scelte per matematica, $3!$ per chimica, $2!$ per storia e $1!$ per grammatica.
+
+    Il numero degli ordinamenti totali è dato dal prodotto: $4!*4!*3!*2!*1!=6912$ modi possibili.   
+\end{Example}
+
+\section{Combinazioni}
+Abbiamo $n$ oggetti distinti e vogliamo scegliere $k$ oggetti tra questi (non conta l'ordine). In quanti modi lo possiamo fare? Un'idea è proseguire nel seguente modo: prima si scelgono $k$ oggetti ordinati, così per il principio fondamentale del calcolo combinatorio otteniamo $n(n-1)(n-2)...(n-k+1)$, e successivamente dimentico l'ordine dei $k$ oggetti e conto le ripetizioni.
+\begin{redbar}
+    Otteniamo che il numero delle scelte di $k$ oggetti distinti di $n$ oggetti di cui non conta l'ordine è:
+    \begin{equation*}
+        \frac{n(n-1)(n-2)...(n-k+1)}{k!}=\frac{n!}{(n-k)!}\frac{1}{k!}=\frac{n!}{(n-k)!k!}
+    \end{equation*}
+    Questa formula rappresenta il \textbf{coefficiente binomiale} $\binom{n}{k}$ e rappresenta il numero di sottoinsiemi di cardinalità $k$ di un insieme di cardinalità $n$.
+\end{redbar}
+
+\begin{Example}{}{}
+    \textit{In una classe ci sono 10 ragazzi e 8 ragazze. Volendo interrogare 5 ragazzi e 4 ragazze, in quanti modi posso scegliere i 9 interrogati?}
+
+    Possiamo proseguire dividendo l'evento in due esperienze: la scelta 5 ragazzi viene effettuata in $\binom{10}{5}$ modi possibili, mentre quella tra le ragazze in $\binom{8}{4}$ modi possibili. Per il principio fondamentale del calcolo combinatorio la risposta corretta al problema è $\binom{10}{5}\binom{8}{4}$.
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Dieci persone voglio giocare una partita di calcio a cinque. In quanti modi posso formare due squadre?}
+
+    La risposta corretta è $\binom{10}{5}\frac{1}{2}$ perché il coefficiente binomiale $\binom{10}{5}$ rappresenta il numero di modi in cui si possono scegliere 5 persone da un gruppo di 10, che è il modo in cui si può formare una squadra. Dividendo questo valore per 2, otterremo il numero di modi unici in cui puoi formare due squadre distinte poiché non conta l'ordine in cui vengono scelte.
+\end{Example}
+
+\section{Coefficienti multinomiali}
+Abbiamo $n$ oggetti che dobbiamo distribuire in $r$ scatole distinte in modo tale che a scatola $i$-esima contenga esatamente $n_i$ oggetti dove $n_1,n_2,...,n_r$ sono fissati e $\sum^r_{i=1}n_i=n$.
+
+\begin{redbar}
+    Il numero delle possibili suddivisioni degli oggetti o \textbf{coefficiente multinomiale} è:
+    \begin{equation*}
+        \binom{n}{n_1,n_2,...,n_r}=\frac{n!}{n_1!n_2!...n_r!}
+    \end{equation*}
+\end{redbar}
+Un altro metodo per ottenere lo stesso risultato consiste nello scegliere come prima esperienza $n_1$ oggetti che metto in $S_1$ in $\binom{n}{n_1}$ modi possibili, come seconda esperienza $n_2$ oggetti che metto in $S_2$ in $\binom{n-n_1}{n_2}$ modi possibili, fino ad arrivare a $n_r$ oggetti che metto in $S_r$ in $\binom{n-n_1-n_2-...-n_r-1}{n_r}$ modi possibili. Per il principio fondamentale del calcolo combinatorio otteniamo:
+\begin{equation*}
+    \binom{n}{n_1}\binom{n-n_1}{n_2}...\binom{n-n_1-...-n_r-1}{n_r} = \binom{n}{n_1,n_2,...,n_r}
+\end{equation*}
+
+\begin{Example}{}{}
+    \textit{Ho 5 mansioni distinte e le voglio suddividere tra 3 coinquilini. In quanti modi posso effettuare questa suddivisione?}
+    
+    Ipotizzando che i coinquilini siano Aldo, Giovanni e Giacomo possiamo scrivere:
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline$M_1$ & $M_2$ & $M_3$ & $M_4$ & $M_5$\\
+        Aldo & Aldo & Giovanni & Giovanni & Giacomo\\\hline
+    \end{tabular}
+
+    Notiamo come il principio è lo stesso utilizzato per le permutazioni con ripetizioni per cui il risultato è: $\frac{5!}{2!2!1!}$.
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Voglio suddividere 30 persone in 3 gruppi di lavoro distinti da 10 persone.}
+
+    Posso proseguire assegnando ad ogni gruppo una lettera (A, B, C). In questo modo ho $\binom{30}{10,10,10}$ possibli suddivisioni degli oggetti. Essendo che i gruppi sono distinti, e che quindi non seguono un ordine, tutte le permutazioni dei tre gruppi sono $3!$. Otteniamo quindi come risultato finale: $\frac{1}{3!}\binom{30}{10,10,10}$.
+\end{Example}

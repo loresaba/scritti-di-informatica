@@ -1,0 +1,1210 @@
+\chapter{Web Front‑end Programming with Vue.js}
+\section{HTML}
+HTML, short for HyperText Markup Language, has been the standard language for creating web pages since its inception in 1991. As of today, HTML 5.2 represents the latest iteration, incorporating decades of evolution and refinement. Unlike procedural programming languages, HTML is a description language. It defines the structure and content of web pages but doesn’t control how actions are executed on them.
+
+HTML uses a system of tags to structure text, images, links, and other elements into meaningful, organized content that can be displayed in a web browser.
+
+At its core, an HTML element consists of three parts: an opening tag, content, and a closing tag. These elements form the building blocks of HTML.
+
+\begin{minted}{html}
+<tagname>
+    content
+</tagname>
+\end{minted}
+Every HTML document follows a basic structure, starting with a declaration of the document type (<!DOCTYPE html>), followed by the <html> root element. Inside the <html> tag, there are two main sections: <head> and <body>. The <head> contains metadata about the document, while the <body> contains the visible content.
+An example of a simple HTML document:
+\begin{minted}{html}
+<head>
+    <title>Page Title</title>
+</head>
+<body>
+    <h1>Heading</h1>
+    <p>A paragraph.</p>
+    <p>A longer paragraph.</p>
+</body>
+</html>
+\end{minted}
+In this document: the \texttt{<title>} tag specifies the title of the web page, visible on the browser tab; \texttt{<h1>} creates a large, bold heading; \texttt{<p>} defines paragraphs.
+
+\subsection*{HTML elements}
+HTML offers a variety of elements to structure and display different types of content. Here are some frequently used elements:
+\begin{itemize}
+    \item \textit{Headings:} \texttt{<h1>} to \texttt{<h6>} define headings, with \texttt{<h1>} being the largest and most important.
+    \item \textit{Paragraphs:} \texttt{<p>} creates blocks of text.
+    \item \textit{Line Breaks:} \texttt{<br>} introduces a line break without a closing tag.
+    \item \textit{Links:} \texttt{<a>} defines hyperlinks.
+    \item \textit{Images:} \texttt{<img>} embeds images.
+    \item \textit{Lists:} \texttt{<ul>} for unordered lists, \texttt{<ol>} for ordered lists, and \texttt{<li>} for list items.
+    \item \textit{Tables:} \texttt{<table>} organizes data into rows (\texttt{<tr>}) and cells (\texttt{<td>} or \texttt{<th>} for headers).
+\end{itemize}
+
+\subsection*{Attributes}
+Links in HTML are created using the \texttt{<a>} tag, which includes an \texttt{href} attribute to specify the destination URL:
+\begin{minted}{html}
+<a href="http://gamificationlab.uniroma1.it/wasa">Our course</a>
+\end{minted}
+Attributes like href provide additional information about elements and follow a \texttt{name="value"} format. They are always included in the opening tag of an element.
+
+The \texttt{<img>} tag is used to embed images in a web page. It requires attributes such as \texttt{src} for the image’s path, \texttt{alt} for alternate text (displayed if the image fails to load), and optionally \texttt{width} or \texttt{height} for size adjustments.
+\begin{minted}{html}
+<img src="logo-sapienza.png" alt="Sapienza's logo" width="250px">
+\end{minted}
+This code displays an image with a \texttt{width} of 250 pixels and the alternate text \texttt{"Sapienza's logo"}.
+
+Tables are a way to organize data in rows and columns. The \texttt{<table>} element contains \texttt{<tr>} (table rows), \texttt{<td>} (table data cells), and \texttt{<th>} (table headers):
+\begin{minted}{html}
+<table>
+    <tr>
+        <th>Room</th>
+        <th>Places</th>
+    </tr>
+    <tr>
+        <td>1L</td>
+        <td>120</td>
+    </tr>
+    <tr>
+        <td>2L</td>
+        <td>96</td>
+    </tr>
+</table>
+\end{minted}
+This example creates a table with two columns labeled \texttt{"Room"} and \texttt{"Places"}, listing details for two rooms.
+
+HTML supports both unordered and ordered lists. Unordered lists use \texttt{<ul>}, while ordered lists use \texttt{<ol>}. Each list item is wrapped in \texttt{<li>}:
+\begin{minted}{html}
+<ul>
+    <li>Alice</li>
+    <li>Bob</li>
+</ul>
+
+<ol>
+    <li>Alice</li>
+    <li>Bob</li>
+</ol>
+\end{minted}
+Tags can also be nested. For example, an image inside a hyperlink can be structured as:
+\begin{minted}{html}
+<table>
+    <tr>
+        <td>
+            <a href="https://www.uniroma1.it">
+                <img src="logo-sapienza.png" alt="Sapienza's logo" width="150px">
+            </a>
+        </td>
+    </tr>
+</table>
+\end{minted}
+
+\section{CSS}
+Cascading Style Sheets, or CSS, is a language used to control the presentation of web pages. It works alongside HTML, defining the appearance of elements by specifying layouts, colors, fonts, and more. The "cascading" aspect of CSS means that styles are applied hierarchically, with parent elements influencing their children unless explicitly overridden.
+
+CSS styles can be included in web pages in three main ways:
+\begin{enumerate}
+    \item Inline, directly within an HTML element using the style attribute.
+    \item Internal, within a \texttt{<style>} element in the \texttt{<head>} section of the HTML document.
+    \item External, through a linked CSS file that can style multiple HTML pages.
+\end{enumerate}
+This flexibility allows developers to create reusable, maintainable, and scalable designs.
+
+\subsection*{Inline CSS}
+Inline CSS applies styles directly to a single HTML element using the style attribute. For instance:
+\begin{minted}{html}
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1 style="color:blue;">A Blue Heading</h1>
+        <p style="color:red;">A red paragraph.</p>
+    </body>
+</html>
+\end{minted}
+Here, the \texttt{<h1>} element has its color set to blue, while the \texttt{<p>} element is styled in red. Inline CSS is useful for quick customizations but is not recommended for large-scale projects due to its lack of reusability and cluttered appearance.
+
+\subsection*{Internal CSS}
+Internal CSS defines styles for an entire HTML document, placed within a \texttt{<style>} block in the \texttt{<head>} section. For example:
+\begin{minted}{html}
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+        body { background-color: silver; }
+        h1 { color: blue; }
+        p { color: red; }
+    </style>
+    </head>
+    <body>
+        <h1>This is a heading</h1>
+        <p>This is a paragraph.</p>
+    </body>
+</html>
+\end{minted}
+This example sets the background color of the page to silver, the heading text to blue, and paragraph text to red. Internal CSS centralizes styles but limits them to the specific page.
+
+\subsection*{External CSS}
+External CSS enables developers to define styles in a separate file, which can be linked to multiple HTML documents. This approach enhances maintainability and consistency across pages.
+\begin{minted}{html}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>This is a heading</h1>
+        <p>This is a paragraph.</p>
+    </body>
+</html>
+\end{minted}
+Contents of styles.css:
+\begin{minted}{css}
+body {
+    background-color: silver;
+}
+h1 {
+    color: blue;
+}
+p {
+    color: red;
+}
+\end{minted}
+The external file \texttt{styles.css} applies the same styles as the internal example, but its separation from the HTML file ensures cleaner and more modular code.
+
+\subsection*{Overridding}
+CSS styles can be overridden based on specificity and location:
+\begin{itemize}
+    \item Inline styles take precedence over both internal and external styles.
+    \item Internal styles override external styles for the same element.
+    \item Browser default styles are the least specific and can be overridden by any CSS rule.
+\end{itemize}
+\begin{minted}{html}
+<head>
+    <style>
+        h4 { color: green; }
+    </style>
+</head>
+<body>
+    <h4>This is green</h4>
+    <h4 style="color:cyan;">This is cyan</h4>
+    <h4 style="font-family:sans-serif;">Green sans</h4>
+</body>
+\end{minted}
+The second \texttt{<h4>} element is styled cyan due to its inline style attribute, overriding the internal rule that sets all \texttt{<h4>} elements to green.
+
+\subsection*{Selectors}
+A basic CSS rule consists of a selector, which targets elements, and declarations, which define the styles to apply. Each declaration includes a property and a value:
+\begin{minted}{css}
+h1 {
+    color: blue;
+    font-size: 12px;
+}
+\end{minted}
+Here: the selector \texttt{h1} targets all \texttt{<h1>} elements; the declarations set the color to blue and the font size to 12 pixels. CSS selectors allow developers to target elements precisely:
+\begin{itemize}
+    \item Type selectors target element names (e.g., \texttt{p}).
+    \item ID selectors use a hash (\texttt{\#}) to target a specific element with an ID (e.g., \texttt{\#hot}).
+    \item Class selectors use a period (\texttt{.}) to target elements with a class (e.g., \texttt{.xxl}).
+\end{itemize}
+\begin{minted}{html}
+<head>
+    <style>
+        p { text-align: center; }
+        #hot { color: red; }
+        .xxl { font-size: 300%; }
+    </style>
+</head>
+<body>
+    <p>Just centered</p>
+    <p id="hot">Centered red</p>
+    <p class="xxl">Centered large</p>
+</body>
+\end{minted}
+CSS allows grouping multiple selectors to apply the same styles:
+\begin{minted}{css}
+h1, h2, p {
+    text-align: center;
+    color: red;
+}
+\end{minted}
+The universal selector (\texttt{*}) applies styles to all elements:
+\begin{minted}{css}
+* {
+    text-align: center;
+    color: blue;
+}
+\end{minted}
+Combinators refine the relationship between elements:
+\begin{enumerate}
+\item Descendant selector (\texttt{ }) selects all descendants of a specified element:
+\begin{minted}{css}
+div p { color: red; }
+\end{minted}
+This targets \texttt{<p>} elements within \texttt{<div>} elements.
+
+\item Child selector (\texttt{>}) selects direct children only:
+\begin{minted}{css}
+div > p { color: red; }
+\end{minted}
+
+\item Adjacent sibling selector (\texttt{+}) selects the immediate sibling:
+\begin{minted}{css}
+div + p { color: red; }
+\end{minted}
+
+\item General sibling selector (\texttt{$\sim$}) selects all siblings:
+\begin{minted}{css}
+div ~ p { color: red; }
+\end{minted}
+\end{enumerate}
+Each combinator narrows the scope of the selector to achieve precise styling.
+
+\section{Javascript}
+JavaScript is a versatile programming language widely used for web development. Its dynamic capabilities allow developers to create interactive and responsive web pages. It is a just-in-time (JIT) compiled language, which means the code is compiled during execution rather than beforehand, enabling fast execution. While primarily executed in web browsers, JavaScript is also used in server environments equipped with JS engines, such as Node.js.
+
+One of JavaScript's most powerful features is its ability to interact with and manipulate the Document Object Model (DOM), a representation of the web page structure. This feature enables developers to dynamically update web content, styles, and even user interfaces.
+
+\subsection*{Types and variables}
+JavaScript supports various data types, including strings, numbers, booleans, and objects (which also encompass arrays). Its dynamic typing means that a variable's type can change during its lifetime. Additionally, JavaScript is weakly typed, which means it performs implicit type casting depending on the operation.
+
+For instance:
+\begin{minted}{javascript}
+let example = "Text";  // example is a string
+example = 42;          // example is now a number
+\end{minted}
+JavaScript provides several ways to declare variables, each with unique scoping rules:
+\begin{itemize}
+    \item \texttt{var}: Function-scoped and can be redeclared.
+    \item \texttt{let}: Block-scoped and cannot be redeclared within the same block.
+    \item \texttt{const}: Block-scoped and immutable once assigned.
+\end{itemize}
+
+\begin{minted}{javascript}
+let greeting = "Hello";
+greeting += " World"; // Now "Hello World"
+
+const number = 10;
+// number = 20; // This would throw an error as `const` cannot be reassigned.
+\end{minted}
+It's worth noting that assigning variables without declaration, like \texttt{x = "foo";}, creates a global variable and is considered outdated.
+
+\subsection*{Objects and arrays}
+Objects are mutable collections of key-value pairs, where keys are typically strings, and values can be any JavaScript type. For example:
+\begin{minted}{javascript}
+let person = {
+  name: "Alice",
+  age: 30
+};
+person.age = 31;  // The age property is updated
+\end{minted}
+Arrays in JavaScript are a special type of object. They store data sequentially, but their indexes are essentially strings converted from integers. Here's an example:
+\begin{minted}{javascript}
+const fruits = ["apple", "banana", "cherry"];
+fruits[3] = "date";   // Adds "date" at index 3
+console.log(fruits[0]);  // Outputs: apple
+\end{minted}
+
+\subsection*{Functions}
+Functions are first-class citizens in JavaScript. This means they can be assigned to variables, passed as arguments, and returned from other functions. Functions come in various forms, including traditional function declarations and arrow functions.
+\begin{minted}{javascript}
+function multiply(x) {
+  return x * 2;
+}
+console.log(multiply(5)); // Outputs: 10
+\end{minted}
+Introduced in ES6, arrow functions offer a concise syntax:
+\begin{minted}{javascript}
+const triple = (x) => x * 3;
+console.log(triple(4)); // Outputs: 12
+\end{minted}
+JavaScript functions can capture variables from their surrounding scope, forming closures. For example:
+\begin{minted}{javascript}
+function outer() {
+  const value = 42;
+  return function inner() {
+    return value;
+  };
+}
+const innerFunc = outer();
+console.log(innerFunc()); // Outputs: 42
+\end{minted}
+
+\subsection*{Loops}
+JavaScript offers several looping mechanisms:
+\begin{itemize}
+    \item \texttt{for} loops for general iteration.
+    \item \texttt{for...in} to iterate over object properties.
+    \item \texttt{for...of} to iterate over iterable values, like arrays.
+    \item the \texttt{.forEach()} method for arrays, which applies a function to each element.
+\end{itemize}
+
+\begin{minted}{javascript}
+const items = ["a", "b", "c"];
+items.forEach((item) => console.log(item));
+// Outputs: a, b, c
+\end{minted}
+
+\subsection*{HTML and DOM}
+JavaScript can dynamically modify HTML and CSS. For instance, you can use:
+\begin{itemize}
+    \item \texttt{innerHTML} to set or retrieve HTML content.
+    \item \texttt{document.write()} to output directly into the document.
+    \item \texttt{console.log()} for debugging.
+\end{itemize}
+
+\begin{minted}{html}
+<p id="demo"></p>
+<script>
+document.getElementById("demo").innerHTML = "Hello, World!";
+</script>
+\end{minted}
+
+\begin{minted}{html}
+<p id="demo">This text will turn red.</p>
+<script>
+document.getElementById("demo").style.color = "red";
+</script>
+\end{minted}
+
+\subsection*{Modules}
+Modules enable code organization and reusability. The \texttt{export} keyword marks variables or functions for external use, while \texttt{import} allows their inclusion in other files.
+
+\begin{minted}{javascript}
+// File: module.js
+export const greeting = "Hello";
+
+// File: main.js
+import { greeting } from './module.js';
+console.log(greeting); // Outputs: Hello
+\end{minted}
+
+\subsection*{Async‑await}
+JavaScript, by its nature, operates in a single-threaded environment. This means only one task can be executed at a time. However, modern web applications demand responsiveness and the ability to perform multiple operations simultaneously. This is where asynchronous programming becomes crucial. Asynchronous JavaScript allows developers to write code that doesn't block the execution of other operations, ensuring a seamless user experience.
+
+One of the foundational concepts in asynchronous JavaScript is the Promise. A Promise is essentially an object that acts as a placeholder for a value that will be available in the future. When a function returns a Promise, it signals that the result of its execution will be determined later, allowing the program to continue running other tasks in the meantime.
+
+Promises operate in three distinct states:
+\begin{enumerate}
+    \item \textit{Pending:} The initial state, where the operation has neither completed nor failed.
+    \item \textit{Fulfilled:} The operation successfully completed, and the resulting value is now available.
+    \item \textit{Rejected:} The operation failed, and an error has been encountered.
+\end{enumerate}
+Using Promises involves chaining methods to handle success and failure. For example, suppose we have a function \texttt{doSomething()} that returns a Promise. The syntax to handle its resolution and rejection might look like this:
+\begin{minted}{javascript}
+ doSomething()
+   .then((result) => {
+       // Handle the successful result
+   })
+   .catch((error) => {
+       // Handle any errors
+   });
+\end{minted}
+Here, the then method is executed when the Promise is fulfilled, and the catch method is called if it is rejected.
+
+It's essential to understand that the execution flow in JavaScript does not wait for Promises to resolve. For instance:
+\begin{minted}{javascript}
+let txt;
+doSomething()
+   .then((result) => {
+       txt = result;
+   });
+
+// This alert may run before txt is set
+alert(txt);
+\end{minted}
+In this scenario, the \texttt{alert} function might execute before the Promise has resolved and set the value of \texttt{txt}, illustrating the asynchronous nature of Promises.
+
+To simplify working with Promises, JavaScript provides the async-await syntax. This syntactic sugar makes asynchronous code resemble synchronous code, improving readability without altering its asynchronous behavior.
+
+Functions that use the async-await pattern must be declared with the \texttt{async} keyword. Within these functions, the \texttt{await} keyword pauses execution until the Promise resolves. However, the overall behavior remains asynchronous, and developers should remain conscious of this.
+
+Let’s compare traditional Promise chaining with the async-await syntax:
+\begin{itemize}
+    \item \textit{Using Promises:}
+    \begin{minted}{javascript}
+    function buttonClicked() {
+       doSomething()
+          .then((result) => {
+              alert(result);
+          })
+          .catch((error) => {
+              // Handle the error
+          });
+    }
+    \end{minted}
+    \item \textit{Using Async-Await:}
+    \begin{minted}{javascript}
+    async function buttonClicked() {
+       try {
+           let txt = await doSomething();
+           alert(txt);
+       } catch (error) {
+           // Handle the error
+       }
+    }
+    \end{minted}
+\end{itemize}
+The async-await pattern reduces nesting and improves the readability of code, making it easier to debug and maintain.
+
+\section{Vue.js}
+Frameworks have become indispensable tools in web development. Unlike libraries, which provide pre-written code to perform specific tasks, frameworks impose a structure and a methodology for building applications. This "inversion of control" means the framework takes charge of the application's flow, enabling extensibility while remaining unmodifiable by the user.
+
+Why do we need frameworks? The answer lies in JavaScript's origin. It was never designed with full-fledged application development in mind. Although the language has evolved, it still lacks built-in solutions for complex tasks, leaving developers to grapple with repetitive "boilerplate" code. Frameworks like Vue.js, React, and Angular bridge this gap, streamlining development.
+
+What Is Vue.js? Vue.js, pronounced as "view," is a progressive JavaScript framework designed for building user interfaces. It builds upon standard HTML, CSS, and JavaScript, offering a declarative and component-based programming model. This approach simplifies the development of both simple and complex applications. Whether you're crafting a small interactive widget or a comprehensive single-page application (SPA), Vue.js provides the tools you need.
+
+Vue.js stands out for two key features: declarative rendering and reactivity. Declarative rendering allows developers to specify how the UI should look based on the application state, while reactivity ensures that changes in the underlying data automatically update the UI.
+
+For example:
+
+\begin{minted}{javascript}
+const app = Vue.createApp({
+  data() {
+    return { message: "Hello, Vue!" };
+  },
+});
+app.mount('#app');
+\end{minted}
+In the associated HTML:
+\begin{minted}{html}
+<div id="app">{{ message }}</div>
+\end{minted}
+When the message changes, the content inside the \texttt{<div>} updates automatically, thanks to Vue's reactivity.
+
+Vue.js can be used in multiple ways:
+\begin{itemize}
+    \item As a standalone library for adding interactivity to existing web pages.
+    \item Embedded as web components in legacy applications.
+    \item To build SPAs that run entirely on the client side.
+    \item For full-stack/server-side rendering, where both server and client collaborate.
+    \item For static site generation, producing pre-rendered static files without requiring JavaScript execution on the client.
+\end{itemize}
+
+\subsection*{Template}
+At the heart of Vue's template syntax is text interpolation, which utilizes "Mustache" syntax—double curly braces—to bind variables to the HTML content dynamically. For example:
+\begin{minted}{html}
+<span>Message: {{ msg }}</span>
+\end{minted}
+If the variable \texttt{msg} contains the string \texttt{"Hello world!"}, the rendered HTML becomes:
+\begin{minted}{html}
+<span>Message: Hello world!</span>
+\end{minted}
+Vue automatically escapes HTML within variables to ensure security. For instance, if \texttt{msg} contains \texttt{<b>Hello</b>}, the output will display as:
+\begin{minted}{html}
+<span>Message: &lt;b&gt;Hello&lt;/b&gt;</span>
+\end{minted}
+This behavior prevents cross-site scripting (XSS) vulnerabilities.
+
+Vue templates support JavaScript expressions directly within the interpolation syntax. These expressions allow dynamic content generation, such as:
+\begin{minted}{javascript}
+{{ number + 1 }}
+{{ ok ? 'YES' : 'NO' }}
+{{ message.split('').reverse().join('') }}
+\end{minted}
+However, Vue restricts the use of flow control statements like \texttt{if} or variable declarations within these expressions. For example:
+\begin{minted}{javascript}
+<!-- These will not work -->
+{{ var a = 1 }}
+{{ if (ok) { return message } }}
+\end{minted}
+
+Calling JavaScript functions within templates is supported. For instance:
+\begin{minted}{javascript}
+{{ formatDate(date) }}
+\end{minted}
+It is essential to note that Vue re-executes these functions whenever the template is updated, so they should remain efficient.
+
+Vue extends HTML with custom attributes called directives. These directives allow for powerful template functionalities and are prefixed with \texttt{v-}.
+
+Some key directives include:
+\begin{enumerate}
+    \item \texttt{v-text}: Updates the text content of an element. For example:
+    \begin{minted}{html}
+    <span v-text="msg"></span>
+    \end{minted}
+    If \texttt{msg} changes, the content of the \texttt{<span>} updates dynamically.
+
+    \item \texttt{v-html}: Dynamically updates the HTML content but does not escape it—use it cautiously to avoid security risks.
+
+    \item \texttt{v-show} and \texttt{v-if}: Control element visibility and rendering, respectively. While \texttt{v-if} removes the element entirely from the DOM, \texttt{v-show} toggles visibility with CSS.
+
+    \item \texttt{v-for}: Enables iteration over arrays or objects to generate repetitive structures. For instance:
+    \begin{minted}{html}
+    <div v-for="item in items">{{ item }}</div>
+    \end{minted}
+    If items contains \texttt{['a', 'b']}, the rendered HTML becomes:
+    \begin{minted}{html}
+    <div>a</div>
+    <div>b</div>
+    \end{minted}
+    \item \texttt{v-bind}: Dynamically binds attributes to variables. For example:
+    \begin{minted}{html}
+    <span v-bind:id="dynamicId"></span>
+    \end{minted}
+    can be shortened as:
+    \begin{minted}{html}
+    <span :id="dynamicId"></span>
+    \end{minted}
+    \item \texttt{v-model}: Creates a two-way binding between an input element and a JavaScript variable. For example:
+    \begin{minted}{html}
+    <input type="text" v-model="name" />
+    \end{minted}
+    This directive applies to \texttt{<input>}, \texttt{<select>}, \texttt{<textarea>}, and Vue components.
+\end{enumerate}
+
+Vue facilitates interaction with user events via the \texttt{v-on} directive. For example:
+\begin{minted}{html}
+<span v-on:click="alert('Hello!')">World</span>
+\end{minted}
+The shorthand syntax \texttt{@click} achieves the same result:
+\begin{minted}{html}
+<span @click="alert('Hello!')">World</span>
+\end{minted}
+Vue supports all standard HTML events and custom component events.
+
+Vue provides two primary mechanisms to manage conditional content:
+\begin{enumerate}
+    \item v-if:
+    \begin{minted}{html}
+    <p v-if="showMessage">This appears if showMessage is true.</p>
+    \end{minted}
+    \item v-show:
+    \begin{minted}{html}
+    <p v-show="showMessage">This is visible if showMessage is true.</p>
+    \end{minted}
+\end{enumerate}
+Unlike \texttt{v-if}, \texttt{v-show} does not remove the element from the DOM but simply toggles its visibility.
+
+\subsection*{Stepper}
+Imagine building a stepper, a simple counter with buttons to increment and decrement its value. This stepper will consist of two buttons, "-" and "+", with a number displayed between them.
+
+The initial structure looks like this:
+\begin{minted}{html}
+<template>
+  <button>-</button>
+  0
+  <button>+</button>
+</template>    
+\end{minted}
+To make the counter functional, we need a variable to store its value. Vue.js introduces a reactive state using the \texttt{data()} function, which returns an object containing all reactive variables:
+\begin{minted}{javascript}
+<script>
+export default {
+  data() {
+    return { counter: 0 };
+  },
+};
+</script>    
+\end{minted}
+Vue.js provides directives like \texttt{\@click} to listen for events. We can update the counter value when a button is clicked:
+\begin{minted}{html}
+<template>
+  <button @click="counter--">-</button>
+  {{ counter }}
+  <button @click="counter++">+</button>
+</template>    
+\end{minted}
+Instead of directly modifying the counter, we can define methods for better code organization:
+\begin{minted}{javascript}
+<script>
+export default {
+  data() {
+    return { counter: 0 };
+  },
+  methods: {
+    incr() {
+      this.counter++;
+    },
+    decr() {
+      this.counter--;
+    },
+  },
+};
+</script>    
+\end{minted}
+In the template, these methods are invoked:
+\begin{minted}{html}
+<template>
+  <button @click="decr()">-</button>
+  {{ counter }}
+  <button @click="incr()">+</button>
+</template>
+\end{minted}
+Vue.js allows dynamic styling based on the application's state. For instance, we can change the counter's color to red if the value is negative:
+\begin{minted}{html}
+<template>
+  <button @click="decr()">-</button>
+  <span :style="dCol">{{ counter }}</span>
+  <button @click="incr()">+</button>
+</template>
+\end{minted}
+The \texttt{:style} directive binds the \texttt{dCol} variable to the \texttt{<span>} element's style. The reactive state and methods manage this variable:
+\begin{minted}{javascript}
+data() {
+  return {
+    counter: 0,
+    dCol: 'color:black;',
+  };
+},
+methods: {
+  incr() {
+    this.counter++;
+    if (this.counter >= 0) {
+      this.dCol = 'color:black;';
+    }
+  },
+  decr() {
+    this.counter--;
+    if (this.counter < 0) {
+      this.dCol = 'color:red;';
+    }
+  },
+}
+\end{minted}
+To simplify dynamic style handling, we can use computed properties. These properties automatically update based on their dependencies:
+\begin{minted}{javascript}
+computed: {
+  stepperStyle() {
+    let color = this.counter < 0 ? 'red' : 'black';
+    return `color:${color}; font-size:${Math.abs(this.counter)}em;`;
+  },
+},    
+\end{minted}
+The template then uses this property:
+\begin{minted}{html}
+<template>
+  <span :style="stepperStyle">{{ counter }}</span>
+</template>    
+\end{minted}
+To promote reusability, we can encapsulate the stepper into its own component, \texttt{Stepper.vue}. This modular design allows it to be used across different parts of the application:
+\begin{minted}{html}
+<template>
+  <div>
+    <button @click="decr()">-</button>
+    <span :style="stepperStyle">{{ counter }}</span>
+    <button @click="incr()">+</button>
+  </div>
+</template>
+\end{minted}
+\begin{minted}{javascript}
+<script>
+export default {
+  data() {
+    return { counter: 0 };
+  },
+  methods: {
+    incr() {
+      this.counter++;
+    },
+    decr() {
+      this.counter--;
+    },
+  },
+  computed: {
+    stepperStyle() {
+      let color = this.counter < 0 ? 'red' : 'black';
+      return `color:${color}; font-size:${Math.abs(this.counter)}em;`;
+    },
+  },
+};
+</script>    
+\end{minted}
+Vue's \texttt{v-for} directive allows dynamic rendering of multiple components. For example, if we want to manage counters for different courses:
+\begin{minted}{html}
+<template>
+  <div>
+    <Stepper v-for="course in courses" :key="course" :title="course" />
+  </div>
+</template>    
+\end{minted}
+\begin{minted}{javascript}
+<script>
+import Stepper from './Stepper.vue';
+export default {
+  components: { Stepper },
+  data() {
+    return {
+      courses: ['Math', 'Physics', 'Chemistry', 'Biology'],
+    };
+  },
+};
+</script>
+\end{minted}
+The \texttt{v-model} directive binds input fields to variables, enabling two-way data binding. This can be used to dynamically add courses:
+\begin{minted}{html}
+<template>
+  <input v-model="newCourse" placeholder="Enter course name" />
+  <button @click="addCourse" :disabled="!newCourse">Add</button>
+</template>
+\end{minted}
+\begin{minted}{javascript}
+<script>
+export default {
+  data() {
+    return {
+      courses: [],
+      newCourse: '',
+    };
+  },
+  methods: {
+    addCourse() {
+      if (this.newCourse) {
+        this.courses.push(this.newCourse);
+        this.newCourse = '';
+      }
+    },
+  },
+};
+</script>
+\end{minted}
+
+\subsection*{Options and Composition}
+Vue.js provides two programming styles: the Options API and the Composition API. The Options API, often considered more beginner-friendly, organizes code into options like data, methods, and computed. On the other hand, the Composition API introduces a more functional approach, allowing developers to better manage complex logic.
+
+A simple Vue.js app combines JavaScript, HTML, and CSS. Here’s an example of a basic counter:
+\begin{minted}{javascript}
+import { createApp } from 'vue';
+
+createApp({
+  data() {
+    return { count: 0 };
+  },
+}).mount('#app');
+\end{minted}
+\begin{minted}{html}
+<div id="app">
+  <button @click="count++">Count is: {{ count }}</button>
+</div>
+\end{minted}
+
+\subsection*{Single-File Components (SFCs)}
+A powerful feature of Vue.js is its single-file components (SFCs). These components encapsulate JavaScript, HTML, and CSS into a single \texttt{.vue} file. This modular approach promotes reusability and maintainability.
+
+\begin{minted}{html}
+<script>
+export default {
+  data() {
+    return { count: 0 };
+  },
+};
+</script>
+
+<template>
+  <button @click="count++">Count is: {{ count }}</button>
+</template>
+
+<style scoped>
+button {
+  font-weight: bold;
+}
+</style>
+\end{minted}
+The \texttt{scoped} keyword ensures the styles apply only to this component.
+
+\subsection*{Single-Page Applications (SPAs)}
+An SPA is a web application that interacts with the user by dynamically updating the current page rather than loading new pages from the server. In Vue.js, the \texttt{index.html} file serves as the foundation for the SPA:
+\begin{minted}{html}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Example App</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>    
+\end{minted}
+The \texttt{main.js} file initializes Vue.js and mounts it to the \texttt{\#app} element:
+
+\begin{minted}{javascript}
+import { createApp } from 'vue';
+import App from './App.vue';
+
+createApp(App).mount('#app');
+    
+\end{minted}
+
+\subsection*{Reactive}
+Reactive programming is a declarative paradigm centered around data streams and the propagation of changes. It offers a way to automatically adjust dependent values whenever the source values change. For instance, if we have a reactive variable \texttt{b} defined as \texttt{b = a + 1}, updating the value of \texttt{a} will immediately update \texttt{b} as well.
+
+In an imperative language, the relationship between variables is static unless explicitly updated. For example:
+\begin{minted}{javascript}
+// Imperative programming
+let a = 2;
+let b = a + 1;
+console.log(b); // Outputs: 3
+a = 1;
+console.log(b); // Still outputs: 3
+\end{minted}
+In reactive programming, dependencies are tracked automatically:
+\begin{minted}{javascript}
+// Reactive programming
+let a = 2;
+reactive let b = a + 1;
+console.log(b); // Outputs: 3
+a = 1;
+console.log(b); // Outputs: 2
+\end{minted}
+This dynamic nature is what makes reactive programming a powerful tool for modern applications.
+
+In Vue.js, each component maintains a reactive state. This is declared within the \texttt{data()} function, and Vue wraps the returned object in its reactive system.
+
+Here’s an example of a basic reactive state:
+\begin{minted}{javascript}
+export default {
+  data() {
+    return {
+      count: 0,
+    };
+  },
+};
+\end{minted}
+All reactive variables must be declared within the \texttt{data()} function.
+
+Nested objects are deeply reactive, meaning changes within their properties are tracked.
+
+Reserved prefixes like \$ or \_ should not be used for variable names as they are reserved for Vue's internal use.
+
+You can interact with reactive variables either programmatically in JavaScript or directly within templates. In JavaScript, you use this to refer to the reactive state:
+\begin{minted}{javascript}
+export default {
+  data() {
+    return { count: 1 };
+  },
+  mounted() {
+    console.log(this.count); // Outputs: 1
+    this.count = 2; // Updates the state and triggers reactivity
+  },
+};
+\end{minted}
+In templates, you don’t need the this keyword:
+\begin{minted}{html}
+<span>Count: {{ count }}</span>
+<div v-text="count"></div>
+\end{minted}
+
+Vue allows you to define computed properties that automatically update when their dependencies change. These properties are useful for deriving state without duplicating logic.
+
+Here’s an example:
+\begin{minted}{javascript}
+export default {
+  data() {
+    return { count: 0 };
+  },
+  computed: {
+    realCount() {
+      return this.count + 1;
+    },
+  },
+};
+\end{minted}
+In the template:
+\begin{minted}{html}
+<span>{{ realCount }}</span>
+\end{minted}
+The value of \texttt{realCount} updates whenever \texttt{count} changes.
+
+Vue automatically updates the DOM when the reactive state changes, though these updates are buffered and applied in batches during the next "tick" (update cycle). If you need to access the updated DOM immediately after state changes, use the \texttt{nextTick} function:
+\begin{minted}{javascript}
+import { nextTick } from 'vue';
+export default {
+  methods: {
+    increment() {
+      this.count++;
+      nextTick(() => {
+        // Access the updated DOM here
+      });
+    },
+  },
+};
+\end{minted}
+
+Components can include methods for encapsulating logic. These methods can be called from JavaScript or directly within templates. For instance:
+\begin{minted}{javascript}
+export default {
+  data() {
+    return { count: 0 };
+  },
+  methods: {
+    increment() {
+      this.count++;
+    },
+  },
+};
+\end{minted}
+In the template:
+\begin{minted}{html}
+<button @click="increment">{{ count }}</button>
+\end{minted}
+
+Methods should not be defined using arrow functions as they do not bind this to the component instance:
+\begin{minted}{javascript}
+export default {
+  methods: {
+    increment: () => {
+      // BAD: No access to `this`
+    },
+  },
+};
+\end{minted}
+
+Vue components go through a series of lifecycle stages, such as being created, mounted, updated, and unmounted. These stages allow you to execute specific logic at precise moments. For example:
+\begin{minted}{javascript}
+export default {
+  mounted() {
+    console.log('The component is now mounted.');
+  },
+};
+\end{minted}
+For an in-depth guide, refer to Vue’s Lifecycle Documentation.
+
+\subsection*{Routing}
+The SPA architecture relies on a server to deliver the necessary JavaScript, HTML, and CSS files. Once loaded, the SPA communicates with the server via APIs to send and receive data. This seamless interaction forms the backbone of SPAs, making frameworks like Vue.js highly effective in creating dynamic and responsive applications.
+
+In an SPA, navigation between different views or pages occurs without reloading the browser. This is where a router comes into play. The router allows users to navigate through the application using URLs, ensuring that each view has a unique URL. This unique identification of views supports features like bookmarking and sharing.
+
+Additionally, routers enable the use of URL or query parameters, which can be passed dynamically. For instance, a route like \texttt{/user/:id} allows the application to display different content based on the id parameter.
+
+To understand how Vue Router facilitates navigation, let’s explore its core components:
+\begin{enumerate}
+    \item \texttt{Routes:} These define the mapping between URLs and components. Each route specifies a path and the corresponding component to render.
+    \item \texttt{RouterView:} This is a placeholder in the main Vue component. It dynamically renders the component associated with the current URL.
+    \item \texttt{RouterLink:} This component creates navigational links. Clicking a RouterLink updates the URL and renders the associated component in the RouterView.
+\end{enumerate}
+For example, a link defined as \texttt{<RouterLink to="/link1">Page 1</RouterLink>} will replace the content in the \texttt{RouterView} with the component registered for \texttt{/link1} when clicked.
+
+Vue Router manages navigation history using a stack. This allows users to navigate forward and backward through their browsing history. The following actions can manipulate the stack programmatically:
+\begin{itemize}
+    \item \texttt{Push}: Adds a new view to the stack and switches to it.
+    \item \texttt{Go}: Moves back or forward in the stack.
+    \item \texttt{Replace}: Similar to Push, but replaces the current view instead of adding a new one.
+\end{itemize}
+Users can also navigate using browser controls like the back and forward buttons.
+
+Here’s a sample implementation of Vue Router in JavaScript:
+\begin{minted}{javascript}
+import { createRouter, createWebHashHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import Page1View from '../views/Page1View.vue';
+import Page2View from '../views/Page2View.vue';
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [
+    { path: '/', component: HomeView },
+    { path: '/link1', component: Page1View },
+    { path: '/some/:id/link', component: Page2View },
+  ],
+});
+export default router;
+\end{minted}
+In this example, the \texttt{createRouter} function initializes the router with a set of routes. The \texttt{history} mode is set to \texttt{createWebHashHistory}, ensuring compatibility with browsers.
+
+The main component integrates the router as follows:
+\begin{minted}{html}
+<script setup>
+import { RouterView } from 'vue-router';
+</script>
+
+<template>
+  <header>App header</header>
+  <main><RouterView /></main>
+</template>
+\end{minted}
+The \texttt{RouterView} dynamically displays the component associated with the current route.
+
+Navigation can be implemented using \texttt{RouterLink} components:
+\begin{minted}{html}
+<template>
+  <p>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/link1">Page 1</RouterLink>
+    <RouterLink to="/some/1/link">Page with Parameter</RouterLink>
+  </p>
+  <RouterView />
+</template>
+\end{minted}
+Alternatively, navigation can be triggered programmatically:
+\begin{minted}{html}
+<script>
+export default {
+  methods: {
+    goToPage(id) {
+      this.$router.push('/some/' + id + '/link');
+    },
+  },
+};
+</script>
+
+<template>
+  <button @click="goToPage(1)">Go to Page 1</button>
+</template>
+\end{minted}
+
+Route parameters are accessible via \texttt{\$route.params}:
+\begin{minted}{html}
+<script>
+export default {
+  methods: {
+    logParam() {
+      console.log(this.$route.params.id);
+    },
+  },
+};
+</script>
+
+<template>
+  {{ $route.params.id }}
+</template>
+\end{minted}
+However, switching between routes with different parameter values does not reload the component. To handle such cases, you can watch for changes in route parameters:
+\begin{minted}{javascript}
+export default {
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      (newParams, oldParams) => {
+        // React to route changes
+      }
+    );
+  },
+};
+\end{minted}
+
+\subsection*{Ajax}
+AJAX, short for Asynchronous JavaScript and XML, is a set of technologies enabling web pages to update incrementally without reloading the entire page. This capability allows for more dynamic and responsive user experiences. Despite its name, AJAX isn’t limited to XML data—it supports various formats, including JSON and plain text.
+
+The core technologies powering AJAX include:
+\begin{itemize}
+    \item HTML/XHTML/CSS for structuring and styling content.
+    \item JavaScript for enabling interactivity.
+    \item DOM (Document Object Model) for manipulating web page elements.
+    \item XML/XSLT (optional) for data exchange.
+    \item XMLHttpRequest (XHR) for making asynchronous requests.
+\end{itemize}
+These components together allow developers to build rich, interactive web applications.
+
+The \texttt{XMLHttpRequest} object is the backbone of traditional AJAX. It enables web browsers to send and receive data asynchronously. Here’s an example of how to use it:
+
+\begin{minted}{javascript}
+let httpRequest;
+
+function makeRequest() {
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert("Cannot create an XMLHttpRequest instance");
+        return false;
+    }
+
+    httpRequest.onreadystatechange = alertContents;
+    httpRequest.open("GET", "test.html");
+    httpRequest.send();
+}
+
+function alertContents() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+            alert(httpRequest.responseText);
+        } else {
+            alert("There was a problem with the request.");
+        }
+    }
+}
+\end{minted}
+While \texttt{XMLHttpRequest} is functional, it’s verbose and lacks modern features, such as native support for promises or async/await syntax. Its outdated interface often makes it cumbersome to work with in contemporary JavaScript applications.
+
+Modern JavaScript offers the Fetch API, a streamlined alternative to \texttt{XMLHttpRequest}. Fetch simplifies the process of making asynchronous requests and integrates well with modern features like promises. However, it still has limitations, such as a lack of built-in timeout handling, upload/download progress tracking, and backward compatibility with older browsers.
+
+\subsection*{Axios}
+Axios is a popular JavaScript library built on top of \texttt{XMLHttpRequest}. It combines the robustness of \texttt{XMLHttpRequest} with modern JavaScript features, offering a simpler and more efficient way to handle asynchronous requests. Key features of Axios include:
+\begin{itemize}
+    \item Promise-based API.
+    \item Interceptors for requests and responses.
+    \item Transformation of request and response data.
+    \item Cancellation of requests.
+    \item Automatic handling of JSON data.
+    \item Cross-site request forgery (XSRF) protection.
+\end{itemize}
+These features make Axios a versatile tool for building modern web applications.
+
+In Vue.js applications, Axios is often the go-to library for making HTTP requests. Here's an example of a GET request in a Vue.js component:
+
+\begin{minted}{javascript}
+async refresh() {
+    try {
+        let response = await this.$axios.get("/");
+        // response.data contains the JSON in the response body
+    } catch (e) {
+        console.error(e.toString());
+    }
+}
+\end{minted}
+In this example:
+\begin{itemize}
+    \item \texttt{this.\$axios.get("/")} sends a GET request to the server's root URL.
+    \item The \texttt{await} keyword ensures the code waits for the response before proceeding.
+    \item Any errors are caught and logged to the console.
+\end{itemize}
+
+\begin{minted}{javascript}
+async sendData() {
+    try {
+        let response = await this.$axios.post("/some/api", {
+            firstName: 'Fred',
+            lastName: 'Flintstone',
+        });
+        // response.data contains the JSON in the response body
+    } catch (e) {
+        console.error(e.toString());
+    }
+}
+\end{minted}
+In this case, the data object \texttt{\{firstName: 'Fred', lastName: 'Flintstone'\}} is sent in the request body to the endpoint \texttt{/some/api}.
+
+A typical Axios response contains the following properties:
+\begin{minted}{javascript}
+{
+    data: {},        // The response payload
+    status: 200,     // HTTP status code
+    statusText: 'OK',// Status message
+    headers: {},     // HTTP headers
+    config: {},      // Request configuration
+    request: {}      // The original request object
+}
+\end{minted}
+This structure provides comprehensive details about the server's response, making it easy to debug and process data.
+
+Axios interceptors allow developers to modify requests or responses before they are sent or received. This can be useful for adding authentication headers, logging, or error handling.
+
+\begin{minted}{javascript}
+axios.interceptors.request.use(function (config) {
+    return config;
+}, function (error) {
+    return Promise.reject(error);
+});
+\end{minted}
+This example processes the configuration object of every request. Errors are handled by rejecting the promise.
+
+\begin{minted}{javascript}
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    return Promise.reject(error);
+});
+\end{minted}
+Here, responses are processed before being passed to the calling code. Errors are handled similarly to requests.
+
+Axios supports request cancellation using the \texttt{AbortController}. This feature is useful for terminating long-running or unnecessary requests:
+
+\begin{minted}{javascript}
+const controller = new AbortController();
+
+axios.get('/foo/bar', {
+    signal: controller.signal
+}).then(function (response) {
+    // Handle response
+});
+
+// Cancel the request
+controller.abort();
+\end{minted}
+In this example, \texttt{controller.abort()} terminates the request, ensuring no unnecessary network activity.
+

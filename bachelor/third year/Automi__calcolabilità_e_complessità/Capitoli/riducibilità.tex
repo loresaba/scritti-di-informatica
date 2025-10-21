@@ -1,0 +1,390 @@
+\chapter{Riducibilità}
+In questo capitolo esamineremo vari altri problemi irrisolvibili. Nel far ciò introdurremo il metodo principale per dimostrare che alcuni problemi sono computazionalmente irrisolvibili. Tale metodo si chiama riducibilità.
+
+Una riduzione è un modo di convertire un problema in un altro problema in modo tale che una soluzione al secondo problema può essere usata per risolvere il primo problema. La riducibilità coinvolge sempre due problemi, che noi chiamiamo $A$ e $B$. Se $A$ si riduce a $B$, possiamo usare una soluzione per $B$ per risolvere $A$. Notate che la riducibilità non dice nulla circa la soluzione dei problemi $A$ o $B$ individualmente, ma soltanto qualcosa circa la risolubilità di $A$ quando abbiamo una soluzione per $B$.
+
+Quando $A$ è riducibile a $B$, trovare la soluzione di $A$ non può essere più difficile di risolvere $B$ perché una soluzione per $B$ offre una soluzione ad $A$. In termini di teoria della computabilità, se $A$ è riducibile a $B$ e $B$ è decidibile, allora anche $A$ è decidibile. Equivalentemente, se $A$ è indecidibile e riducibile a $B$, $B$ è indecidibile.
+
+In breve, il nostro metodo per dimostrare che un problema è indecidibile sarà quello di mostrare che qualche altro problema già noto per essere indecidibile si riduce ad esso.
+
+\section{Problemi indecidibili dalla teoria dei linguaggi}
+Abbiamo già stabilito l'indecidibilità di $A_{TM}$, il problema di determinare se una macchina di Turing accetta un dato input. Consideriamo ora un problema affine, $HALT_{TM}$, il problema di determinare se una macchina di Turing si ferma (accettando o rifiutando) su un dato input. Questo problema è generalmente noto come il problema della fermata. Usiamo l'indecidibilità di $A_{TM}$ per dimostrare l'indecidibilità del problema della fermata riducendo $A_{TM}$ a $HALT_{TM}$. Sia
+\begin{equation*}
+HALT_{TM} = \{\langle M,w\rangle | M\textit{ è una TM e M si ferma su input }w\}
+\end{equation*}
+
+\begin{Thm}{$HALT_{TM}$ è indecidibile}{}
+\textit{$HALT_{TM}$ è indecidibile.}
+
+\begin{osservation}
+Questa dimostrazione è per assurdo. Assumiamo che $HALT_{TM}$ è decidibile ed utilizziamo questa assunzione per dimostrare che $A_{TM}$ è decidibile, contraddicendo il Teorema \ref{thm:atm-indecidibile}. L'idea chiave è quella di mostrare che $A_{TM}$ è riducibile ad $HALT_{TM}$.
+
+Supponiamo di avere una TM $R$ che decide $HALT_{TM}$. Usiamo quindi $R$ per costruire $S$, una TM che decide $A_{TM}$. $S$ potrebbe non essere in grado di determinare se $M$ è entrata in un ciclo, in questo caso la simulazione non terminerà. Questo non va bene perché $S$ è un decisore e non vi è permesso ciclare. Quindi questa idea non funziona. Utilizziamo, invece, l'ipotesi che avete una TM $R$ che decide $HALT_{TM}$. Con $R$, potete verificare se $M$ si ferma su $w$. Se $R$ indica che $M$ non si ferma su $w$, rifiutate perché $\langle M,w\rangle$ non è in $A_{TM}$. Tuttavia, se $R$ indica che $M$ si ferma su $w$, potete fare la simulazione senza alcun pericolo di ciclare. Cosi, se la TM $R$ esistesse, potremmo decidere $A_{TM}$, ma sappiamo che $A_{TM}$ è indecidibile. In virtù di questa contraddizione possiamo concludere che $R$ non esiste. Pertanto $HALT_{TM}$ è indecidibile.
+
+\begin{demonstration}
+Assumiamo al fine di ottenere una contraddizione che la TM $R$ decide $HALT_{TM}$. Costruiamo la TM $S$ per decidere $A_{TM}$, che opera come segue.
+
+$S=$ "Su input $\langle M,w\rangle$, una codifica di una TM $M$ ed una stringa $w$
+\begin{enumerate}
+    \item Esegue la TM $R$ su input $\langle M,w\rangle$.
+    \item Se $R$ rifiuta, rifiuta.
+    \item Se $R$ accetta, simula $M$ su $w$ finché non si ferma.
+    \item Se $M$ ha accettato, accetta: se $M$ ha rifiutato, rifiuta."
+\end{enumerate}
+
+Chiaramente, se $R$ decide $HALT_{TM}$, allora $S$ decide $A_{TM}$. Poiché $A_{TM}$ indecidibile, allora anche $HALT_{TM}$ deve essere indecidibile.
+\end{demonstration}
+\end{osservation}
+\end{Thm}
+
+Presentiamo ora vari altri teoremi e le loro dimostrazioni come ulteriori esempi dell'uso della riducibilità per dimostrare l'indecidibilità. Sia
+\begin{equation*}
+E_{TM} =\{\langle M\rangle| M\textit{ è una TM e }L(M) = \emptyset\}
+\end{equation*}
+
+\begin{Thm}{$E_{TM}$ è indecidibile}{}
+\textit{$E_{TM}$ è indecidibile.}
+
+\begin{osservation}
+Assumiamo che $E_{TM}$ è decidibile e mostriamo che $A_{TM}$ è decidibile una contraddizione. Sia $R$ una TM che decide $E_{TM}$. Utilizziamo $R$ per costruire la TM $S$ che decide $A_{TM}$. Come funzionerà $S$ quando riceve in input $\langle M, w\rangle$?
+
+Un'idea è che $S$ esegue $R$ su input $\langle M \rangle$ e vede se $R$ accetta. Se lo fa, sappiamo che $L(M)$ è vuoto e quindi che $M$ non accetta $w$. Ma, se $R$ rifiuta $\langle M \rangle$, tutto quello che sappiamo è che $L(M)$ non è vuoto e, di conseguenza, che $M$ accetta qualche stringa ma ancora non sappiamo se $M$ accetta la stringa $w$ in particolare. Quindi abbiamo bisogno di utilizzare un'idea diversa. Invece di eseguire $R$ su $\langle M \rangle$, eseguiamo $R$ su una modifica di $\langle M \rangle$. Modifichiamo $\langle M \rangle$ così da garantire che $M$ rifiuta tutte le stringhe tranne $w$, ma su input $w$, funziona come al solito. A questo punto, utilizziamo $R$ per determinare se la macchina modificata riconosce il linguaggio vuoto. L'unica stringa che adesso la macchina può accettare è $w$, per cui il suo linguaggio sarà non vuoto se accetta $w$. Se $R$ accetta quando riceve in input la descrizione della macchina modificata, sappiamo che la macchina modificata non accetta nulla e che $M$ non accetta $w$.
+\end{osservation}
+
+\begin{demonstration}
+Descriviamo la macchina modificata già descritta nell'idea di dimostrazione usando la nostra notazione standard. Chiamiamola $M_{1}$.
+
+$M_1 =$ "Su input $x$:
+\begin{enumerate}
+    \item $x\neq w$ rifiuta.
+    \item $x = w$ esegue $M$ su input $w$ e accetta se $M$ accetta."
+\end{enumerate}
+
+Questa macchina ha la stringa $w$ come parte della sua descrizione. Essa verifica se $x = w$ nel modo ovvio, attraverso la scansione dell'input e confrontandolo carattere per carattere con $w$ per determinare se coincidono. Mettendo insieme tutto questo, assumiamo che la TM $R$ decide $E_{TM}$ e costruiamo la TM $S$ che decide $A_{TM}$ come segue.
+
+$S =$ "Su input $\langle M, w\rangle$ una codifica di una TM $M$ e una stringa $w$:
+\begin{enumerate}
+    \item Usa la descrizione di $M$ e $w$ per costruire la TM $M_{1}$ descritta sopra.
+    \item Esegue $R$ su input $\langle M_{1}\rangle$.
+    \item Se $R$ accetta, rifiuta; se $R$ rifiuta, accetta."
+\end{enumerate}
+
+Notate che $S$ deve essere effettivamente in grado di calcolare una descrizione di $M_{1}$ da una descrizione di $M$ e $w$. Può farlo, perché ha bisogno solo di aggiungere ad $M$ alcuni stati in più che svolgono il test $x = w$. Se $R$ fosse un decisore per $E_{TM}$, $S$ sarebbe un decisore per $A_{TM}$. Un decisore per $A_{TM}$ non può esistere, quindi sappiamo che $E_{TM}$ deve essere indecidibile.
+\end{demonstration}
+\end{Thm}
+
+\section{Riducibilità mediante funzione}
+In questa sezione formalizziamo il concetto di riducibilità. Informalmente, essere in grado di ridurre il problema $A$ al problema $B$ utilizzando una riduzione mediante funzione significa che esiste una funzione calcolabile che trasforma istanze del problema $A$ in istanze del problema $B$.
+
+\subsection{Funzioni calcolabili}
+Una macchina di Turing calcola una funzione iniziando con l'input della funzione sul nastro e terminando con l'output della funzione sul nastro.
+
+\begin{Definition}{Funzione calcolabile}{}
+Una funzione $f: \Sigma\rightarrow\Sigma$ è una funzione calcolabile se esiste una macchina di Turing $M$ che, su qualsiasi input $w$, si ferma avendo solo $f(w)$ sul nastro.
+\end{Definition}
+
+\begin{Example}{Funzione calcolabile}{}
+Le funzioni calcolabili possono essere trasformazioni di descrizioni di macchine. Per esempio, una funzione calcolabile $f$ prende in input $w$ e restituisce la descrizione di una macchina di Turing $\langle M'\rangle$ se $w = \langle M\rangle$ è la codifica di una macchina di Turing $M$. La macchina $M'$ è una macchina che riconosce lo stesso linguaggio di $M$, ma non tenta mai di muovere la testina oltre il limite sinistro del suo nastro. La funzione $f$ realizza questo compito con l'aggiunta di vari stati nella descrizione di $M$. La funzione restituisce $\epsilon$ se $w$ non è una codifica legale di una macchina di Turing.    
+\end{Example}
+
+\subsection{Definizione formale di riducibilità mediante funzione}
+\begin{Definition}{Riducibilità mediante funzione}{}
+Un linguaggio $A$ si dice riducibile mediante funzione al linguaggio $B$, e si denota con $A\leq_m B$, se esiste una funzione calcolabile $f:\Sigma\rightarrow\Sigma^*$, dove per ogni $w$,
+\begin{equation*}
+    w\in A\iff f(w)\in B
+\end{equation*}
+La funzione $f$ è chiamata riduzione da $A$ a $B$.
+\end{Definition}
+
+Una riduzione mediante funzione da $A$ a $B$ fornisce un modo per convertire problemi di appartenenza ad $A$ in problemi di appartenenza a $B$. Per verificare se $w\in A$, usiamo la riduzione per mappare $w$ in $f(w)$ e verifichiamo se $f(w) \in B$ o meno.
+
+\begin{Thm}{Riducibilità mediante funzione decidibile}{}\label{thm:AleqmB-dec}
+\textit{Se $A\leq_m B$ e $B$ è decidibile, allora $A$ è decidibile.}
+
+\begin{demonstration}
+Siano $M$ il decisore per $B$ ed $f$ la riduzione da $A$ a $B$. Descriviamo un decisore $N$ per $A$ come segue.
+
+$N=$ "Su input $w$
+\begin{enumerate}
+    \item Computa $f(w)$
+    \item Esegue $M$ su input $f(w)$ e restituisce lo stesso output di $M$."
+\end{enumerate}
+Ovviamente, se $w \in A$ allora $f(w) \in B$ perché $f$ è una riduzione da $A$ a $B$. Quindi, $M$ accetta $f(w)$ ogni volta che $w \in A$. Quindi, $N$ svolge il compito desiderato.
+\end{demonstration}    
+\end{Thm}
+
+\begin{Corollario}{}{}
+\textit{Se $A\leq_m B$ e $A$ è indecidibile, allora $B$ è indecidibile.}
+\end{Corollario}
+
+\begin{Example}{Da $A_{TM}$ a $HALT_{TM}$}{}
+\textit{Possiamo fornire una riduzione mediante funzione da $A_{TM}$ a $HALT_{TM}$ come segue.}
+
+Per farlo, dobbiamo fornire una funzione calcolabile $f$ che prende in input $\langle M, w\rangle$ e restituisce in output $\langle M', w'\rangle$ dove
+\begin{equation*}
+\langle M,w\rangle\in A_{TM} \textit{ se e solo se } \langle M', w'\rangle\in HALT_{TM}
+\end{equation*}
+La seguente macchina $F$ calcola una riduzione $f$.
+
+$F=$ "Su input $\langle M, w\rangle$:
+\begin{enumerate}
+    \item Costruisce la seguente macchina $M'$.
+    
+    $M'=$ "Su input $x$:
+    \begin{enumerate}
+        \item Esegue $M$ su $x$.
+        \item Se $M$ accetta, accetta.
+        \item Se $M$ rifiuta, cicla."
+    \end{enumerate}
+    \item Output $\langle M', w\rangle$"
+\end{enumerate}
+
+Qui sorge un problema minore che riguarda le stringhe in input che non sono della forma corretta. Se la TM $F$ determina che il suo input non è della forma corretta, in accordo a quanto specificato dalla linea dell'input "Su input $\langle M, w\rangle$:" e, quindi, che l'input non è in $A_{TM}$, la TM dà in output una stringa non in $HALT_{TM}$. In generale, quando descriviamo una macchina di Turing che calcola una riduzione da $A$ a $B$, assumiamo che gli input che non sono della forma corretta siano mappati in stringhe al di fuori di $B$.
+\end{Example}
+
+\begin{Example}{$E_{TM}\leq_m EQ_{TM}$}{}
+\textit{Mostriamo che $E_{TM}\leq_m EQ_{TM}$}.
+
+Per farlo, dobbiamo fornire una funzione calcolabile $f$ che prende in input $\langle M\rangle$ e restituisce in output $\langle M, M'\rangle$ dove
+\begin{equation*}
+\langle M\rangle\in E_{TM} \textit{ se e solo se } \langle M, M'\rangle\in EQ_{TM}
+\end{equation*}
+La seguente macchina $F$ calcola una riduzione $f$.
+
+$F=$ "Su input $\langle M\rangle$:
+\begin{enumerate}
+    \item Costruisci una TM $M'$ definita come:
+
+    $M' =$ "Data la stringa $x$ in input:
+    \begin{enumerate}
+        \item Rifiuta"
+    \end{enumerate}
+    \item Restituisci in output la stringa $\langle M, M'\rangle$"
+\end{enumerate}
+
+Notiamo che:
+\begin{equation*}
+\langle M\rangle\in E_{TM}\iff L(M)\neq\emptyset\iff f(\langle M\rangle)=\langle M, M'\rangle\in EQ_{TM}
+\end{equation*}
+Di conseguenza, poiché:
+\begin{equation*}
+    \langle M\rangle\in E_{TM}\iff f(\langle M\rangle)\in EQ_{TM}
+\end{equation*}
+ne segue che $E_{TM}\leq_m EQ_{TM}$. Infine, poiché $E_{TM}\notin DEC$, concludiamo che $EQ_{TM}\notin DEC$.
+\end{Example}
+
+\begin{Thm}{Riducibilità mediante funzione Turing-riconoscibile}{}
+\textit{Se $A\leq_m B$ e $B$ è Turing-riconoscibile, allora $A$ è Turing-riconoscibile.}
+
+La dimostrazione è uguale a quella che abbiamo dato per il Teorema \ref{thm:AleqmB-dec}, tranne per il fatto che $M$ ed $N$ sono riconoscitori invece di decisori. 
+\end{Thm}
+
+\begin{Corollario}{Riducibilità mediante funzione non Turing-riconoscibile}{}
+\textit{Se $A\leq_m B$ e $A$ non è Turing-riconoscibile, allora $B$ non è Turing-riconoscibile.}
+
+In una tipica applicazione di questo corollario, supponiamo che $A$ sia $\overline{A_{TM}}$, il complemento di $A_{TM}$. Sappiamo che $\overline{A_{TM}}$ non è Turing-riconoscibile. La definizione di riduzione mediante funzione implica che $A\leq_m B$ ha lo stesso significato di $\overline{A}\leq_m\overline{B}$. Per dimostrare che $B$ non è riconoscibile possiamo mostrare che $A_{TM}\leq_m\overline{B}$.
+\end{Corollario}
+
+\begin{Thm}{Riducibilità complementare}{}
+\textit{Dati due linguaggi $A$ e $B$, si ha che $A\leq_m B\iff \overline{A}\leq_m \overline{B}$.}
+
+\begin{demonstration}
+Data la riduzione $f$ tale che $A\leq_m B$, si ha che:
+\begin{equation*}
+w\in \overline{A} \iff w \notin A \iff f(w) \notin B \iff f(w) \in \overline{B}
+\end{equation*}
+\end{demonstration}
+\end{Thm}
+
+\begin{Thm}{$EQ_{TM}$ non è nè Turing-riconoscibile nè co-Turing-riconoscibile}{}
+\textit{$EQ_{TM}$ non è nè Turing-riconoscibile nè co-Turing-riconoscibile.}
+
+\begin{demonstration}
+Come primo passo, dimostriamo che $EQ_{TM}$ non è Turing-riconoscibile. Lo facciamo dimostrando che $A_{TM}$ è riducibile a $EQ_{TM}$. La funzione di riduzione $f$ opera come segue.
+
+$F=$ "Su input $\langle M, w\rangle$, dove $M$ è una TM e $w$ è una stringa:
+\begin{enumerate}
+    \item Costruisce le seguenti due macchine, $M_1$ e $M_2$.
+
+    $M_1$ "Su ogni input:
+    \begin{enumerate}
+        \item Rifiuta."
+    \end{enumerate}
+    $M_2$ "Su ogni input:
+    \begin{enumerate}
+        \item Esegue $M$ su $w$. Se accetta, accetta."
+    \end{enumerate}
+    \item Restituisce $\langle M_1, M_2\rangle$."
+\end{enumerate}
+Qui, $M_{1}$ non accetta alcuna stringa. Se $M$ accetta $w$, $M_{2}$ accetta qualsiasi stringa, quindi le due macchine non sono equivalenti. Viceversa, se $M$ non accetta $w$, $M_{2}$ non accetta alcuna stringa, ed esse sono equivalenti. Perciò $f$ riduce $A_{TM}$ a $EQ_{TM}$ come desiderato.
+
+Per dimostrare che $\overline{EQ_{TM}}$ non è Turing-riconoscibile diamo una riduzione da $A_{TM}$ al complemento di $\overline{EQ_{TM}}$ cioè, $EQ_{TM}$. In questo modo dimostriamo che $A_{TM}\leq_m EQ_{TM}$. La seguente TM $G$ calcola la funzione di riduzione $g$.
+
+$G=$ "Su input $\langle M, w\rangle$, dove $M$ è una TM e $w$ è una stringa:
+\begin{enumerate}
+    \item Costruisce le seguenti due macchine, $M_{1}$ ed $M_{2}$.
+
+    $M_{1}$ = "Su ogni input:
+    \begin{enumerate}
+        \item Accetta."
+    \end{enumerate}
+    $M_{2} =$ "Su ogni input:
+    \begin{enumerate}
+        \item Esegue $M$ su $w$.
+        \item Se accetta, accetta."
+    \end{enumerate}
+    \item Restituisce $\langle M_{1}, M_{2}\rangle$"
+\end{enumerate}
+La sola differenza tra $f$ e $g$ si trova nella macchina $M_{1}$. In $f$, la macchina $M_{1}$ rifiuta sempre, mentre in $g$ accetta sempre. Sia in $f$ che in $g$, $M$ accetta $w$ sse $M_{2}$ accetta ogni input. In $g$, $M$ accetta $w$ sse $M_{1}$ ed $M_{2}$ sono equivalenti. Questo è il motivo per cui $g$ è una riduzione da $A_{TM}$ a $EQ_{TM}$.
+\end{demonstration}
+\end{Thm}
+
+\section{Esercizi svolti}
+\begin{Exercise}{}{}
+Dato il seguente linguaggio $L = \{\langle M\rangle | M\textit{ TM}, L(M) = \{w \in\Sigma^*| |w|\textit{ è dispari}\}\}$ dimostrare che è indecidibile, ossia che $L \notin  DEC$.
+
+\begin{demonstration}
+Sia $f : \Sigma^*\rightarrow\Sigma^*$ la funzione calcolata dalla seguente TM $F$ definita come:
+
+$F =$ "Data la stringa $\langle M, w\rangle$ in input:
+\begin{enumerate}
+    \item Costruisci una TM $M'$ definita come:
+
+    $M' =$ "Data la stringa $x$ in input:
+    \begin{enumerate}
+        \item Se $|x|$ è pari, rifiuta. Altrimenti, esegui il programma di $M$ su input $w$
+        \item Se l’esecuzione accetta, allora $M'$ accetta, altrimenti rifiuta"
+    \end{enumerate}
+    \item Restituisci in output la stringa $\langle M'\rangle"$
+\end{enumerate}
+Supponiamo che $w \notin L(M)$. In tal caso, $M'$ rifiuterà qualsiasi stringa, implicando che $L(M'
+) = \emptyset$ e dunque che $\langle M' \rangle \notin  L$.
+
+Supponiamo ora che $w \in  L(M)$. In tal caso, abbiamo che: se $|x|$ è pari, allora $x \notin  L(M'
+)$; se $|x|$ è dispari, allora $x \in  L(M')$ poiché $M(w)$ accetta di conseguenza, otteniamo che:
+\begin{equation*}
+x \in  L(M') \iff |x|\textit{ è dispari}
+\end{equation*}
+implicando che $\langle M' \rangle \in  L$. Di conseguenza, concludiamo che $w \in  L(M) \iff L(M') \in  L$.
+
+A questo punto, notiamo che:
+\begin{equation*}
+\langle M, w\rangle \in A_{TM} \iff w \in  L(M) \iff f(\langle M, w\rangle) = \langle M'\rangle \in  L
+\end{equation*}
+implicando quindi che $A_{TM} \leq_m L$. Infine, poiché $A_{TM} \notin  DEC$, concludiamo che $L \notin  DEC$.
+\end{demonstration}
+\end{Exercise}
+
+\begin{Exercise}{}{}
+Dato il seguente linguaggio $L = \{\langle M\rangle | M\textit{ TM}, L(M) = \{0y | y \in \Sigma^*\}\}$ dimostrare che è indecidibile, ossia che $L \notin DEC$.
+
+\begin{demonstration}
+Sia $f : \Sigma^* \rightarrow \Sigma^*$ la funzione calcolata dalla seguente TM $F$ definita come:
+
+$F =$ "Data la stringa $\langle M, w\rangle$ in input:
+\begin{enumerate}
+    \item Costruisci una TM $M'$ definita come:
+    
+    $M' =$ "Data la stringa $x$ in input:
+    \begin{enumerate}
+        \item Se $x \notin \{0y | y \in \Sigma^*\}$, rifiuta. Altrimenti, esegui il programma di $M$ su input $w$.
+        \item Se l’esecuzione accetta, allora $M'$ accetta, altrimenti rifiuta"
+    \end{enumerate}
+    \item Restituisci in output la stringa $\langle M'\rangle$"
+\end{enumerate}
+Supponiamo che $w \notin L(M)$. In tal caso, $M'$ rifiuterà qualsiasi stringa, implicando che $L(M'
+) = \emptyset$ e dunque che $\langle M'\rangle \notin L$. 
+
+Supponiamo ora che $w \in L(M)$. In tal caso, abbiamo che: se $x \notin \{0w | w \in \Sigma^*\}$, allora $x \notin L(M')$; se $x \in \{0w | w \in \Sigma^*\}$, allora $x \in L(M')$ poiché $w \in L(M)$
+di conseguenza, otteniamo che:
+\begin{equation*}
+x \in L(M') \iff x \in \{0w | w \in \Sigma^*\}
+\end{equation*}
+implicando che $\langle M'\rangle \in L$. Di conseguenza, concludiamo che $w \in L(M) \iff L(M') \in L$.
+
+A questo punto, notiamo che:
+\begin{equation*}
+\langle M, w\rangle \in A_{TM}\iff w \in L(M) \iff f(\langle M, w\rangle) = \langle M'\rangle \in L    
+\end{equation*}
+implicando quindi che $A_{TM} \leq_m L$. Infine, poiché $A_{TM} \notin DEC$, concludiamo che $L \notin DEC$.
+\end{demonstration}
+\end{Exercise}
+
+\begin{Exercise}{}{}
+Dato il seguente linguaggio $L = \{\langle T, T'\rangle | T, T'\textit{ TM}, L(T) \cup L(T') = \Sigma^*\}$ dimostrare che è indecidibile, ossia che $L \notin DEC$.
+
+Sia $f : \Sigma^* \rightarrow \Sigma^*$ la funzione calcolata dalla seguente TM $F$ definita come:
+
+$F =$ "Data la stringa $\langle M, w\rangle$ in input:
+\begin{enumerate}
+    \item Costruisci una TM $T$ definita come:
+
+    $T =$ "Data la stringa $x$ in input:
+    \begin{enumerate}
+        \item Rifiuta"
+    \end{enumerate}
+    \item Costruisci una TM $T'$ definita come:
+    
+    $T' =$ "Data la stringa $x$ in input:
+    \begin{enumerate}
+        \item Esegui il programma di $M$ con input $w$.
+        \item Se l’esecuzione accetta, $T'$ accetta, altrimenti rifiuta"
+    \end{enumerate}
+    \item Restituisci in output la stringa $\langle T, T'\rangle$"
+\end{enumerate}
+Notiamo che:
+\begin{align*}
+\langle M, w\rangle \in A_{TM} \iff w \in L(M) \implies L(T) = \emptyset, L(T') = \Sigma^* \implies L(T)\cup L(T') = \Sigma^*\iff\\ f(\langle M, w\rangle) = \langle T, T'\rangle \in L    
+\end{align*}
+e inoltre che:
+\begin{align*}
+\langle M, w\rangle \notin A_{TM} \iff w \notin L(M) \implies L(T) = \emptyset, L(T') = \emptyset \implies L(T)\cup L(T') = \emptyset\implies\\ f(\langle M, w\rangle) = \langle T, T'\rangle \notin L    
+\end{align*}
+implicando quindi che $A_{TM} \leq_m L$. Infine, poiché $A_{TM} \notin DEC$, concludiamo che $L\notin DEC$.
+\end{Exercise}
+
+% \section{Teoremi di incompletezza di Gödel}
+% Il lavoro di Kurt Gödel sui teoremi di incompletezza ha rivoluzionato la logica e la matematica, evidenziando i limiti fondamentali dei sistemi formali. Gödel dimostrò che, per ogni sistema sufficientemente potente da descrivere l'aritmetica, esistono affermazioni che non possono essere né dimostrate né confutate all'interno del sistema stesso. Vedremo come tali risultati si applicano anche alle macchine di Turing e agli algoritmi.
+
+% Dall'antichità, filosofi e matematici hanno cercato di costruire un sistema rigoroso per descrivere il mondo. Euclide, nel 300 a.C., propose un sistema di assiomi per la geometria che ha rappresentato uno dei primi tentativi di formalizzare una disciplina scientifica. Tuttavia, solo nel XIX secolo, con l'avvento della logica moderna, fu possibile formulare un approccio rigoroso, culminato nella logica del primo ordine. Questo tipo di logica, con variabili, funzioni e relazioni ben definite, divenne uno strumento fondamentale per esprimere affermazioni e costruire dimostrazioni in maniera strutturata.
+
+% Per un sistema formale, sono necessari alcuni elementi essenziali:
+% \begin{itemize}
+%      \item \textit{Vocabolario:} Costituito da funzioni, relazioni e variabili.
+%      \item \textit{Quantificatori:} Come $\forall$ (per ogni) e $\exists$ (esiste).
+%      \item \textit{Connettori:} Connettori logici come $\land$, $\lor$, $\lnot$, $\implies$.
+%      \item \textit{Assiomi:} Affermazioni fondamentali che si assumono vere e su cui si costruiscono le dimostrazioni.
+% \end{itemize}
+% Questi assiomi forniscono una base su cui si costruiscono le dimostrazioni formali. Se il sistema è valido, significa che tutte le affermazioni dimostrabili all'interno di esso sono vere. Inoltre, se un sistema è completo, ogni affermazione vera è anche dimostrabile.
+
+
+% Un sistema formale è:
+% \begin{itemize}
+%     \item Consistente se non può dimostrare sia un'affermazione che la sua negazione.
+%     \item Valido se per ogni affermazione, se è dimostrabile allora è vera.
+%     \item Completo se, per ogni affermazione, o essa o la sua negazione è dimostrabile.
+% \end{itemize}
+% Gödel dimostrò che in un sistema come quello aritmetico, la consistenza implica necessariamente l'incompletezza: se il sistema è consistente, non può essere completo. Questo significa che ci saranno sempre affermazioni vere che non possono essere dimostrate nel sistema.
+
+% Per comprendere i teoremi di incompletezza, consideriamo una macchina di Turing che elabora affermazioni e dimostrazioni in modo sistematico:
+% \begin{enumerate}
+%     \item Per ogni affermazione, vera o falsa, esiste una rappresentazione come stringa $\langle x\rangle$ di lunghezza finita.
+%     \item Per ogni dimostrazione, esiste una rappresentazione come stringa $\langle w\rangle$ di lunghezza finita.
+%     \item Esiste una TM $V$ decisore tale che $V(\langle x, w\rangle)=ACC$ sse $w$ è una prova per affermazione $x$.
+% \end{enumerate}
+
+% \begin{Definition}{Affermazione dimostrabile}{}
+%     \textit{$x$ è dimostrabile, se esiste $w$ tale che $V(\langle x, w\rangle)=ACC$.}
+
+%     $x$ è indipendente se né $x$ che $\lnot x$ sono dimostrabili.
+% \end{Definition}
+
+% 5. Teorema di Incompletezza e Consistenza
+% Gödel dimostrò formalmente che, per ogni sistema consistente che contiene l'aritmetica, esiste almeno un'affermazione vera che non può essere dimostrata all'interno del sistema. Questo risultato ha conseguenze profonde:
+
+% Validità e completezza sono incompatibili: Un sistema valido non può essere completo.
+% Autoreferenzialità e paradossi: Esistono affermazioni che, se assumiamo la consistenza del sistema, non possono essere dimostrate all'interno dello stesso.
+% Questo ci porta al cuore del primo teorema di incompletezza: se un sistema è consistente, esisteranno affermazioni indecidibili, ossia vere ma non dimostrabili all'interno del sistema.
+
+% 6. Implicazioni del Secondo Teorema di Incompletezza
+% Il secondo teorema di incompletezza di Gödel afferma che un sistema consistente non può dimostrare la propria consistenza. Ciò significa che, all'interno del sistema, non esiste una prova formale che garantisca che il sistema non conduca a contraddizioni.

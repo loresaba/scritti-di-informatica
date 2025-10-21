@@ -1,0 +1,17 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Dataloader}\label{sec:cap 3}
+\subsection{Creazione del DataLoader}
+
+Abbiamo sfruttato il meccanismo di \texttt{PyTorch} costruendo una pipeline basata sulle classi \texttt{Dataset} e \texttt{DataLoader} per caricare le immagini per il modello; per prima cosa, abbiamo organizzato le immagini in due cartelle (\texttt{no\_fallo} e \texttt{fallo}) in modo da rendere immediato il riconoscimento delle etichette. Una funzione di utilità scorre ricorsivamente queste directory, raccogliendo i percorsi completi di tutte le immagini e assegnando a ciascuna un’etichetta binaria (0 per ``nessun fallo'', 1 per ``fallo''). Le due liste risultanti --- una di percorsi e una di etichette --- diventano la base su cui poggia la classe personalizzata che eredita da \texttt{torch.utils.data.Dataset}.\\
+\noindent 
+In fase di inizializzazione, questa classe riceve tali liste insieme a una serie di trasformazioni da applicare alle immagini; nel metodo \texttt{\_\_len\_\_} restituisce il numero totale di campioni, mentre in \texttt{\_\_getitem\_\_} si occupa di aprire il file, applicare le trasformazioni (come la normalizzazione secondo gli standard ImageNet) e restituire il tensore dell’immagine assieme alla sua etichetta.\\
+\noindent
+Infine, ogni dataset è stato inserito in un \texttt{DataLoader} con \textit{batch size} 32, ottimale per bilanciare stabilità e velocità di addestramento. Nel loader di training abbiamo abilitato lo \texttt{shuffle} per mescolare i dati a ogni epoca e ridurre l’overfitting, mentre nel loader di validazione lo shuffle è disattivato per garantire risultati ripetibili. Con \texttt{num\_workers=2} il caricamento è stato parallelizzato su due processi, riducendo i tempi di I/O e mantenendo la GPU sempre alimentata.\\
+\noindent 
+Per verificare la correttezza di questo flusso, abbiamo implementato alcuni strumenti di controllo: da un lato, la visualizzazione di singole immagini con la loro etichetta per confermare che il \textit{mapping} fosse corretto; dall’altro, l’estrazione e l’analisi di un intero batch per controllare le dimensioni dei tensori, range di valori e distribuzione delle classi. Grazie a queste verifiche, siamo sicuri che la pipeline di caricamento fornisca al modello dati accurati e uniformi.
+
+
+
+\end{document}

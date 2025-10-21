@@ -1,0 +1,97 @@
+\chapter{Approssimazioni}
+Vogliamo approssimare una funzione complicata con un polinomio generando un piccolo valore di errore.
+
+Per quantificare il termine di errore usiamo il o-piccolo di Peano.
+\begin{definition}
+    Diciamo che $f(x)=o(g(x))$ per $x\to x_0$ se $\lim_{x\to x_0}\frac{f(x)}{g(x)}=0$, ovvero se $|f(x)|<<|g(x)|$ vicino a $x_0$.
+    
+    Ad esempio $x_0=0$, $f(x)=x^2$, $g(x)=x$ e $x^2=o(x)$ per $x\to 0$.
+\end{definition}
+
+\section{Algebra degli o-piccolo}
+\textbf{Proprietà fondamentale}
+\begin{equation*}
+    \lim_{x\to x_0}\frac{o(f(x))}{f(x)}=0
+\end{equation*}
+
+\textbf{Moltiplicazione per una costante}
+\begin{align*}
+    o(c*g(x))=o(g(x))\\
+    c*o(g(x))=o(g(x))
+\end{align*}
+
+\textbf{Potenza di una funzione}
+\begin{equation*}
+    [f(x)]^\alpha = o[(g(x)]^\alpha)
+\end{equation*}
+
+\textbf{Somma tra o-piccolo}
+\begin{equation*}
+    o(f(x))+o(f(x))=o(f(x))
+\end{equation*}
+
+\textbf{Prodotto tra una funzione e o-piccolo}
+\begin{equation*}
+    f(x)o(g(x))=o(f(x)g(x))
+\end{equation*}
+
+\textbf{Prodotto tra o-piccolo}
+\begin{equation*}
+    o(f(x))o(g(x))=o(f(x)g(x))
+\end{equation*}
+
+\textbf{o-piccolo di o-piccolo}
+\begin{equation*}
+    o(o(f(x)))=o(f(x))
+\end{equation*}
+
+\section{Polinomi di Taylor}
+La formula di Taylor ci permette di approssiamare le funzioni con polinomi.
+
+\begin{equation}
+    f(x)=T_n(x)+o(x^n)=\sum_{k=0}^n\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+o((x-x_0)^n)
+\end{equation}
+
+Possiamo infatti dire che la funzione da approssimare è uguale ad un certo polinomio approssimante + un errore di approssimazione o resto di Peano.
+
+\begin{thm}
+    Se f è derivabile in $x_0$ allora vale:
+    \begin{equation}\label{eq:Taylor1}
+        f(x)=f(x_0)+f'(x_0)(x-x_0)+o(x-x_0)
+    \end{equation}
+\end{thm}
+
+L'Equazione \ref{eq:Taylor1} è il primo esempio di polinomio di Taylor ed ha grado 1.
+
+Utilizzando polinomi più alti possiamo approssimare meglio $f(x)$.
+
+Infatti con $\beta=\frac{f''(x)}{2}$ otteniamo:
+
+\begin{equation}\label{eq:Taylor2}
+        f(x)=f(x_0)+f'(x_0)(x-x_0)+\frac{f''(x)(x-x_0)^2}{2}+o((x-x_0)^2)
+\end{equation}
+
+\begin{example}
+    $f(x)=e^x$, $x_0=0$, $f(0)=e^0=1$, $f'(0)=e^0=1$, $f''(0)=e^0=1$
+    
+    $e^x=1+x+\frac{x^2}{2}+o(x^2)$ per $x\to 0$.
+\end{example}
+
+Con l'Equazione \ref{eq:Taylor2} abbiamo ottenuto il polinomio di Taylor in grado 2 in $x_0$.
+
+Oltre al resto di Peano esiste anche il resto di Lagrange secondo cui la funzione è approssimabile come:
+\begin{equation}
+    f(x)=T_n(x)+\frac{f^{(x+1)}(\xi)}{(x+1)!}(x-x_0)^{n+1}
+\end{equation}
+
+Ecco inoltre alcune forme utili e ricorrenti dei polinomi di Taylor per $x_0=0$:
+\begin{itemize}
+    \item $e^x=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\text{ ... }+o(x^{n})$
+    \item $\ln(x+1)=x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\frac{x^5}{5}+\text{ ... }+\frac{(-1)^{n+1}}{n}x^n+o(x^{n})$
+    \item $\sin(x)=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}+\text{ ... }+\frac{(-1)^nx^{2n+1}}{(2n+1)!}+o(x^{2n+1})$
+    \item $\cos(x)=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}+\text{ ... }+\frac{(-1)^nx^{2n}}{(2n)!}+o(x^{2n})$
+    \item $\tan(x)=x+\frac{x^3}{3}+\frac{2}{15}x^5+o(x^6)$
+    \item $\arcsin(x)=x+\frac{x^3}{6}+\frac{3}{40}x^5+\frac{5}{112}x^7-\frac{35}{1152}x^9+o(x^9)$
+    \item $\arccos(x)=\frac{\pi}{2}-x-\frac{x^3}{6}-\frac{3}{40}x^5-\frac{5}{112}x^7-\frac{35}{1152}x^9+o(x^9)$
+    \item $\arctan(x)=x-\frac{x^3}{3}+\frac{x^5}{5}-\frac{x^7}{7}+\frac{x^9}{9}+o(x^9)$
+\end{itemize}

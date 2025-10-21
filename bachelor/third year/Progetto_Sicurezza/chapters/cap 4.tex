@@ -1,0 +1,32 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Attivazione del Payload}\label{sec:cap 4}
+
+Dopo aver individuato correttamente l’offset, calcolato l’indirizzo del buffer e impostato il return address, possiamo procedere con l’ultima fase dell’attacco: l’esecuzione dell’exploit.
+Questa fase consiste nell’invio al programma vulnerabile di un payload costruito ad hoc, il quale combina la shellcode, un’area di padding per raggiungere il return address e infine l’indirizzo di ritorno scelto. L’obiettivo è dirottare il flusso di esecuzione verso la shellcode, ottenendo così l’esecuzione arbitraria di comandi.\\
+Il payload viene scritto su un file binario e poi fornito come input al programma, facendo crashare il flusso normale per aprire una shell con i privilegi dell’utente che esegue il binario.\\
+\noindent Eseguendo da terminale il comando \texttt{(cat payload.bin; cat) | ./vuln  } si aprirà la nostra shell ed avremo un output di questo tipo:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/payload.png}
+    \caption{Output della compilazione del file exploit.py da terminale}
+    \label{fig:esempio}
+\end{figure}
+
+\noindent Ora, possiamo eseguire comandi quali id, whoami, ls -l, ed interagire con la nostra shell.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/shell.png}
+    \caption{Esecuzione della shell}
+    \label{fig:esempio}
+\end{figure}
+
+\noindent Il nostro attacco è riuscito, e siamo stati in grado anche di ottenere i permessi root con la nostra shell.
+
+
+
+
+
+\end{document}

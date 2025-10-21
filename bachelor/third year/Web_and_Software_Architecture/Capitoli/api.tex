@@ -1,0 +1,453 @@
+\chapter{Designing and documenting APIs}
+\section{Introduction to APIs}
+In the modern digital world, software systems need to communicate with each other. To make this communication possible, developers use APIs, which stand for Application Programming Interface. APIs define the allowed interactions between two software components. These components could range from two different systems or applications to a consumer and a service provider. The API specifies how requests should be made, the parameters needed, the format for sending data, and the expected return values.
+
+Imagine APIs as contracts between the consumer (the one making the request) and the provider (the one delivering the service). Both parties must adhere to the rules defined by the API to ensure smooth communication. Without this explicit definition, it would be challenging to manage interactions between different parts of a system.
+
+One of the key advantages of using APIs is that they provide an explicit interface. This means that APIs clearly define the methods for interacting with the software, ensuring there’s no ambiguity.
+Another significant benefit is information hiding. With an API, a consumer does not need to know how the provider works internally. This abstraction is valuable because it allows developers to focus on their specific task without worrying about the complexities of the service they are interacting with.
+APIs also establish an unbreakable contract between the consumer and the provider. Once defined, the provider is committed to maintaining the API so as not to break compatibility for existing consumers. This ensures reliability and consistency.
+
+APIs can be categorized based on where and how they operate. For instance, there are local APIs that might be used within a single programming language or within a specific system. Examples include APIs in operating systems, software libraries, and hardware interfaces. These APIs allow different components of a single system to interact seamlessly.
+
+On the other hand, remote APIs are used when different systems or applications need to communicate over a network. A common example of this is a web API, where a client sends a request to a remote server, and the server sends back a response, often in formats like JSON or XML. Web APIs are at the heart of modern web services, making remote systems easily accessible to developers.
+
+APIs can also be categorized as public or private. A public API is one that is available for public use, such as the APIs provided by Google, Facebook, or Twitter. These APIs allow developers around the world to integrate their services into different applications. However, even public APIs can have restrictions. For instance, access might require the use of API tokens, which act as authentication keys to ensure that only authorized users can interact with the API.
+
+On the other hand, private APIs are meant for internal use within an organization. These APIs are not available to the public and are typically used for internal communication between different systems or components of a company’s software infrastructure.
+
+An important aspect of APIs is interface stability. If an API changes, it can break the applications that depend on it. For this reason, unstable or experimental parts of an API might be marked as "beta" or "deprecated," indicating that they might change or be removed in future versions. Developers must be cautious when using such features to avoid compatibility issues.
+
+APIs are defined through either documentation or description files. Documentation typically provides a free-text explanation of how the API works, the types of requests that can be made, and examples of data formats. However, relying solely on documentation has its drawbacks. Documentation can become outdated, be unclear, or fail to cover all the edge cases of an API.
+
+\section{OpenAPI Specification Overview}
+To address these shortcomings, many APIs also come with a machine-readable specification, such as the OpenAPI Specification (OAS). This is an industry-standard format for describing HTTP-based APIs. OAS is human- and machine-readable, making it easier to generate code, automatically validate API requests, and create mock servers for testing purposes.
+
+The OpenAPI Specification is a popular vendor-neutral format for describing APIs. This format is widely adopted and provides a standard way to document HTTP-based APIs. Let’s look at an example of an OpenAPI description file written in YAML:
+\begin{lstlisting}[language=yaml]
+openapi: 3.0.0
+info:
+  title: An example OpenAPI document
+  description: This API allows writing down marks on a Tic Tac Toe board and requesting the state of the board or of individual squares.
+  version: 0.0.1
+paths: {} # No endpoints defined yet
+\end{lstlisting}
+This simple description provides a title, a brief explanation of the API’s purpose, and a version number. The paths section will eventually contain the endpoints available in the API, but it’s empty in this example.
+
+\section{Designing REST API}
+\subsection*{Hi-Lo game}
+We explore the development of a web service for a simple game known as the Hi-Lo Game. The game is straightforward: the computer thinks of a secret number between 1 and 100, and the player has up to 10 attempts to guess the number. After each guess, the system will respond with one of three indications: too high, too low, or correct.
+
+Before delving into the technical design, it's important to understand the service requirements. The Hi-Lo game service should provide the following functionalities:
+\begin{enumerate}
+    \item Start a new game.
+    \item Accept a guess from the player, up to 10 guesses, and return whether the guess is too high, too low, or correct.
+    \item Reset the game by generating a new secret number.
+    \item Return a list of guesses for the current game, along with the results of each guess.
+    \item Provide a list of all games played, along with their outcomes (win/lose) and the number of guesses made.
+\end{enumerate}
+From these requirements, it's evident that we need a system that can not only manage individual games but also maintain the history of all games. This immediately suggests the need for a well-structured API that can handle these operations efficiently.
+
+To structure the API, we start by identifying the core resources. The key resource here is the game. Each game is essentially a distinct entity, and we can organize these entities using the following structure:
+\begin{itemize}
+    \item \texttt{/games}: A collection representing all games. This will handle requests to create new games and retrieve the list of past games, including their outcomes.
+    \item \texttt{/games/\{id\}}: Each individual game will be treated as a separate resource, allowing us to handle operations like guessing, resetting, and retrieving the status of a specific game.
+\end{itemize}
+This resource structure adheres to the principles of REST, where each resource is identified by a URI and manipulated using standard HTTP methods such as \texttt{GET}, \texttt{POST}, and \texttt{PUT}.
+
+To formalize the design, we will use the OpenAPI specification, which allows us to define our API in a structured, machine-readable format. For this, we use the Swagger Editor, a widely used tool for creating and validating OpenAPI documents.
+Let's begin by defining the basic metadata for the Hi-Lo Game API:
+\begin{lstlisting}[language=yaml]
+openapi: 3.0.0
+info:
+  title: Hi-Lo Game
+  description: This API allows playing the Hi-Lo game and retrieving the state of a game or the history of all games.
+  version: 0.0.1
+paths:
+  /games:
+    # This section will define the methods for interacting with the games collection
+  /games/{id}:
+    # This section will define the methods for interacting with individual games
+\end{lstlisting}
+This basic structure sets up the API's foundation, including the overall description and the paths for accessing the games collection and individual game instances.
+
+The \texttt{/games} path will manage the collection of all games. The key operations here are:
+\begin{enumerate}
+    \item \texttt{POST}: To start a new game.
+    \item \texttt{GET}: To retrieve a list of all games, including their results.
+\end{enumerate}
+The OpenAPI definition for these methods would look something like this:
+\begin{lstlisting}[language=yaml]
+paths:
+  /games:
+    post:
+      summary: start a new game
+      description: Start a new game generating the secret number and return the created game id
+      responses:
+        "200":
+          description: new game created
+          content:
+            application/json:
+              schema:
+                type: integer
+    get:
+      summary: list all games
+      description: Obtain the list of all games, with the final result (win/lose) and the number of guesses
+      responses:
+        "200":
+          description: An array of objects, each one containing the game id, the final outcome, and the number of guesses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    type: object
+                    properties:
+                        id:
+                          type: integer
+                        outcome: 
+                          type: string
+                          enum:
+                          - win
+                          - lose
+                        guesses:
+                          type: integer
+\end{lstlisting}
+This defines two endpoints. The \texttt{POST} method allows a user to start a new game, returning a game ID that will be used in future requests. The \texttt{GET} method retrieves a list of all games, with each game represented by its ID, result (win or lose), and the number of guesses made.
+
+The next step is to define the operations for individual games. The \texttt{\{id\}} in the path represents the ID of a specific game. Here are the methods we will define:
+\begin{enumerate}
+    \item \texttt{POST}: To make a guess in the game.
+    \item \texttt{GET}: To retrieve the state of a game, including the list of guesses made.
+    \item \texttt{PUT}: To reset the game, generating a new secret number.
+\end{enumerate}
+These methods can be specified in OpenAPI as follows:
+\begin{lstlisting}[language=yaml]
+/games/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: this is the game id
+      schema:
+        type: integer
+        description: e.g., /games/1234
+    put:
+      summary: start or reset a game
+      description: Start a game with given id, generating the secret number; or reset an existing game, re-generating the secret number and zeroing the guesses counter
+      responses:
+        "200": 
+           description: An existing game is reset
+        "201":
+           description: A new game is created
+    post:
+      summary: make a guess
+      description: Try to guess the secret number; return hi, lo, or correct, plus the guess count.
+      parameters:
+        - name: guess
+          in: query
+          required: true
+          description: the guess
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: Guess accepted, the result is in the the content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  guess-count:
+                    type: integer
+                    minimum: 1
+                    maximum: 10
+                  guess-outcome:
+                    type: string
+                    enum:
+                    - hi
+                    - lo
+                    - correct
+        "403":
+          description: game over
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  outcome: 
+                    type: string
+                    enum:
+                    - win
+                    - lose
+                  guesses:
+                    type: integer
+        "404":
+          description: game not found
+    get:
+      summary: list guesses
+      description: Return a list of all guesses in reverse chronological order, including the responses received (hi/lo/correct)
+      responses:
+        "200":
+          description: Request accepted, all guesses listed in content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    guess-count:
+                      type: integer
+                      minimum: 1
+                      maximum: 10
+                    guess-outcome:
+                      type: string
+                      enum:
+                      - hi
+                      - lo
+                      - correct
+\end{lstlisting}
+The \texttt{POST} method takes a guess from the user, compares it to the secret number, and returns whether the guess is too high, too low, or correct. The \texttt{GET} method returns the history of guesses made in the game. The \texttt{PUT} method allows the game to be reset, generating a new secret number for the player to guess.
+
+
+\subsection*{Reusing OpenAPI descriptions}
+Reusing objects in OpenAPI allows developers to reduce code duplication, which in turn minimizes maintenance efforts and the potential for errors. When defining an API, the same data structures or responses may be used in multiple places. Instead of redefining these objects each time, OpenAPI allows developers to create components, which are reusable descriptions that can be referenced wherever needed.
+
+At the heart of reusability in OpenAPI is the \texttt{components} object. This object can hold reusable definitions such as parameters, responses, and schemas, which are often referred to by other parts of the API.
+Consider the example of the Hi-Lo game.
+\begin{lstlisting}[language=yaml]
+components:
+  schemas:
+    guess-result:
+      type: object
+      properties:
+        guess-count:
+          type: integer
+          minimum: 1
+          maximum: 10
+        guess-outcome:
+          type: string
+          enum:
+          - hi
+          - lo
+          - correct
+    final-result:
+      type: object
+      properties:
+        id:
+          type: integer
+        outcome: 
+          type: string
+          enum:
+          - win
+          - lose
+        guesses:
+          type: integer
+\end{lstlisting}
+Now, whenever a schema is needed, the API can reference its component.
+\begin{lstlisting}[language=yaml]
+get:
+  summary: list all games
+  description: Obtain the list of all games, with the final result (win/lose) and the number of guesses
+  responses:
+    "200":
+      description: An array of objects, each one containing the game id, the final outcome, and the number of guesses
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/final-result"
+
+post:
+  summary: make a guess
+  description: Try to guess the secret number; return hi, lo, or correct, plus the guess count.
+  parameters:
+    - name: guess
+      in: query
+      required: true
+      description: the guess
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+  responses:
+    "200":
+      description: Guess accepted, the result is in the the content
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/guess-result"
+    "403":
+      description: game over
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/final-result"
+    "404":
+      description: game not found
+get:
+  summary: list guesses
+  description: Return a list of all guesses in reverse chronological order, including the responses received (hi/lo/correct)
+  responses:
+    "200":
+      description: Request accepted, all guesses listed in content
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/guess-result"
+\end{lstlisting}
+
+% \subsection*{Fountains project}
+% Define the API for the Fountains project (fountains are called Fontanelle or Nasoni in Rome). The Fountains project includes a mobile app that allows citizens and tourists to explore nearby drinking fountains.
+
+% In Rome, drinking water is available thanks to little public fountains, also known as “nasoni” (“large noses”, due to their nose-like shape). They were installed in the late 1800 by the local municipalities in the capital city and nearby areas. More than 2500 are still working. The “Fountains” project includes a mobile app that allows citizens and tourists to explore nearby drinking fountains (see their location and status). Also, they will be able to change the status or location of any fountains, add missing fountains, and remove those that are no longer present. A fountain’s status is “good” when it is in working condition and “faulty” if broken. The app will communicate with a central server via REST and JSON - no information is stored locally in the smartphone. No authentication is needed, nor is user identification.
+
+% \begin{lstlisting}[language=yaml]
+% openapi: 3.0.0
+% info:
+%   title: Fountains
+%   description: This API allows to search near fountains, delete and update existing ones or to add another fountain.
+%   version: 0.0.1
+% paths:
+%   /fountains:
+%     get:
+%       summary: list of all fountains
+%       description: Obtain the list of all nearby fountains
+%       parameters:
+%         - name: location
+%           in: query
+%           required: true
+%           description: the location of the user
+%           schema:
+%             type: object
+%             items:
+%               $ref: "#/components/schemas/location"
+%       responses:
+%         "200":
+%           description: An array of objects, each one containing the fountain id, 
+%             the location and the status. The location is an object containing the latitude and the longitude.
+%           content:
+%             application/json:
+%               schema:
+%                 type: array
+%                 items:
+%                   $ref: "#/components/schemas/fountain"
+%     post:
+%       summary: Create a new fountain
+%       description: Create a new fountain generating the fountain id, location and status, returning only the id.
+%       parameters:
+%         - name: location
+%           in: query
+%           required: true
+%           description: the location
+%           schema:
+%             type: object
+%             items:
+%               $ref: "#/components/schemas/location"
+%         - name: status
+%           in: query
+%           required: true
+%           description: the status
+%           schema:
+%             type: object
+%             items:
+%               $ref: "#/components/schemas/status"
+%       responses:
+%         "200":
+%           description: new fountain created
+%           content:
+%             application/json:
+%               schema:
+%                 type: integer
+%   /fountains/{id}:
+%     parameters:
+%     - name: id
+%       in: path
+%       required: true
+%       description: the fountain id
+%       schema:
+%         type: integer
+%         description: e.g., /fountains/1234
+%     put:
+%       summary: change the fountain's properties
+%       description: Change the location and/or the status of the fountain with the given id. If the id doesn't exists, create a new fountain.
+%       parameters:
+%         - name: location
+%           in: query
+%           required: false
+%           description: the location
+%           schema:
+%             type: object
+%             items:
+%               $ref: "#/components/schemas/location"
+%         - name: status
+%           in: query
+%           required: false
+%           description: the status
+%           schema:
+%             type: object
+%             items:
+%               $ref: "#/components/schemas/status"
+%       responses:
+%         "200": 
+%            description: An existing fountain is updated
+%         "201":
+%            description: A new fountain is created
+%     delete:
+%       summary: delete the fountain
+%       description: Delete the fountain specified by the id
+%       responses:
+%         "200":
+%           description: The fountain is delete
+%         "404":
+%           description: The fountain is not found
+    
+% components:
+%   schemas:
+%     fountain:
+%       type: object
+%       properties:
+%         id:
+%           type: integer
+%         location:
+%           type: object
+%           items: 
+%             $ref: "#/components/schemas/location"
+%         status:
+%           type: string
+%           items:
+%             $ref: "#/components/schemas/status"
+%     location:
+%       type: object
+%       properties:
+%         latitude:
+%           type: object 
+%           items:
+%             $ref: "#/components/schemas/corr_type"
+%         longitude:
+%           type: object 
+%           items:
+%             $ref: "#/components/schemas/corr_type"
+%     corr_type:
+%       type: object
+%       properties:
+%         grade:
+%           type: integer
+%         first:
+%           type: integer
+%         second:
+%           type: integer
+%     status:
+%       type: string
+%       enum:
+%       - good
+%       - faulty
+% \end{lstlisting}

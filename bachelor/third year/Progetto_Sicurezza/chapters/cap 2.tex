@@ -1,0 +1,68 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Analisi e compilazione del codice vulnerabile}\label{sec:cap 2}
+
+Per sviluppare il nostro attacco di buffer overflow abbiamo innanzitutto creato un programma vulnerabile in c, chiamato vuln.c.\\
+
+\begin{lstlisting}[style=codiceC]
+#include <stdio.h>
+#include <string.h>
+
+void vulnerable() {
+    char buffer[100];
+    printf("Inserisci input: ");
+    gets(buffer);  
+}
+
+int main() {
+    vulnerable();
+}
+\end{lstlisting}
+
+\noindent La funzione \texttt{gets()} è intrinsecamente insicura poiché legge l'input da standard input (\texttt{stdin}) senza controllare la lunghezza della stringa inserita. Questo può causare una \textbf{scrittura oltre i limiti dell'array} \texttt{buffer[100]} se l'utente inserisce più di 99 caratteri (più il terminatore \texttt{\textbackslash 0}).
+
+\subsubsection*{Compilazione del codice e disattivazione dei sistemi di sicurezza}
+
+Per poter analizzare e sfruttare la vulnerabilità di tipo buffer overflow, è necessario compilare il programma disattivando alcune protezioni.\\
+Innanzitutto, compiliamo il programma vulnerabile vuln.c, generando l'eseguibile, nel seguente modo:
+\begin{verbatim}
+gcc -m32 -fno-stack-protector -z execstack -no-pie -g vuln.c -o vuln
+\end{verbatim}
+
+\noindent Significato delle opzioni
+
+\begin{itemize}
+    \item \verb|-m32|: compila in modalità 32 bit.
+    \item \verb|-fno-stack-protector|: disattiva lo \textbf{Stack Canary}, una protezione che rileva sovrascritture dello stack e può prevenire exploit.
+    \item \verb|-z execstack|: rende lo \textbf{stack eseguibile}, permettendo di eseguire codice inserito nello stack (la shellcode nel nostro caso).
+    \item \verb|-no-pie|: disattiva la compilazione come \textbf{Position Independent Executable (PIE)}. Questo rende gli indirizzi di memoria fissi, facilitando l'attacco.
+    \item \verb|-g|:  permette di effettuare il debug del programma
+
+\end{itemize}
+
+\noindent Successivamente dobbiamo disattivare l'\textbf{ASLR} (Address Space Layout Randomization),  una protezione del sistema operativo che randomizza gli indirizzi di memoria ad ogni esecuzione, nel seguente modo:
+\begin{verbatim}
+echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+\end{verbatim}
+per controllare se tutte le sicurezze sono state disattivate utilizziamo il comando da terminale \verb|checksec --file=./vuln| aspettandoci un output di questo tipo:
+
+\begin{itemize}
+    \item Canary found:          No
+    \item NX enabled:            No
+    \item PIE enabled:           No
+    \item Stack executable:      Yes
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

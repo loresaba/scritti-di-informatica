@@ -1,0 +1,852 @@
+\chapter{Backend programming with Go}
+\section{Introduction to Go}
+Go, often referred to as Golang, is a programming language developed by Google. It was designed to streamline the development of software with a focus on simplicity, efficiency, and ease of use. Due to these strengths, several major companies have adopted Go for their own systems. Some prominent examples include Google, Dropbox, and Uber, which rely on Go for tasks that require highly scalable and performant code.
+
+The simplicity of Go, along with its powerful concurrency features, make it especially useful for applications in web development and large-scale systems architecture.
+
+One of the benefits of learning Go is the availability of the Go Playground, a web-based platform (found at \href{https://go.dev/play/}{go.dev/play/}) that allows users to run Go code without installing any software on their local machine. This environment is ideal for experimenting with Go syntax and understanding its core functionalities.
+
+\subsection*{Packages}
+In Go, code is organized into packages. Each package serves as a collection of related functions and types, all residing in one or more files within a directory. Every file in Go starts by declaring its package, often with the keyword package \texttt{main} for standalone applications.
+
+\begin{minted}{go}
+package main
+//... 
+\end{minted}
+The \texttt{main} package is unique, as it signals to the Go compiler that this package contains an executable program.
+
+Go encourages modular code by allowing programs to import additional packages. This is done with the \texttt{import} statement, which can bring in essential libraries, such as \texttt{fmt} for formatted I/O or \texttt{math/rand} for generating random numbers.
+
+\begin{minted}{go}
+import (
+    "fmt"
+    "math/rand"
+)
+
+func main() {
+    fmt.Println("My favorite number is", rand.Intn(10))
+}
+\end{minted}
+
+\subsubsection{Standard and external library}
+Go comes with a comprehensive standard library that provides a wide range of packages for common tasks. The full list of standard packages can be explored at \href{https://pkg.go.dev/std}{pkg.go.dev/std}, offering extensive resources for handling basic programming needs.
+
+In addition to the standard library, Go allows you to create custom packages within your project or use external packages developed by others. External packages are useful for adding specific functionality that is not covered by the standard library. These packages can be shared among projects, encouraging code reuse and collaboration.
+
+To create a custom package within a project, you first need to initialize a module. Modules are groups of related packages that make up a Go project. You can initialize a module by navigating to your project directory and running:
+
+\begin{minted}{sh}
+go mod init some-module
+\end{minted}
+This command generates two important files in the project directory: \texttt{go.mod} and \texttt{go.sum}. The \texttt{go.mod} file specifies the module’s path and dependencies, while \texttt{go.sum} records the checksums of the dependencies.
+
+Once a module is initialized, you can create sub-packages by adding subdirectories. Each subdirectory represents a package, which can be imported using its path. For instance, if you create a package in \texttt{some-module/package1}, it can be imported with the following syntax:
+
+\begin{minted}{go}
+import "some-module/package1"
+\end{minted}
+Let’s look at an example structure of a Go project with custom packages:
+
+\begin{minted}{go}
+main.go
+go.mod
+go.sum
+package1/functions.go
+package1/other-things.go
+package1/subpackage/file.go
+\end{minted}
+In this structure, \texttt{main.go} is the main executable file, while \texttt{package1} is a custom package with several files (\texttt{functions.go} and \texttt{other-things.go}). There is also a subpackage inside \texttt{package1}, demonstrating how packages can be nested within a project.
+
+Inside \texttt{package1}, you might have a file called \texttt{functions.go} that contains functions and variables. The file would start by defining the package name, like so:
+\begin{minted}{go}
+package package1
+
+// Note: Use an uppercase letter to make functions public.
+func Dummy() {}
+\end{minted}
+The \texttt{Dummy} function is a simple example function, and by capitalizing its name, it becomes an exported function, meaning it can be accessed from other packages that import \texttt{package1}.
+
+In \texttt{main.go}, you can use the \texttt{Dummy} function by importing package1:
+\begin{minted}{go}
+package main
+
+import "some-module/package1"
+
+func main() {
+    package1.Dummy()
+}
+\end{minted}
+Go makes it easy to use external packages by downloading them from online repositories. To include an external package, use the go get command followed by the package’s path. For example:
+
+\begin{minted}{sh}
+go get gopkg.in/yaml.v2
+\end{minted}
+This command downloads the \texttt{yaml.v2} package, which can then be imported into your code.
+
+\begin{minted}{go}
+package main
+
+import "gopkg.in/yaml.v2"
+
+func main() {
+    yaml.SomeFunction()
+}
+\end{minted}
+Once imported, the external package functions are available for use, just like standard or custom packages.
+
+\subsection*{Hello, World!}
+A classic introduction to any programming language involves writing a simple \texttt{"Hello, World!"} program. Go uses the \texttt{fmt} package to handle output formatting.
+
+\begin{minted}{go}
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, world!")
+}
+\end{minted}
+This program demonstrates several foundational concepts: importing the \texttt{fmt} package, defining the \texttt{main} function, and using \texttt{fmt.Println} to output text. Notably, Go functions and variables must start with a capital letter to be publicly accessible within imported packages.
+
+\subsection*{Types}
+Go supports several fundamental data types, including:
+\begin{itemize}
+    \item \texttt{bool} for boolean values.
+    \item \texttt{string} for text.
+    \item Integer types: \texttt{int}, \texttt{int8}, \texttt{int16}, \texttt{int32}, \texttt{int64}, along with their unsigned versions like \texttt{uint} and \texttt{uint8}.
+    \item Floating-point numbers: \texttt{float32} and \texttt{float64}.
+    \item Complex numbers: \texttt{complex64} and \texttt{complex128}.
+    \item Special types like \texttt{byte} (alias for \texttt{uint8}) and \texttt{rune} (alias for \texttt{int32}, representing Unicode code points).
+\end{itemize}
+
+Variables in Go can be declared with the \texttt{var} keyword, either outside or inside functions. Variables declared within a function are local to that function, while those declared outside are visible throughout the package.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+// these are visible in the package
+var b bool
+var s string
+var x, y float32
+
+func main() {
+    var i int // this is local in this function
+    fmt.Println(i, b, s, x, y)
+}    
+\end{minted}
+The Go syntax places the type after the variable name, which is different from many other programming languages.
+
+In Go, variables can be initialized with a specific value, or they will automatically receive a "zero value" if not explicitly initialized:
+\begin{itemize}
+    \item Numeric types are initialized to \texttt{0}.
+    \item Booleans are initialized to \texttt{false}.
+    \item Strings are initialized to an empty string \texttt{""}.
+\end{itemize}
+
+\begin{minted}{go}
+var i int = 10
+var b = true // infers the boolean type from the initializer
+var x, y = 1.5, 2.5
+\end{minted}
+Within functions, Go allows for short variable declarations using the \texttt{:=} syntax. This shorthand both declares and initializes the variable.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func main() {
+    k := 3
+    fmt.Println(k)
+}
+\end{minted}
+Here, \texttt{k} is initialized to 3 without explicitly stating its type.
+
+Constants in Go are declared using the \texttt{const} keyword. They are similar to variables but immutable, meaning their value cannot be changed after declaration.
+
+\begin{minted}{go}
+const k = 10
+const zero = -273.15
+\end{minted}
+
+\subsubsection{Arrays and slices}
+An array in Go is a fixed-length sequence of elements of a specific type. Arrays are declared with a specified size, and each element is initialized to its zero value by default.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func main() {
+    var v [10]int
+    odds := [5]int{1, 3, 5, 7, 9}
+    i := 4
+    v[0] = odds[i]
+    fmt.Println(v)
+}
+\end{minted}
+In this example, \texttt{v} is an integer array of size 10, while odds is a fixed array initialized with specific odd numbers.
+
+Slices in Go are more flexible than arrays. They represent a segment of an array and can be resized as needed. A slice is not an independent data structure but rather a view of an underlying array.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func main() {
+    vowels := [5]string{"a", "e", "i", "o", "u"}
+    var s []string = vowels[1:3] // ["e", "i"]
+    fmt.Println(s)
+}
+\end{minted}
+Slices have a length, which is the number of elements in the slice, and a capacity, which is the number of elements from the slice's starting point to the end of the array.
+
+\subsubsection{Maps}
+Maps in Go are unordered collections of key-value pairs, where each key is unique. They are initialized using the make function or directly through literals.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func main() {
+    temperatures := map[string]int{
+        "Rome": 27,
+        "London": 18,
+        "San Francisco": 21,
+    }
+    fmt.Println(temperatures)
+}
+\end{minted}
+
+\subsubsection{Pointers}
+Pointers in Go allow for the manipulation of memory addresses directly. A pointer is a variable that holds the address of another variable.
+
+\begin{minted}{go}
+i := 42
+p := &i // p now holds the address of i
+fmt.Println(*p) // dereferences p to retrieve the value of i
+*p = 21 // modifies i through p
+\end{minted}
+Pointers enable efficient management of memory and are integral to many advanced programming techniques.
+
+\subsubsection{Custom types and structs}
+In Go, structs are a way to define complex data structures by grouping together variables under one name. A struct is similar to an object in other programming languages, but it has no methods or inheritance features. Instead, structs in Go are simply collections of fields, each with a specific data type. This makes structs powerful for organizing data in meaningful ways and is an essential feature when building scalable applications.
+
+To define a struct in Go, you use the \texttt{type} keyword, followed by the name of the struct and the keyword \texttt{struct}. Each field is declared within curly braces and has a name and type.
+
+Consider the example of a struct called \texttt{Vertex}, which contains two fields, \texttt{x} and \texttt{y}, both integers. This struct could represent a point in a 2D coordinate system:
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+type Vertex struct {
+    x int
+    y int
+}
+
+func main() {
+    v := Vertex{1, 2}
+    fmt.Println(v) // Output: {1 2}
+}
+\end{minted}
+In this example, the \texttt{Vertex} struct is initialized with the values 1 and 2 for \texttt{x} and \texttt{y} respectively. When printed, \texttt{fmt.Println(v)} outputs \texttt{{1 2}}, showing the values of \texttt{x} and \texttt{y} in the \texttt{Vertex} struct.
+
+Struct fields can be accessed and modified using the dot \texttt{.} notation.
+
+\begin{minted}{go}
+v.x = 4
+fmt.Println(v) // Output: {4 2}
+\end{minted}
+Here, we modified the \texttt{x} value of \texttt{v} to 4, while \texttt{y} remains 2. If we want to perform operations on the struct fields, such as calculating the squared sum of \texttt{x} and \texttt{y}, we can do the following:
+
+\begin{minted}{go}
+m := v.x*v.x + v.y*v.y
+fmt.Println(m) // Output: 20
+\end{minted}
+This code calculates the expression $x^2+y^2$, which equals 20 for the given values of \texttt{x} and \texttt{y}.
+
+Pointers are integral to Go's memory management, and structs can be referenced using pointers. When you create a pointer to a struct, it allows you to modify the original struct data through the pointer. Here’s how to use pointers with a Vertex struct:
+
+\begin{minted}{go}
+p := &v
+p.x = 5
+fmt.Println(v) // Output: {5 2}
+\end{minted}
+In this example, \texttt{p} is a pointer to \texttt{v}. By accessing \texttt{p.x}, we change \texttt{x} to 5 through the pointer, modifying the original struct \texttt{v} directly. When we print \texttt{v}, it shows \texttt{{5 2}}, indicating that the change made via the pointer has affected the original struct.
+
+In Go, struct literals provide a convenient way to initialize structs with specific values for their fields. Struct literals can be written in several forms, as illustrated in the following examples:
+
+\begin{minted}{go}
+var (
+    v1 = Vertex{1, 2}      // Full initialization, v1 has type Vertex
+    v2 = Vertex{x: 1}      // Partially initialized, y defaults to 0
+    v3 = Vertex{}          // All fields are set to zero values, x:0 and y:0
+    p  = &Vertex{1, 2}     // Pointer to a Vertex struct, type *Vertex
+)
+\end{minted}
+Here, \texttt{v1} is fully initialized with \texttt{x = 1} and \texttt{y = 2}, while \texttt{v2} only specifies \texttt{x = 1}, so \texttt{y} defaults to \texttt{0}, Go's zero value for integers. \texttt{v3} initializes with both \texttt{x} and \texttt{y} as \texttt{0}, using the default zero values for all fields. Finally, \texttt{p} is a pointer to a \texttt{Vertex} struct, which can be useful for efficiently managing memory and modifying the struct’s fields directly.
+
+Using struct literals is an efficient way to initialize and manage data within structs, especially in cases where many struct instances need to be created with similar default values.
+
+\subsection*{Functions}
+In Go, functions are essential building blocks that allow developers to break down complex tasks into smaller, reusable sections of code. Functions enable code modularity, making programs easier to write, understand, and maintain. They also play a crucial role in defining a program’s flow by encapsulating logic in organized units.
+
+A function in Go is defined with the \texttt{func} keyword, followed by the function name, parameters, return type, and the body of the function. Parameters are defined by their name followed by their type, and unlike many other languages, Go places the type after the parameter name.
+
+Consider the following example of a function called \texttt{add}, which takes two integers, \texttt{x} and \texttt{y}, as input parameters and returns their sum:
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func add(x int, y int) int {
+    return x + y
+}
+
+func main() {
+    fmt.Println(add(42, 13))
+}
+\end{minted}
+In this program, the \texttt{add} function receives two integer arguments and returns an integer. When called with the values 42 and 13, it computes their sum and prints the result, which is 55.
+
+One of Go’s unique features is its support for multiple return values. This allows a function to return more than one result, which can be useful for conveying additional information about an operation. For instance, a division operation might need to return both the quotient and the remainder of the division.
+
+The following example defines a function called \texttt{divide}, which takes two integers, \texttt{x} and \texttt{y}, and returns both the quotient and remainder:
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func divide(x int, y int) (int, int) {
+    return x / y, x % y
+}
+
+func main() {
+    fmt.Println(divide(7, 3)) // Output: 2 1
+}
+\end{minted}
+The \texttt{divide} function divides \texttt{x} by \texttt{y} and returns two values: \texttt{x/y} (the quotient) and \texttt{x\%y} (the remainder). When we call \texttt{divide(7, 3)}, it returns 2 and 1, representing the quotient and remainder respectively.
+
+Go also offers named return values, which make function definitions more descriptive and often eliminate the need for explicit return values. In this setup, you can specify names for the return values in the function signature. Within the function body, these names act as regular variables, and you can assign values to them as you would any other variable.
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func divide(x int, y int) (div int, mod int) {
+    div = x / y
+    mod = x % y
+    return
+}
+
+func main() {
+    fmt.Println(divide(7, 3)) // Output: 2 1
+}
+\end{minted}
+In this version of \texttt{divide}, we specify \texttt{div} and \texttt{mod} as named return values. Inside the function, we assign the quotient to \texttt{div} and the remainder to \texttt{mod}. Instead of writing \texttt{return div, mod}, we simply use \texttt{return}, which automatically returns the values of \texttt{div} and \texttt{mod} as specified in the function signature.
+
+\subsection*{Control structures}
+In programming, control structures play a critical role in defining the flow of execution. Go provides various control structures to manage the logical flow of a program. 
+
+\subsubsection{For loop}
+Go's only looping construct is the for loop, which can be adapted to different needs.
+
+The first example illustrates a simple for loop where the program iterates from 0 to 5:
+
+\begin{minted}{go}
+package main
+import "fmt"
+func main() {
+    for i := 0; i <= 5; i++ {
+        fmt.Println(i)
+    }
+}
+\end{minted}
+In this snippet, the loop initializes \texttt{i} at \texttt{0}, checks if \texttt{i} is less than or equal to 5, prints the value of \texttt{i}, and increments it by one on each iteration. As a result, it prints the numbers 0 to 5.
+
+Go also allows you to use a for loop as a while loop. Here’s an example:
+\begin{minted}{go}
+sum := 1
+for sum < 8 {
+    sum += sum
+}
+fmt.Println(sum)
+\end{minted}
+In this case, the loop continues as long as sum is less than 8, doubling sum with each iteration until the condition is no longer met.
+
+It’s possible to create an infinite loop by omitting the condition altogether:
+\begin{minted}{go}
+for {
+    // this will run indefinitely
+}
+\end{minted}
+
+\subsubsection{If}
+The if statement in Go is straightforward and often used for decision-making. Here’s an example that calculates the factorial of a number using recursion:
+
+\begin{minted}{go}
+package main
+import "fmt"
+
+func fact(n int) int {
+    if n <= 1 {
+        return 1
+    } else {
+        return n * fact(n-1)
+    }
+}
+
+func main() {
+    fmt.Println(fact(5))
+}
+\end{minted}
+In this function, fact recursively calls itself until \texttt{n} is less than or equal to 1, at which point it returns 1.
+
+Go allows a variable to be declared and used within the if statement itself, as demonstrated in the following example:
+
+\begin{minted}{go}
+func pow(x, n, lim float64) float64 {
+    if v := math.Pow(x, n); v < lim {
+        return v
+    } else if v > 2 * lim {
+        return 99999 - v
+    }
+    return lim
+}
+\end{minted}
+Here, \texttt{v} is defined within the if statement, allowing it to be used within this block only. This function computes a power and compares it to a limit. If the computed value \texttt{v} is less than the limit, it returns \texttt{v}; otherwise, it performs additional checks.
+
+\subsubsection{Switch}
+The switch statement in Go is a powerful alternative to chained if-else statements. It evaluates each case from top to bottom, executing only the first matching case and exiting afterward.
+
+\begin{minted}{go}
+package main
+import ("fmt"; "time")
+
+func main() {
+    fmt.Println("When's Saturday?")
+    today := time.Now().Weekday()
+    switch time.Saturday {
+    case today + 0:
+        fmt.Println("Today.")
+    case today + 1:
+        fmt.Println("Tomorrow.")
+    default:
+        fmt.Println("Too far away.")
+    }
+}
+\end{minted}
+This program checks the current day of the week and determines the proximity of the upcoming Saturday.
+
+A switch can also be used without a condition, making it act like a sequence of if statements:
+
+\begin{minted}{go}
+switch {
+case t.Hour() < 12:
+    fmt.Println("Good morning!")
+case t.Hour() < 17:
+    fmt.Println("Good afternoon.")
+default:
+    fmt.Println("Good evening.")
+}
+\end{minted}
+This form is useful when you need to evaluate multiple conditions based on different expressions.
+
+\subsubsection{Defer}
+The defer statement in Go is used to postpone the execution of a function until the surrounding function returns. Deferred calls are executed in Last-In-First-Out (LIFO) order.
+
+\begin{minted}{go}
+func main() {
+    defer fmt.Println("world")
+    fmt.Println("hello")
+}
+\end{minted}
+When this code runs, it first prints hello, and then, upon reaching the end of the main function, it prints world. This behavior is particularly useful for closing resources or cleaning up after the main logic of the function has been executed.
+
+A common use case for defer is to ensure that resources are released even if an error occurs:
+\begin{minted}{go}
+file, err := os.Open("file.txt")
+if err != nil {
+    log.Fatal(err)
+}
+defer file.Close()
+\end{minted}
+This code opens a file and defers its closure. Regardless of how the function exits, the file will be closed at the end, ensuring proper resource management.
+
+\subsection*{Interfaces and methods}
+In Go, interfaces and methods are fundamental tools for designing modular and reusable code. They provide a way to define behavior that types can implement, allowing Go programs to achieve polymorphism—a concept where different types can be treated in a uniform manner if they share the same behaviors.
+
+Interfaces in Go are collections of method signatures. If a type provides implementations for all the methods listed in an interface, it is said to satisfy the interface. This enables Go to implement "duck typing," where a type’s compatibility with an interface depends on its methods, not on an explicit declaration.
+
+\subsubsection{Methods}
+Before diving into interfaces, it's important to understand methods in Go, as they form the basis of interface implementation. Methods in Go are functions with a receiver argument, which is a special parameter that binds the function to a specific type, making it a method of that type. Structs, which are custom data types that group variables together, commonly serve as the receiver for methods in Go.
+
+Consider a struct \texttt{Vertex}, which represents a point in a 2D coordinate system:
+
+\begin{minted}{go}
+type Vertex struct {
+    X int
+    Y int
+}
+
+// Somewhere in the code
+v := Vertex{1, 2}
+fmt.Println(v)
+\end{minted}
+
+We can add a method to Vertex to compare if two Vertex instances are equal:
+
+\begin{minted}{go}
+func (v Vertex) Equal(other Vertex) bool {
+    return v.X == other.X && v.Y == other.Y
+}
+\end{minted}
+In this example, \texttt{Equal} is a method on the \texttt{Vertex} type. It takes another \texttt{Vertex} as an argument and returns true if both \texttt{X} and \texttt{Y} values are the same.
+
+In Go, methods can have either a value receiver or a pointer receiver. A pointer receiver allows the method to modify the original struct rather than a copy of it, which is particularly useful for memory efficiency with larger structs or when updates to the data are needed.
+
+\begin{minted}{go}
+func (v *Vertex) Equal(other *Vertex) bool {
+    return v.X == other.X && v.Y == other.Y
+}
+\end{minted}
+With \texttt{*Vertex} as the receiver, this \texttt{Equal} method operates on the pointer \texttt{v}, directly modifying or accessing the data of the original \texttt{Vertex}.
+
+Go allows methods to be defined on any type, including user-defined types based on basic types. For instance, you could define custom types for latitude and longitude and add methods that validate their range:
+
+\begin{minted}{go}
+type Latitude float64
+func (lat *Latitude) IsValid() bool {
+    return lat != nil && -90 <= *lat && *lat <= 90
+}
+
+type Longitude float64
+func (lng *Longitude) IsValid() bool {
+    return lng != nil && -180 <= *lng && *lng <= 180
+}
+\end{minted}
+In this example, \texttt{Latitude} and \texttt{Longitude} are types based on \texttt{float64}, with each having a method \texttt{IsValid} that checks if the values fall within acceptable ranges for geographic coordinates.
+
+We can also create a \texttt{Point2D} struct that represents a coordinate pair and includes methods to validate the coordinate as a whole or to check if it’s at the origin:
+
+\begin{minted}{go}
+type Point2D struct {
+    Latitude  Latitude
+    Longitude Longitude
+}
+
+func (p Point2D) IsValid() bool {
+    return p.Latitude.IsValid() && p.Longitude.IsValid()
+}
+
+func (p Point2D) IsZero() bool {
+    return p.Latitude == 0 && p.Longitude == 0
+}
+\end{minted}
+
+\subsubsection{Interfaces}
+An interface in Go is a collection of method signatures. If a type has methods that match all the signatures in an interface, that type implicitly satisfies the interface. This design enables Go’s “duck typing” approach, where a type’s compatibility with an interface is determined by the methods it implements.
+
+A simple example is the \texttt{Stringer} interface in the \texttt{fmt} package, which defines a single method \texttt{String}:
+
+\begin{minted}{go}
+type Stringer interface {
+    String() string
+}
+\end{minted}
+Any type that implements the \texttt{String} method, returning a string, satisfies the \texttt{Stringer} interface.
+
+To demonstrate how interfaces work, let’s add the \texttt{String} method to the Vertex struct so that it satisfies the \texttt{Stringer} interface
+
+\begin{minted}{go}
+type Vertex struct {
+    X int
+    Y int
+}
+
+func (v *Vertex) String() string {
+    return fmt.Sprintf("(%d,%d)", v.X, v.Y)
+}
+
+// ...
+
+func printSomething(s fmt.Stringer) {
+    fmt.Println(s.String())
+}
+\end{minted}
+In this example, \texttt{Vertex} implements the \texttt{Stringer} interface by providing a \texttt{String} method. This method uses \texttt{fmt.Sprintf} to format \texttt{Vertex} values as \texttt{(X, Y)}. Now, whenever a \texttt{Vertex} instance is printed, the custom \texttt{String} method will be used, producing a nicely formatted string output. The \texttt{printSomething} function takes any type that satisfies the Stringer interface, allowing it to accept diverse types that have a String method.
+
+Another commonly used interface in Go is the \texttt{Writer} interface from the io package, which defines a Write method:
+
+\begin{minted}{go}
+// io/io.go:96
+type Writer interface {
+    Write(p []byte) (n int, err error)
+}
+\end{minted}
+The \texttt{Writer} interface is implemented by types that can write data. For example, \texttt{ResponseWriter} in the \texttt{net/http} package is a specialized version of \texttt{Writer} used to send HTTP responses. It includes additional methods such as Header and \texttt{WriteHeader}:
+
+\begin{minted}{go}
+// net/http/server.go:95
+type ResponseWriter interface {
+    Header() Header
+    Write([]byte) (int, error)
+    WriteHeader(statusCode int)
+}
+
+func saveFile(w io.Writer, content []byte) {
+    w.Write(content)
+}
+\end{minted}
+Here, \texttt{saveFile} accepts any type that satisfies the \texttt{Writer} interface, allowing the function to be used with a variety of types that handle data writing. The \texttt{saveFile} function doesn’t need to know the details of the type—it only relies on the fact that it implements \texttt{Write}.
+
+\subsection*{Errors handling}
+Error handling in Go is distinct from many other programming languages, as it does not rely on exceptions or try-catch blocks. Instead, errors in Go are treated as normal values that are returned by functions. This approach encourages developers to handle errors immediately and explicitly, improving code readability and reliability.
+
+Errors are represented by the \texttt{error} type, which allows them to be returned alongside other values in a function. By convention, errors are usually returned as the last value in a function’s return signature. For example:
+
+\begin{minted}{go}
+func myFunction(a, b string) (string, int, error)
+\end{minted}
+
+In Go, errors are meant to be handled immediately rather than postponed. This principle helps prevent unexpected failures and ensures that issues are dealt with as they arise. For example, when parsing a string to an integer, it’s essential to check for errors right after the parsing attempt:
+
+\begin{minted}{go}
+var someString string
+value, err := strconv.ParseInt(someString, 10, 64)
+if err != nil {
+    // Handle the error immediately
+}
+\end{minted}
+
+There are several ways to handle errors within functions in Go. Let’s explore the most common strategies.
+
+\subsubsection{Handling errors internally}
+One approach is to handle errors directly within the function where they occur. For example, the \texttt{parseOrZero} function attempts to parse a string to an integer but returns 0 if parsing fails:
+
+\begin{minted}{go}
+func parseOrZero(someString string) int64 {
+    value, err := strconv.ParseInt(someString, 10, 64)
+    if err != nil {
+        return 0
+    }
+    return value
+}
+\end{minted}
+
+\subsubsection{Returning errors to the caller}
+In cases where the error needs to be managed by the calling code, Go encourages passing errors up the call stack. The \texttt{parseAndIncrement} function demonstrates this approach, incrementing a parsed integer if parsing succeeds, but returning an error if parsing fails:
+
+\begin{minted}{go}
+func parseAndIncrement(strValue string) (int64, error) {
+    value, err := strconv.ParseInt(strValue, 10, 64)
+    if err != nil {
+        return 0, fmt.Errorf("error parsing value: %w", err)
+    }
+    value++
+    return value, nil
+}
+\end{minted}
+
+The choice between handling errors internally and passing them to the caller depends on the context. Sometimes, a function may handle certain errors while returning others to the caller.
+
+\subsubsection{Don't panic for error handling}
+While Go discourages the use of panic for general error handling, there are specific situations where it can be appropriate. The panic function abruptly stops the program and provides an error message, making it useful for "throwaway code" or cases where the program cannot continue safely.
+
+\begin{minted}{go}
+func main() {
+    var someString = "12345"
+    value, err := strconv.ParseInt(someString, 10, 64)
+    if err != nil {
+        panic(err)
+    }
+}
+\end{minted}
+In this case, panic halts the program if parsing fails. However, Go’s best practices recommend limiting the use of panic to the \texttt{main()} function or situations where recovery is impossible.
+
+\subsubsection{Creating custom errors}
+Go allows developers to create custom error messages to provide more context when an error occurs. One way to do this is through \texttt{errors.New}, which generates a new error message.
+
+Consider the example of parsing a latitude value and checking if it’s within the valid range (-90 to 90 degrees):
+
+\begin{minted}{go}
+func ParseLatitude(str string) (Latitude, error) {
+    latitude, err := strconv.ParseFloat(str, 64)
+    if err != nil {
+        return 0, err
+    } else if latitude < -90 || latitude > 90 {
+        return 0, errors.New("value out of range")
+    }
+    return Latitude(latitude), nil
+}
+\end{minted}
+
+For more complex applications, it can be beneficial to declare error variables that describe specific conditions. By defining custom error variables, developers can check for particular error types in the calling code.
+
+\begin{minted}{go}
+var ErrOutOfRange = errors.New("value out of range")
+
+func ParseLatitude(str string) (Latitude, error) {
+    latitude, err := strconv.ParseFloat(str, 64)
+    if err != nil {
+        return 0, err
+    } else if latitude < -90 || latitude > 90 {
+        return 0, ErrOutOfRange
+    }
+    return Latitude(latitude), nil
+}
+\end{minted}
+In the \texttt{main()} function, the custom error \texttt{ErrOutOfRange} can be checked using \texttt{errors.Is}, allowing the program to handle the error appropriately:
+
+\begin{minted}{go}
+latitude, err := ParseLatitude(latitudeInString)
+if errors.Is(err, ErrOutOfRange) {
+    // Handle as invalid range
+} else {
+    // Handle other types of errors
+}
+\end{minted}
+
+For even more flexibility, Go allows developers to create structured error types by implementing the error interface. This can be useful when additional information, such as line numbers or detailed messages, needs to be included in the error.
+
+The error interface in Go requires a single method, \texttt{Error()}, that returns a string representation of the error.
+
+\begin{minted}{go}
+type MyError struct {
+    LineNumber uint
+    Message    string
+}
+
+func (e *MyError) Error() string {
+    return fmt.Sprintf("Error in line %d: %s", e.LineNumber, e.Message)
+}
+
+func myFunction(str string) error {
+    return &MyError{LineNumber: 2, Message: "Missing :"}
+}
+\end{minted}
+In this example, \texttt{MyError} is a custom error type with fields for a line number and a message. The \texttt{Error()} method formats these fields into a readable error string. When \texttt{myFunction} encounters an error, it returns a \texttt{MyError} instance with detailed information.
+
+\section{Concurrency}
+Concurrency is a programming approach that enables a program to manage multiple tasks at the same time. However, it’s important to distinguish between concurrency and parallelism. As often quoted, "Concurrency is about dealing with lots of things at once, while parallelism is about doing lots of things at once." In other words, concurrency is more about structuring tasks efficiently, even if they aren't running simultaneously. Go was specifically designed with concurrency in mind, making it straightforward to implement concurrent programming through features such as goroutines and channels.
+
+\subsection*{Go routines}
+In Go, the primary way to achieve concurrency is through goroutines. A goroutine is a lightweight thread that runs concurrently with other goroutines in the same address space, making it an efficient way to manage tasks.
+
+\begin{minted}{go}
+func main() {
+    go func() {
+        var i = 0
+        for i < 10 {
+            fmt.Println(i)
+            i++
+        }
+    }()
+    
+    var j = 0
+    for j < 10 {
+        fmt.Println(j)
+        j++
+    }
+}
+\end{minted}
+In this program, two loops are running: one inside a goroutine and the other in the main function. The \texttt{go} keyword in front of the anonymous function call makes it a goroutine, allowing it to execute concurrently with the main loop.
+
+\subsection*{Channels}
+Channels in Go facilitate communication between goroutines by allowing them to send and receive messages. They are essentially typed conduits that synchronize goroutines.
+
+\begin{minted}{go}
+func main() {
+    var channel = make(chan int)
+    go func() {
+        var i = 0
+        for i < 10 {
+            channel <- i
+            i++
+        }
+    }()
+    
+    var j = 0
+    for j < 10 {
+        fmt.Println(<-channel)
+        j++
+    }
+}
+\end{minted}
+In this example, a goroutine sends integers from 0 to 9 to the channel. The main function then receives these values from the channel and prints them. This mechanism not only facilitates communication but also synchronizes the two loops, as each print waits for a new value to be sent.
+
+Buffered channels are a variation of channels that allow multiple values to be sent and stored without an immediate receiver.
+
+\begin{minted}{go}
+func main() {
+    var channel = make(chan int, 2)
+    go func() {
+        var i = 0
+        for i < 10 {
+            channel <- i
+            i++
+        }
+    }()
+    
+    var j = 0
+    for j < 10 {
+        fmt.Println(<-channel)
+        j++
+    }
+}
+\end{minted}
+Here, the buffer size of 2 allows two values to be stored in the channel without requiring an immediate read.
+
+\subsection*{Select}
+The \texttt{select} statement in Go provides a way to handle multiple channel operations. It waits until at least one of its cases can proceed and then executes it. This is particularly useful when you want to listen to multiple channels simultaneously.
+
+\begin{minted}{go}
+func main() {
+    var chan1 = make(chan int, 2)
+    var chan2 = make(chan int, 2)
+    var chan3 = make(chan int, 2)
+
+    select {
+    case v1 := <-chan1:
+        fmt.Printf("Received %v from channel 1\n", v1)
+    case v2 := <-chan2:
+        fmt.Printf("Received %v from channel 2\n", v2)
+    case chan3 <- 1:
+        fmt.Println("Sent value to channel 3")
+    default:
+        fmt.Println("No one is ready to communicate")
+    }
+}
+\end{minted}
+In this code, select listens on three channels. If any channel operation is ready, it will be executed; otherwise, it falls back to the default case.
+
+Using select, we can also implement timeouts for receiving data. This can be done by creating a timeout channel with \texttt{time.After}.
+
+\begin{minted}{go}
+func main() {
+    var chan1 = make(chan int, 2)
+    var timeout = time.After(5 * time.Second)
+
+    select {
+    case v1 := <-chan1:
+        fmt.Printf("Received %v from channel 1\n", v1)
+    case <-timeout:
+        fmt.Println("Timeout")
+    }
+}
+\end{minted}
+In this example, the program waits for data from \texttt{chan1}. If no data is received within 5 seconds, it proceeds with the timeout case, printing \texttt{"Timeout"}.
+
+When multiple goroutines need to access shared resources, data races can occur. Go provides \texttt{sync.Mutex} to lock data, ensuring that only one goroutine accesses it at a time.
+
+\begin{minted}{go}
+var mu sync.Mutex
+var idx int
+
+func Increment() {
+    mu.Lock()
+    defer mu.Unlock()
+    idx++
+}
+\end{minted}
+The \texttt{Increment} function locks \texttt{mu} before updating \texttt{idx}, preventing other goroutines from accessing \texttt{idx} until it’s unlocked. By calling \texttt{defer mu.Unlock()}, we ensure that mu is unlocked at the end of the function, regardless of how the function exits.

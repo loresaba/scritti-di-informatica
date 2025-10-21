@@ -1,0 +1,21 @@
+\chapter{Induzione}
+
+Supponiamo che una certa proprietà vale per $k=k_0\in\mathbb{N}$ e supponiamo che se vale $P_k$ allora vale anche $P_{k+1}$. Se riusciamo a dimostrare quanto detto allora $P_k$ sarà verificata $\forall k\geq k_0$.
+\begin{example}
+    $k!\geq 2{k-1}$.
+    Dimostriamo che $P_k$ vale $\forall k\in\mathbb{N}$ usando il principio di induzione.
+    
+    Scelgo $k_0$ da cui partire per verificare al disuguaglianza.
+    \begin{equation*}
+        P_0=0!\geq 2^{-1}\hspace{0,5cm}1\geq \frac{1}{2}    
+    \end{equation*}
+    Ora dobbiamo verificare che se vale per $P_k$ vale anche per $P_{k+1}$. Supponiamo $P_k$ come vera:
+    \begin{equation*}
+        P_k=k!\geq 2^{k-1}\hspace{0,5cm}P_{k+1}=(k+1)k!\geq 2^{k-1}(k+1)
+    \end{equation*}
+    Possiamo ora affermare che $2^{k-1}(k+1)\geq 2*2^{k-1}$. Abbiamo così dimostrato che:
+    \begin{equation*}
+        P_{k+1}=(k+1)!\geq 2^k
+    \end{equation*}
+    Quindi $P_k$ vale $\forall k\in\mathbb{N}$.
+\end{example}

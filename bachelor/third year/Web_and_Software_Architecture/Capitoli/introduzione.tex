@@ -1,0 +1,69 @@
+\chapter{Introduction}
+%\addcontentsline{toc}{chapter}{Introduzione al corso}
+
+\begin{redbar}
+The \textbf{Web and Software Architecture (WaSA)} course offers a comprehensive introduction to the world of full-stack web development. It is designed to equip students with essential skills to design and implement modern web applications using contemporary frameworks, languages, and tools.
+\end{redbar}
+
+The WaSA course has several fundamental goals, each aimed at building a strong foundation in web development:
+\begin{enumerate}
+    \item \textit{Standard Tools and Frameworks:} Students will gain hands-on experience with key industry tools, such as git for version control and Vue.js, a popular JavaScript framework for building user interfaces.
+    \item \textit{Web Markup Languages:} Students will learn the core languages of web development — HTML for structure and CSS for styling — necessary for creating well-formed web pages.
+    \item \textit{Powerful Programming Languages:} The course delves into two primary programming languages: JavaScript, essential for frontend development and Go used predominantly for backend development.
+    \item \textit{API Design and Implementation:} Students will learn how to design and implement an Application Programming Interface (API), a crucial component for creating scalable web applications that can communicate between different systems.    
+    \item \textit{Client-Server Architecture:} The course will guide students through the design and development of a complete client-server web application, preparing them to handle both frontend and backend responsibilities.
+    \item \textit{Software Containers and Deployment:} Finally, students will learn to package their applications into containers using Docker and deploy them in scalable environments, such as Kubernetes.
+\end{enumerate}
+
+\section{Web apps}
+Web applications, commonly known as web apps, are a significant part of modern computing, forming the backbone of how users interact with content, services, and functionality on the internet. But before delving into the specifics of web apps, it’s important to understand what an application generally represents.
+
+In the simplest terms, an application is a computer program designed to perform specific tasks. Applications can take many forms and run on various platforms, including desktop computers, mobile devices, and web browsers. Let’s explore the different types of applications to understand how web apps fit into the broader landscape of software development.
+
+\begin{enumerate}
+    \item \textit{Desktop Applications:} A desktop application is a software program that runs directly on the operating system of a desktop or laptop computer. It typically requires installation and may or may not need an internet connection to function.
+    \item \textit{Mobile Applications:} Mobile apps are designed to run on mobile devices such as smartphones, tablets, and smartwatches, operating within mobile operating systems like iOS or Android. Like desktop apps, they need to be installed from an app store and may also require internet connectivity for some functionalities.
+    Mobile apps can be further divided into: \textit{Native Apps}, these are applications specifically written for a particular mobile operating system, using languages such as Swift (for iOS) or Java/Kotlin (for Android); \textit{Hybrid Apps}, use web technologies and are compiled to run on various platforms. and, as a single codebase, can be adapted for multiple operating systems.
+    \item \textit{Web Applications:} Web apps represent a distinct type of application that operates entirely within a web browser. Unlike desktop or mobile apps, web apps don’t require installation. They can be accessed via URLs and need a stable internet connection to function.
+    Web apps differ from traditional websites in their interactivity and complexity. Each user interaction in a traditional web app leads to the loading of a new webpage, which contains an updated user interface (UI) based on the interaction.
+    \item \textit{Single Page Applications (SPA):} Single Page Applications take web app development to a new level by dynamically rewriting the content on the same page rather than loading new pages from the server with each interaction. The user interface remains intact, while only the relevant data is updated.
+    \item \textit{Progressive Web Applications (PWA):} Progressive Web Apps combine the best aspects of both web and mobile apps. A PWA is a web application that can be added to a device's home screen, allowing users to access it offline or in low-quality network conditions.
+\end{enumerate}
+
+A web application is essentially software that runs within a web browser. Unlike traditional software applications, web apps split their operations between two distinct environments: the client-side (front-end) and the server-side (back-end). The front-end of a web app is the part of the application that users interact with directly through their browser. It’s often referred to as the presentation layer. The front-end is built using markup languages like HTML for structure, CSS for styling, and JavaScript for interactivity. Additional techniques, such as AJAX (Asynchronous JavaScript and XML), are used to update parts of a web page without reloading the entire page. The back-end is where the core functionality of a web app resides, often referred to as the data access layer. The back-end can be built using various languages, ranging from scripting languages like PHP and Python to compiled languages like Java, C\#, or Go. It is responsible for managing the application’s logic, handling user requests, interacting with databases, and returning the necessary data to the front-end for display. The back-end also deals with Application Programming Interfaces (APIs), which act as bridges between the client and server, facilitating communication and data exchange. An API provides the necessary endpoints that allow the client to request specific services or data from the server.
+
+% \section{REST}
+% In modern web development, REST (REpresentational State Transfer) plays a pivotal role in designing distributed systems, particularly in the context of web services. REST defines a set of architectural principles that govern how networked resources should be transferred between clients and servers.
+
+% At its core, REST is an architectural style used for distributed hypermedia systems. This architecture facilitates communication between various components, such as a client and a server, by transferring representations of resources. The term "representational" refers to the fact that REST doesn’t directly expose resources but offers a current representation of them through a medium like JSON, XML, or HTML. A resource in REST refers to any identifiable information or entity that can be accessed or manipulated. This could be anything from a document, image, or service, to a real-world object like a person or a collection of data. The critical feature of a resource is its ability to vary over time. For instance, a resource might represent the latest version of a software program, which would naturally evolve as new updates are made. 
+
+% When interacting with a resource in a RESTful system, what is transferred between components is not the resource itself but its representation. The representation of a resource encapsulates its current state, which may include metadata and a structured format such as JSON or XML. This data format is known as the media type.
+
+% \subsection*{Uniform Resource Indentifier (URI)}
+% In REST, each resource is uniquely identified by a Uniform Resource Identifier (URI), which is a string of characters that points to a resource's location. A URI can represent either a logical or physical resource and typically takes the form of a URL, such as: \texttt{http://example.com/users}. This URI addresses the "users" resource on a given server, allowing clients to access or manipulate the resource by sending HTTP requests to this address.
+
+% \begin{Notation}{URI}{}
+%     When constructing URIs, REST adheres to several conventions to maintain simplicity and readability: Forward slashes (/) express hierarchy within the URI structure. However, trailing slashes should only be used when the resource is not a "leaf" node (i.e., it is not a final, single resource). Use hyphens (-) rather than underscores (\_) to separate words in a URI, as hyphens are more readable. Stick to lowercase letters for consistency. Avoid file extensions in URIs (such as .html or .json), as the media type is specified in the HTTP headers. Use query components to filter or refine the results. For instance, to access only resources from a specific region: \texttt{http://example.com/managed-devices/?region=USA}.
+% \end{Notation}
+
+% URIs serve the purpose of identifying resources, but the actions performed on these resources are not specified within the URI. Instead, REST utilizes HTTP methods to interact with resources. Common HTTP methods include:
+% \begin{itemize}
+%     \item \textit{GET:} Retrieve the representation of a resource. 
+    
+%     Example: \texttt{GET http://example.com/managed-devices/\{id\}}.
+%     \item \textit{PUT:} Update or create a new resource at the specified URI. 
+    
+%     Example: \texttt{PUT http://example.com/managed-devices/\{id\}}.
+%     \item \textit{DELETE:} Remove a resource. 
+    
+%     Example: \texttt{DELETE http://example.com/managed-devices/\{id\}}.
+% \end{itemize}
+
+% REST operates on five fundamental constraints that ensure scalability, simplicity, and performance:
+% \begin{enumerate}
+%     \item \textit{Client-Server:} The client-server model enforces a clear separation of concerns: the client focuses on the user interface, while the server manages data storage and business logic. This separation enhances scalability and portability, making it easier to update the system without disrupting users.
+%     \item \textit{Stateless:} Each client request must be self-contained. The server does not maintain any session state between requests, meaning that every request carries with it all the information needed to process it. This simplifies server design and allows for easy scalability, as servers don't need to track individual clients.
+%     \item \textit{Cacheable:} REST supports cacheable responses, meaning that clients can store resource representations for later use, thus reducing the need for repeated server requests. The duration for which a resource can be cached is typically specified in the response headers.
+%     \item \textit{Uniform Interface:} REST employs a uniform interface to standardize the interactions between clients and servers. This ensures that implementations are decoupled from the services they provide, promoting interoperability across systems. There are four main constraints for the uniform interface: \textit{Identification of Resources:} Resources must be uniquely identifiable. \textit{Manipulation of Resources Through Representations:} Clients interact with resources via representations, such as JSON or XML. \textit{Self-descriptive Messages:} Each message exchanged between components should contain enough information to describe how it is processed. \textit{Hypermedia as the Engine of Application State (HATEOAS):} The client only needs the initial URI to interact with the system.
+%     \item \textit{Layered System:} In a layered system, different components handle different aspects of communication. For example, requests may pass through a proxy, gateway, or intermediary before reaching the origin server. These intermediary components forward requests and responses, potentially translating them or adding extra functionality such as load balancing. Each component interacts only with the immediate layer next to it, enhancing modularity and security.
+% \end{enumerate}

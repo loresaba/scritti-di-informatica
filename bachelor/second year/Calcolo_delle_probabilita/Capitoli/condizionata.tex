@@ -1,0 +1,385 @@
+\chapter{Probabilità condizionata e indipendenza}
+\section{Probabilità condizionata}
+\begin{redbar}
+    Siano $E$ e $F$ eventi con $P(F)>0$ allora la probabilità di $E$ \textbf{condizionata} a $F$ (cioè sapendo che $F$ si è verificata) è definita come:
+    \begin{equation*}
+        P(E|F):=\frac{P(E\cap F)}{P(F)}
+    \end{equation*}
+\end{redbar}
+
+Supponiamo $\mathbb{S}<\infty$ e che $\mathbb{S}$ abbia esisti equiprobabili. Osserviamo che $P(F)=\frac{|F|}{|\mathbb{S}|}>0\iff F\neq\emptyset$ cioè $|F|\geq1$. Inoltre:
+\begin{equation*}
+    P(E|F)=\frac{P(E\cap F)}{P(F)}=\frac{\frac{|E\cap F|}{|\mathbb{S}|}}{\frac{|F|}{|\mathbb{S}|}}=\frac{|E\cap F|}{|F|}
+\end{equation*}
+
+\begin{Example}{}{}
+    \textit{Ho 25 lampadine natalizie di cui 5 in perfetto stato, 10 parzialmente difettose (si spengono dopo il secondo giorno) e 10 rotte. Sapendo che una lampadine scelta a caso si accende, qual'è la probabilità che continui a funzionare per una settimana?}
+
+    Definiamo $\mathbb{S}=\{L_1,L_2,...,L_{25}\}$ formato da eventi equiprobabili, $G=\{$la lampadina è in perfetto stato$\}$, $D=\{$la lampadina è difettosa$\}$, $T=\{$la lampadina è rotta$\}$.
+
+    Secondo la probabilità condizionata:
+    \begin{equation*}
+        P(G|T^c)=\frac{P(G\cap T^c)}{P(T^c)}=\frac{|G\cap T^c|}{|T^c|}=\frac{|G|}{|T^c|}=\frac{5}{15}=\frac{1}{3}
+    \end{equation*}
+\end{Example}
+
+\section{Regola del prodotto}
+
+Abbiamo visto come $P(E|F)=\frac{P(E\cap F)}{P(F)}$ con $P(F)>0$, vale quindi allo stesso modo che $P(E\cap F)=P(E|F)P(F)$. 
+
+\begin{redbar}
+    Generalizziamo questa formula per ottenere la \textbf{regola del prodotto}. Supponiamo di avere $n$ eventi $E_1,...,E_n$, se $P(E_1\cap E_2\cap...\cap E_{n-1})>0$ allora:
+    \begin{equation*}
+        P(E_1\cap E_2\cap...\cap E_{n})=P(E_1)P(E_2|E_1)P(E_3|E_1\cap E_2)...P(E_n|E_1\cap E_2\cap ... \cap E_{n-1})
+    \end{equation*}
+\end{redbar}
+
+\begin{Osservation}{Regola del prodotto}{}
+    La condizione $P(E_1\cap E_2\cap...\cap E_{n-1})>0$ ci garantisce che tutti gli eventi condizionati nella regola del prodotto hanno probabilità positiva perché $E_1\cap E_2\cap...\cap E_{n-1}\subset E_1\implies 0<P(E_1\cap...\cap E_{n-1})\leq P(E_1)$ e $E_1\cap E_2\cap...\cap E_{n-1}\subset E_2\implies 0<P(E_1\cap...\cap E_{n-1})\leq P(E_2)$, e così via per tutti gli eventi fino a $E_n$.
+\end{Osservation}
+
+\begin{Demonstration}{Regola del prodotto}{}
+    Per dimostrare la regola del prodotto scriviamo esplicitamente cosa sono le probabilità condizionate nel membro destro:
+    \begin{align*}
+        P(E_1)P(E_2|E_1)P(E_3|E_1\cap E_2)...P(E_n|E_1\cap...\cap E_{n-1})=P(E_1)\frac{P(E_1\cap E_2)}{P(E_1)}\frac{P(E_1\cap E_2\cap E_3)}{P(E_1\cap E_2)}...\\\frac{P(E_1\cap E_2\cap...\cap E_{n})}{P(E_1\cap...\cap E_{n-1})}
+    \end{align*}
+    semplificando resta $P(E_1\cap E_2\cap...\cap E_{n})$.
+\end{Demonstration}
+
+\begin{Example}{}{}
+    \textit{Ho un mazzo di 40 carte da cui ne estraggo 3 senza rimpiazzo. Qual'è la probabilità che siano tutte di bastoni?}
+
+    Chiamo  $E=\{\mbox{le tre carte sono di bastoni}\}$ e $E_i=\{\mbox{la carta i-esima è di bastoni}\}$, allora:
+    \begin{equation*}
+        P(E)=P(E_1\cap E_2\cap E_3)=P(E_1)P(E_2|E_1)P(E_3|E_1\cap E_2)=\frac{10}{40}\frac{9}{39}\frac{8}{38}
+    \end{equation*}
+\end{Example}
+
+
+\section{Teorema di Bayes}
+Siano $E$ e $F$ due eventi, volendo calcolare $P(F|E)$ risulterebbe complesso rispetto al semplice calcolo di $P(E|F)$. 
+\begin{redbar}
+    Si definisce la \textbf{formula di Bayes} come:
+    \begin{equation*}
+        P(F|E)=\frac{P(F\cap E)}{P(E)}=\frac{P(F)P(E|F)}{P(E)}
+    \end{equation*}
+\end{redbar}
+Per trovare questa formula sono state utilizzate rispettivamente la probabilità condizionata e la regola del prodotto.
+
+\begin{Example}{}{}
+    \textit{Lancio una moneta, se esce testa estraggo 2 carte da un mazzo di 40 con reinserimento, mentre, se esce croce, estraggo solo una carta. Sapendo che non ho estratto alcuna carta di bastoni qual'è la probabilità che la moneta abbia dato testa?}
+
+    Definisco $T=\{\mbox{esce testa}\}$, $A=\{\mbox{non ho estratto alcuna carta di bastoni}\}$ e $P(A|T)=\{$probabilità di non estrarre carte di bastoni se estraggo 2 carte$\}$. E' abbastanza intuitivo che $P(A|T)$ sia $\frac{30^2}{40^2}=\frac{9}{16}$, per calcolare $P(A)$ scriviamo in modo diverso e utilizziamo la regola del prodotto:
+    \begin{equation*}
+        P(A)=P(A\cap T)+P(A\cap T^c)=P(T)P(A|T)+P(T^c)P(A|T^c)=\frac{1}{2}\frac{9}{16}+\frac{1}{2}\frac{3}{4}
+    \end{equation*}
+    Ora abbiamo tutto il necessario per calcolare:
+    \begin{equation*}
+        P(T|A)=\frac{P(T)P(A|T)}{P(A)}=\frac{\frac{1}{2}\frac{9}{16}}{\frac{1}{2}\frac{9}{16}+\frac{1}{2}\frac{3}{4}}
+    \end{equation*}
+\end{Example}
+
+\section{Legge della probabilità totale}
+\begin{redbar}
+    Dati $E$ e $F$ eventi, secondo la \textbf{legge della probabilità totale }abbiamo che:
+    \begin{equation*}
+        P(E)=P(F)P(E|F)+P(F^c)P(E|F^c)
+    \end{equation*}    
+\end{redbar}
+\begin{Demonstration}{Legge della probabilità totale}{}
+    $E=(E\cap F)\cup(E\cap F^c)$ sono eventi incompatibili quindi posso applicare l'additività e la regola del prodotto:
+    \begin{equation*}
+        P(E)=P(E\cap F)+P(E\cap F^c)=P(F)P(E|F)+P(F^c)P(E|F^c)
+    \end{equation*}
+\end{Demonstration}
+
+\begin{Example}{}{}
+    \textit{Supponiamo che sia stato indetto uno sciopero per lunedì 23 Ottobre. La probabilità di avere una buona adesione è del 40\% se c'è bel tempo e 20\% se c'è brutto tempo. Il meteorologo dice che con probabilità dell'80\% sarà bel tempo.}
+    \begin{enumerate}
+        \item Qual'è la probabilità che l'adesione allo sciopero sia buona?
+        \item E' passato il 23 Ottobre e ci comunicano che allo sciopero c'è stata grande adesione. Qual'è la probabilità che ci sia stato bel tempo?
+    \end{enumerate}
+    
+    Definiamo $E=\{\mbox{c'è buona adesione allo sciopero}\}$ e $F=\{\mbox{c'è bel tempo}\}$.
+    \begin{align*}
+        &\circled{1}\hspace{.5cm}P(E)=P(F)P(E|F)+P(F^c)P(E|F^c)=\frac{8}{10}\frac{4}{10}+\frac{2}{10}\frac{2}{10}=0,36\\
+        &\circled{2}\hspace{.5cm}P(E|F)=\frac{P(F)P(E|F)}{P(E)}=\frac{0,4*0,8}{0,36}=0,89
+    \end{align*}
+\end{Example}
+
+In generale, sia $\{F_i\}_{i\in I}$ una famiglia numerabile (finita o infinita) di eventi a due a due incompatibili la cui unione da $\mathbb{S}$, ovvero $\mathbb{S}=\bigcup_{i\in I}F_i$, allora $\forall E$ evento vale:
+\begin{equation*}
+    P(E)=\sum_{i\in I}P(F_i)P(E|F_i)
+\end{equation*}
+dove assumo $P(F_i)>0$ $\forall i\in I$.
+
+\begin{Demonstration}{Legge della probabilità totale generale}{}
+    Dato che $\mathbb{S}=\bigcup_{i\in I}F_i$, allora:
+    \begin{equation*}
+        E=\bigcup_{i\in I}(E\cap F_i)
+    \end{equation*}
+    Gli $F_i$ sono a due a due disgiunti e quindi lo sono anche gli eventi $E\cap F_i$. Essendo $I$ numerabile, per additività ho:
+    \begin{equation*}
+        P(E)=\sum_{i\in I}P(E\cap F_i)=\sum_{i\in I}P(F_i)P(E|F)
+    \end{equation*}
+\end{Demonstration}
+
+\begin{Osservation}{Legge della probabilità totale generale}{}
+    Se $\{F_i\}_{i\in I}$ è una partizione di $F$, allora $\forall E$ evento otteniamo la formula di Bayes:
+    \begin{equation*}
+        P(F_j|E)=\frac{P(F_j\cap E)}{P(E)}=\frac{P(E|F_j)P(F_j)}{\sum_{i\in I}P(E|F_i)P(F_i)}
+    \end{equation*}
+\end{Osservation}
+
+\begin{Example}{}{}
+    \textit{Ho un mazzo da 40 carte, lancio un dado ed estraggo, senza rimpiazzo, tante carte quanto il numero uscito. Qual'è la probabilità che si estraggono solo carte di bastoni?}
+
+    Definiamo $E=\{\mbox{estraggo solo carte di bastoni}\}$ e $F_i=\{\mbox{il dado da i}\}$. Notiamo che $F_1,F_2,...,F_6$ sono una partizione di $\mathbb{S}$, quindi per la legge della probabilità totale:
+    \begin{equation*}
+        P(E)=\sum_{i=1}^6P(F_i)P(E|F_i)=\sum_{i=1}^6\frac{1}{6}\frac{\binom{10}{i}}{\binom{40}{i}}
+    \end{equation*}
+\end{Example}
+
+\begin{Example}{}{}
+   \textit{ Ho una scatola con lampadine di 3 tipi. Se ho $T_1$ la probabilità che duri più di 1000 ore è 0,7, con $T_2$ la probabilità è 0,4, mentre con $T_3$ scende a 0,3. Si supponga che la scatola sia composta da 20\% $T_1$, 30\% $T_2$ e 50\% $T_3$.}
+    \begin{enumerate}
+        \item \textit{Qual'è la probabilità che una lampadina scelta a caso duri più di 1000 ore?}
+        \item \textit{Testo la lampadina scelta e dura più di 1000 ore, qual'è la probabilità che sia di tipo $T_2$?}
+    \end{enumerate}
+
+    Definiamo $A=\{$la lampadina scelta dura più di 1000 ore$\}$ e $F_j=\{$la lampadina scelta è di tipo $T_j\}$.
+    \begin{align*}
+        \circled{1}\hspace{0.5cm}P(A)=P(F_1)P(A|F_1)+P(F_2)P(A|F_2)+P(F_3)P(A|F_3)=\\0,2*0,7+0,3*0,4+0,5*0,3=0,41\\
+        \circled{2}\hspace{0.5cm}P(F_i|A)=\frac{P(F_i\cap A)}{P(A)}=\frac{P(F_i)P(A|F_i)}{P(A)}=\begin{cases}
+            \frac{0,2*0,7}{0,41}\hspace{0.5cm}i=1\\
+            \frac{0,3*0,4}{0,41}\hspace{0.5cm}i=2\\
+            \frac{0,5*0,3}{0,41}\hspace{0.5cm}i=3
+        \end{cases}
+    \end{align*}
+\end{Example}
+
+Non sempre però $P(E)$ è conosciuta per Bayes, quindi si può unire la legge delle probabilità totali e il teorema di Bayes per ottenere un \textbf{secondo teorema di Bayes}:
+\begin{equation*}
+    P(F|E)=\frac{P(F)P(E|F)}{P(F)P(E|F)+P(F^c)P(E|F^c)}
+\end{equation*}
+
+\begin{Example}{}{}
+    \textit{Un esame del sangue rileva la presenza di una malattia nell'organismo con probabilità del 95\% se l'individuo è malato. Inoltre, se la persona è sana, l'esame da esito positivo con probabilità dell'1\%. Sappiamo che lo 0,5\% della popolazione soffre della malattia. Qual'è la probabilità che chi risultata positivo all'esame, abbia la malattia?}
+
+    Definiamo $D=\{\mbox{la persona testata è malata}\}$ e $E=\{\mbox{la persona è positiva all'esame}\}$.
+    \begin{equation*}
+        P(D|E)=\frac{P(D)P(E|D)}{P(D)P(E|D)+P(D^c)P(E|D^c)}=\frac{0,05*0,95}{0,05*0,95+0,95*0,1}=0,323
+    \end{equation*}
+\end{Example}
+
+\section{Rapporto a favore}
+\begin{redbar}
+    Il \textbf{rapporto a favore} di un evento è definito come:
+    \begin{equation*}
+        \frac{P(A)}{P(A^c)}=\frac{P(A)}{1-P(A)}
+    \end{equation*}
+\end{redbar}
+
+\begin{Example}{}{}
+    \textit{L'Italia gioca contro l'Inghilterra in una partita di calcio. La vittoria dell'Italia è data 2 a 5.} S'intende che il rapporto a favore dell'evento $A=\{$l'Italia vince$\}$ è $\frac{2}{5}$. Quindi $\frac{P(A)}{1-P(A)}=\frac{2}{5}$ e $5P(A)=2-2P(A)\implies7P(A)=2\implies P(A)=\frac{2}{7}$.
+\end{Example}
+
+\textit{Come cambia il rapporto a favore di un evento se viene data qualche informazione?}
+\begin{equation*}
+    A\rightarrow \mbox{ rapporto a favore }\frac{P(A)}{P(A^c)}
+\end{equation*}
+Sapendo che si è verificata $F$, il rapporto a favore diventa:
+\begin{gather*}
+    A\rightarrow \mbox{ rapporto a favore }\frac{P(A|F)}{P(A^c|F)}\\
+    \frac{P(A|F)}{P(A^c|F)}=\frac{\frac{P(A\cap F)}{P(F)}}{\frac{P(A^c\cap F)}{P(F)}}=\frac{P(A\cap F)}{P(A^c\cap F)}=\frac{P(F|A)P(A)}{P(F|A^c)P(A^c)}
+\end{gather*}
+Sapere che si realizza $F$ aumenta il rapporto a favore se $P(F|A)>P(F|A^c)$.
+
+\begin{Example}{}{}
+    \textit{Un ispettore è convinto della colpevolezza dell'indagato al 60\%. Con una prova scopre che il colpevole ha una certa caratteristica, il 20\% della popolazione ha questa caratteristica. Come stima l'ispettore la probabilità che l'indagato sia colpevole?}
+
+    Definiamo $G=\{$l'indagato è colpevole$\}$ e $C=\{$l'indagato possiede la caratteristica del criminale$\}$.
+    \begin{equation*}
+        P(G|C)=\frac{P(G\cap C)}{P(C)}=\frac{P(G)P(C|G)}{P(G)P(C|G)+P(G^c)P(C|G^c)}=\frac{0,6*1}{0,6*1+0,4*0,2}=0,882
+    \end{equation*}
+\end{Example}
+
+\section{Eventi indipendenti}
+Dati $E$ e $F$ eventi, intuitivamente posso pensare che $E$ e $F$ sono indipendenti se sapere che si è verificato $F$ non cambia l'esito di $E$ e viceversa. Matematicamente si può riassumere questa idea con le identità:
+\begin{equation}\label{eq:eventi-indipendenti}
+    \begin{cases}
+        P(E)=P(E|F)\iff P(E)=\frac{P(E\cap F)}{P(F)}\iff P(E\cap F)=P(E)P(F)\\
+        P(F)=P(F|E)\iff P(F)=\frac{P(F\cap E)}{P(E)}\iff P(F\cap E)=P(F)P(E)
+    \end{cases}
+\end{equation}
+Possiamo prendere la Formula \ref{eq:eventi-indipendenti} come definizione di indipendenza di $E$ e $F$ quando $P(E)>0$ e $P(F)>0$ (infatti gli eventi condizionati devono avere probabilità positiva). Quindi le due richieste nella Formula \ref{eq:eventi-indipendenti} equivalgono entrambe a $P(E\cap F)=P(E)P(F)$, questa identità ha il vantaggio che ha senso anche con $P(E)=0$ e $P(F)=0$.
+
+\begin{redbar}
+    Due eventi $E$ e $F$ sono detti \textbf{indipendenti} se:
+    \begin{equation*}
+        P(E\cap F)=P(E)P(F)    
+    \end{equation*}
+\end{redbar}
+
+\begin{Example}{}{}
+    \textit{Lancio due volte un dado con $E=\{$il 1° lancio dà 3$\}$ e $F=\{$la somma dei due risultati è 7$\}$. $E$ e $F$ sono indipendenti?}
+
+    Abbiamo che $P(E)=\frac{1}{6}$ e $P(F)=\frac{6}{36}=\frac{1}{6}$ ($P(F)$ viene trovato con le coppie $\{(1,6),(2,5),(3,4)...(6,1)\}$). Allora $P(E\cap F)=P(\{3,4\})=\frac{1}{36}$ e $P(E)P(F)=\frac{1}{6}\frac{1}{6}=\frac{1}{36}$, dato che $P(E\cap F)=P(E)P(F)$ gli eventi sono indipendenti.
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Lancio due volte un dado con $E=\{$il 1° lancio dà 3$\}$ e $G=\{$la somma dei due risultati è 10$\}$. $E$ e $F$ sono indipendenti?}
+
+    Abbiamo che $P(E)=\frac{1}{6}$, $G=\emptyset$ e $P(E|G)=0$. Abbiamo che $E$ e $G$ sono indipendenti $\iff\begin{cases}
+        P(E|G)=P(E)\\P(G|E)=P(G)
+    \end{cases}$ dato che nella prima equazione del sistema abbiamo un numero $=0\neq$ numero $>0$, $E$ e $G$ sono dipendenti.
+\end{Example}
+
+\begin{Proposition}{}{}
+    Se $E$ e $F$ sono eventi indipendenti, allora anche $E$ e $F^c$ sono indipendenti.
+    \begin{demonstration}
+        Devo provare $P(E\cap F^c)=P(E)P(F^c)$. 
+        
+        So che $P(E\cap F)=P(E)P(F)$, posso scrivere $E=(E\cap F^c)\cup(E\cap F)$ sono eventi disgiunti quindi posso applicare l'additività $P(E)=P(E\cap F^c)+P(E\cap F)$. Quindi:
+        \begin{equation*}
+            P(E\cap F^c)=P(E)-P(E\cap F)=P(E)-P(E)P(F)=P(E)(1-P(F))=P(E)P(F^c)    
+        \end{equation*}
+    \end{demonstration}
+\end{Proposition}
+
+\begin{Definition}{Indipendenze di tre eventi}{}
+    Tre eventi E, F, G si dicono indipendenti se valgono le seguenti proprietà:
+    \begin{enumerate}
+        \item $P(E\cap F) = P(E)P(F)$
+        \item $P(E\cap G) = P(E)P(G)$
+        \item $P(F\cap G) = P(F)P(G)$
+        \item $P(E\cap F\cap G) = P(E)P(F)P(G)$
+    \end{enumerate}
+\end{Definition}
+
+\begin{Definition}{Indipendenze di n eventi}{}
+    Dati $n$ eventi $E_1,E_2,...E_n$ si dicono indipendenti se per ogni sottoinsieme di eventi $E_{n_1},E_{n_2},...E_{n_r}$ con $r\leq n$ vale che:
+    \begin{equation*}
+        P(E_{n_1}\cap E_{n_2}\cap...\cap E_{n_r})=P(E_{n_1})P(E_{n_2})...P(E_{n_r})
+    \end{equation*}
+    \begin{proposition}
+        Se $E,F,G$ sono indipendenti, allora anche $E,F,G^c$, $E,F^c,G^c$ e $E^c,F^c,G^c$ sono indipendenti tra loro.
+    \end{proposition}
+\end{Definition}
+
+\begin{Example}{}{}
+    \textit{Presi $E,F,G$ indipendenti, supponiamo che $P(E)=\frac{1}{2}$, $P(F)=\frac{2}{5}$ e $P(G)=\frac{3}{5}$. Determinare $P(E\cap F^c)$, $P(E\cap F\cap G)$ e $P(E\cap(F\cup G))$.}
+
+    \begin{gather*}
+        P(E\cap F^c)=P(E)P(F^c)=\frac{1}{2}\frac{3}{5}=\frac{3}{10}\\
+        P(E\cap F\cap G)=P(E)P(F)P(G)=\frac{1}{2}\frac{2}{5}\frac{3}{5}=\frac{3}{25}\\
+        P(E\cap F\cap G^c)=P(E)P(F)P(G^c)=\frac{1}{2}\frac{2}{5}\frac{2}{5}=\frac{2}{25}\\
+    \end{gather*}
+    \begin{align*}
+        P(E\cap (F\cup G))=P(E)-P(E\cap (F\cup G)^c)=P(E)-P(E\cap F^c\cap G^c)=\\P(E)-P(E)P(F^c)P(G^c)=\frac{1}{2}-\frac{1}{2}\frac{3}{5}\frac{2}{5}=\frac{19}{50}    
+    \end{align*}
+    \begin{osservation}
+        Per l'ultima domanda è stata utilizzata la formula:
+        \begin{equation*}
+            P(A\cap B)=P(A)-P(A\cap B^c)
+        \end{equation*}    
+    \end{osservation}
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Si realizza una sequenza infinita di prove indipendenti. Ogni prova ha due esiti possibili: il successo con probabilità $p$ o  l'insuccesso con probabilità $1-p$. Qual è la probabilità che (a) vi sia almeno un successo nelle prime n prove; (b) vi siano esattamente k successi nelle prime n prove; (c) tutte le prove abbiano successo?}
+
+    Introduciamo $E_i=\{$la i-esima prova è un successo$\}$.
+    \begin{enumerate}[label=(\alph*)]
+        \item E' più semplice determinare prima la probabilità dell'evento complementare, cioè che non vi siano successi nelle prime $n$ prove:
+        \begin{align*}
+            P(E)=1-P(E_1^c\cap E_2^c\cap...\cap E_n^c)=1-P(E_1^c)P(E_2^c)...P(E_n^c)=\\1-(1-p)(1-p)...(1-p)=1-(1-p)^n
+        \end{align*}
+        
+        \item Consideriamo una sequenza particolare dei primi $n$ esiti contenente $k$ successi e $n-k$ insuccessi. Ognuna di queste sequenze si realizzerà, per l'ipotesi di indipendenza, con probabilità $p^k(1-p)^{n-k}$. Dato che vi sono $\binom{n}{k}$ sequenze di questo tipo, la probabilità cercata è data da:
+        \begin{equation*}
+            P\{\text{esattamente k successi}\}=\binom{n}{k}p^k(1-p)^{n-k}
+        \end{equation*}
+
+        \item Osserviamo che la probabilità è data:
+        \begin{align*}
+            P(E_1\cap E_2\cap...)=P(\bigcap^\infty_{i=1}E_i)=P(\lim_{n\to\infty}\bigcap^n_{i=1}E_i)=\lim_{n\to\infty}P(\bigcap^n_{i=1}E_i)=\lim_{n\to\infty}p^n=\begin{cases}1\hspace{0.5cm}p=1\\0\hspace{0.5cm}p<1\end{cases}
+        \end{align*}
+    \end{enumerate}
+\end{Example}
+
+\begin{Example}{}{}
+    \textit{Si effettuano delle prove indipendenti, che consistono nel lanciare una coppia di dadi non truccati. Qual è la probabilità che l’esito uguale a 5 preceda l’esito uguale a 7?}
+
+    Sia $E_n$ l’evento "i numeri 5 e 7 non appaiono nelle prime $n-1$ prove e il 5 appare alla n-esima prova", la probabilità cercata è:
+    \begin{equation*}
+        P(\bigcup^\infty_{n=1}E_n)=\sum^\infty_{n=1}P(E_n)
+    \end{equation*}
+    Dato che, in ogni singola prova $P\{$la somma è 5$\}=\frac{4}{36}$, $P\{$la somma è 7$\}=\frac{6}{36}$ e $P\{$la somma non è né 5 né 7$\}=\frac{10}{36}$ otteniamo, per l’indipendenza delle prove, che:
+    \begin{equation*}
+        P(E_n) = (1-\frac{10}{36})^{n-1}\frac{4}{36}
+    \end{equation*}
+    e, pertanto:
+    \begin{equation*}
+        P(\bigcup^\infty_{n=1}E_n)=\frac{1}{9}\sum^\infty_{n=1}(\frac{13}{18})^{n-1}=\frac{1}{9}\frac{1}{1-\frac{13}{18}}=\frac{2}{5}
+    \end{equation*}
+
+    \begin{osservation}
+        Per l'ultimo passaggio è stata utilizzata la formula:
+        \begin{equation*}
+            \sum^\infty_{n=0}x^n=\begin{cases}\frac{1}{1-x}\hspace{0.5cm}x<1\\\infty\hspace{0.5cm}x\geq1\end{cases}
+        \end{equation*}
+    \end{osservation}
+\end{Example}
+
+
+\section{La probabilità condizionata è una probabilità}
+\begin{Proposition}{}{}\label{prop:condiz-prob}
+    Sia $F\subset\mathbb{S}$ con $P(F)>0$ e sia $E\subset\mathbb{S}$, allora valgono:
+    \begin{enumerate}
+        \item $0\leq P(E|F)\leq1$
+        \item $P(\mathbb{S}|F)=1$
+        \item se $F_1,F_2,...$ sono eventi disgiunti a coppie allora:
+        \begin{equation*}
+            P(\bigcup^\infty_{i=1}E_i|F)=\sum^\infty_{i=1}P(E_i|F)
+        \end{equation*}
+    \end{enumerate}
+    \begin{demonstration}
+        Sapendo che $P(E|F)=\frac{P(E\cap F)}{P(F)}$ abbiamo:
+        \begin{enumerate}
+            \item $E\cap F\subset F$ e quindi $P(E\cap F)\leq P(F)$ e $0\leq \frac{P(E\cap F)}{P(F)}\leq1$;
+            \item $P(\mathbb{S}|F)=\frac{P(\mathbb{S}\cap F)}{P(F)}=\frac{P(F)}{P(F)}=1$, dato che $P(\mathbb{S}\cap F)=P(F)$;
+            \item $P(\bigcup^\infty_{i=1}E_i|F)=\frac{P((\bigcup^\infty_{i=1} E_1)\cap F)}{P(F)}$, osserviamo che $(\bigcup^\infty_{i=1} E_i)\cap F=\bigcup^\infty_{i=1}(E_i|F)$ con $E_1\cap F, E_2\cap F,...$ disgiunti a coppie. Quindi, per l'additività, $\frac{P((\bigcup^\infty_{i=1}E_i)\cap F)}{P(F)}=\frac{\sum_{i=1}^\infty P(E_i\cap F)}{P(F)}=\sum_{i=1}^\infty P(E_i|F)$.
+        \end{enumerate}
+    \end{demonstration}
+\end{Proposition}
+
+Se definiamo $Q(E):=P(E|F)$, segue dalla Proposizione \ref{prop:condiz-prob} che $Q(E)$ è una funzione di probabilità sullo spazio campionario $\mathbb{S}$. Di conseguenza, a essa si applicano tutte le proposizioni riguardanti le probabilità dimostrate precedentemente. Ad esempio si ha:
+\begin{gather*}
+    Q(E_1\cup E_2)=Q(E_1)+Q(E_2)-Q(E_1\cap E_2)\\
+    Q(E_1)=Q(E_1|E_2)Q(E_2)+Q(E_1|E_2^c)Q(E_2^c)
+\end{gather*}
+
+Dato che $Q(E_1|E_2)=P(E_1|E_2\cap F)$ per:
+\begin{align*}
+    Q(E_1|E_2)=\frac{Q(E_1\cap E_2)}{Q(E_2)}=\frac{P(E_1\cap E_2|F)}{P(E_2|F)}=\frac{\frac{E_1\cap E_2\cap F}{P(F)}}{\frac{P(E_2\cap F)}{P(F)}}=\frac{P(E_1\cap E_2\cap F)}{P(E_2\cap F)}=P(E_1|E_2\cap F)
+\end{align*}
+possiamo riscrivere queste formule per $P(*|F)$:
+\begin{gather*}
+    P(E_1\cap E_2|F)=P(E_1|F)+P(E_2|F)-P(E_1\cap E_2|F)\\
+    P(E_1|F) = P(E_1|E_2\cap F)P(E_2|F) + P(E_1|E_2^c\cap F)P(E_2^c|F)
+\end{gather*}
+
+\begin{Example}{}{}
+    \textit{Una compagnia di assicurazioni suddivide i clienti in due categorie: gli automobilisti propensi agli incidenti, con probabilità 0,4 di avere almeno un incidente in un anno e, gli automobilisti non propensi, con probabilità 0,2 di avere almeno un incidente. Il 30\% dei clienti è propenso agli incidenti. (a) Determinare la probabilità che un nuovo assicurato abbia almeno un incidente nel primo anno. (b) Determinare la probabilità combinata che il nuovo assicurato abbia un incidente nel secondo anno sapendo che l'ha avuto anche nel primo.}
+
+    Definiamo $A=\{$l'assicurato ha avuto almeno un incidente nell'anno $i$ con $i=1,2\}$ e $A=\{$l'assicurato è propenso agli incidenti$\}$. Sappiamo quindi che $P(A)=\frac{3}{10}$, $P(A_i|A)=0,4$ e $P(A_i|A^c)=0,2$. Con queste premesse calcoliamo:
+
+    \begin{enumerate}[label=(\alph*)]
+        \item $P(A_1)=P(A)P(A_i|A)+(A^c)P(A_i|A^c)=\frac{3}{10}\frac{4}{10}+\frac{7}{10}\frac{2}{10}=0,2$
+        \item Utilizzando le formule trovate per $P(*|F)$ otteniamo:
+        \begin{align*}
+            P(A_2|A_1)=P(A_2|A\cap A_1)P(A|A_1)+P(A_2|A^c\cap A_1)P(A^c|A_1)=\\0,4\frac{P(A)P(A_1|A)}{P(A_1)}+0,2\frac{P(A^c)P(A_1|A^c)}{P(A_1)}=0,4\frac{\frac{3}{10}\frac{4}{10}}{\frac{26}{100}}+0,2\frac{\frac{7}{10}\frac{2}{10}}{\frac{26}{100}}=\frac{19}{65}
+        \end{align*}
+    \end{enumerate}
+\end{Example}

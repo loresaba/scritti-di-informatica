@@ -1,0 +1,33 @@
+\section{Introduzione}
+
+Il programma \texttt{finger} implementato ha lo scopo di visualizzare informazioni sugli utenti del sistema. Le informazioni possono essere mostrate in formato breve o lungo, e possono includere sia utenti attualmente connessi che utenti specificati come argomenti di comando. La seguente relazione descrive le scelte progettuali e implementative fatte durante lo sviluppo del programma.
+
+\section{Struttura del Programma}
+
+Il programma è strutturato in diverse funzioni, ciascuna con uno scopo specifico. Questo approccio modulare rende il codice più leggibile e manutenibile.
+
+\subsection{Struttura \texttt{UserInfo}}
+
+Per gestire le informazioni degli utenti, è stata utilizzata la struttura \texttt{UserInfo}. Questa scelta è stata fatta per raggruppare tutte le informazioni rilevanti in un'unica struttura dati, facilitando l'accesso e la manipolazione delle informazioni dell'utente.
+
+\subsection{Funzioni di Recupero Informazioni}
+
+Le funzioni \texttt{get\_single\_user\_info}, \texttt{get\_user\_info}, e \texttt{get\_user\_info\_noreal} sono responsabili del recupero delle informazioni sugli utenti. Queste funzioni utilizzano, a loro volta, altre funzioni (come \texttt{get\_pwd\_info} e \texttt{get\_utmp\_info}), chiamate di sistema e strutture dati standard (come \texttt{utmp} e \texttt{pwd}) per ottenere le informazioni necessarie degli utenti e sui loro login.
+
+\subsection{Funzioni di Stampa}
+
+Le funzioni di stampa, quali: \texttt{print\_short\_header}, \texttt{print\_short\_user}, \\\texttt{print\_short\_user\_without\_header}, \texttt{print\_long\_user}, sono suddivise in due categorie principali: stampa breve e stampa lunga e, formattano e stampano le informazioni degli utenti in modo leggibile. Le restanti: \texttt{print\_m\_user}, \texttt{print\_m\_user\_without\_header}, \texttt{print\_connected\_users} contengono dei flag per gestire efficacemente la stampa in formato beve/lungo e, inoltre, si occupano dell'opzione \texttt{-m} e degli eventuali utenti connessi al sistema. 
+
+La scelta di suddividere il codice in molte piccole funzioni di stampa con un ruolo specifico ha notevolmente facilitato la programmazione generale, contribuendo a una maggiore chiarezza e permettendo di gestire facilmente i diversi formati di output richiesti.
+
+\subsection{Funzioni di Ordinamento e Filtraggio}
+
+La funzione \texttt{get\_sorted\_unique\_users} filtra e ordina gli utenti passati come argomenti, rimuovendo duplicati e gestendo sia nomi utenti che real name. In questo modo, durante la stampa su terminale delle informazioni, verranno mostrati prima gli utenti che non esistono e successivamente le informazioni di quelli presenti nel sistema, evitando la stampa di informazioni duplicate e ridondanti e  riproducendo fedelmente l'output del comando \texttt{finger}.
+
+\subsection{Funzione Principale}
+
+La funzione \texttt{main} gestisce e verifica la validità delle opzioni passate come input degli argomenti da linea di comando, assicurandosi che siano tra quelle supportate, e decide quali funzioni chiamare in base alle opzioni e agli argomenti forniti.
+
+\section{Conclusione}
+
+Il programma \texttt{finger} è stato progettato per essere modulare e facilmente estendibile. Ogni funzione ha un ruolo specifico, migliorando la leggibilità e la manutenibilità del codice. L'uso di funzioni separate per la gestione delle opzioni e per la stampa delle informazioni permette di gestire facilmente i diversi formati di output richiesti dagli utenti.

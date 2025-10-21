@@ -1,0 +1,15 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+
+\section{Introduzione}\label{sec:introdution}
+Il calcio è lo sport più popolare al mondo, e la sua crescente complessità rende sempre più importante l’impiego di tecnologie avanzate per supportare decisioni rapide e imparziali durante le partite. Tra gli aspetti più controversi vi è il riconoscimento dei falli: situazioni spesso soggette a interpretazioni soggettive, con un impatto rilevante sull’esito degli incontri.
+Negli ultimi anni, l’evoluzione dell’intelligenza artificiale e del deep learning ha aperto nuove possibilità nell’analisi automatica di immagini e video. Le reti neurali convoluzionali (CNN), in particolare, hanno mostrato ottimi risultati nella classificazione e nel riconoscimento di oggetti. In questo ambito, la rilevazione automatica dei falli rappresenta una sfida complessa, data la dinamicità delle riprese, la varietà di contatti fisici e la necessità di decisioni in tempo reale. Un sistema capace di identificare in modo affidabile i contrasti irregolari potrebbe supportare arbitri e VAR, riducendo errori e polemiche, e migliorando al contempo l’esperienza di spettatori e commentatori.
+Il nostro progetto si inserisce in questo contesto, con l’obiettivo di sviluppare un modello in grado di riconoscere automaticamente la presenza di un fallo a partire da un’immagine singola. Il sistema deve classificare la scena come “fallo” o “nessun fallo”.
+A differenza di altri approcci che si concentrano su video in tempo reale tramite modelli complessi come YOLOv5/YOLOv8 o Faster R-CNN, il nostro lavoro ha adottato un modello più compatto, addestrato su immagini statiche. Questa scelta ha permesso di contenere tempi e risorse computazionali, pur ottenendo risultati promettenti in termini di accuratezza e capacità discriminativa.\\
+\noindent
+Per comprendere meglio l’idea del modello e il suo funzionamento, è utile fare riferimento ad alcuni sistemi di intelligenza artificiale già esistenti con obiettivi analoghi. Tra questi troviamo \textit{MatchVision}, un’IA in grado di riconoscere i falli, valutarne la gravità e generare commenti simili a quelli di un telecronista umano~\cite{matchvision2024}; l’\textit{AI-Driven Image Recognition System}, che sfrutta tecniche di visione artificiale e un modello ibrido di deep learning per il rilevamento automatico di fuorigioco e falli~\cite{Zhang2025}; e infine \textit{AI-VAR} ~\cite{ansari2021varcnn}, un sistema che utilizza una rete neurale convoluzionale personalizzata per classificare le immagini di gioco in contrasti regolari o falli.
+
+
+
+\end{document}

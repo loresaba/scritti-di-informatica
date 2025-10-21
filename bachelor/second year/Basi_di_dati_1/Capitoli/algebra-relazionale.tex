@@ -1,0 +1,613 @@
+\chapter{Algebra relazionale}
+L'algebra relazionale è un linguaggio formale e procedurale. Formale perché ci permette di interrogare una base di dati relazionale con un insieme di operatori che possono essere applicati a una (operatori unari) o due (operatori binari) istanze di relazione e forniscono come risultato una nuova istanza.
+In particolare, individuiamo i seguenti quattro tipi di operatore: 
+\begin{enumerate}
+    \item Rimozione di specifiche parti di una relazione (Proiezione e Selezione);
+    \item Operazioni insiemistiche (Unione, Intersezione e Differenza);
+    \item Combinazione delle tuple di due relazioni (Prodotto cartesiano e Join);
+    \item Ridenominazione di attributi.
+\end{enumerate}
+
+E' anche un linguaggio procedurale perché l'interrogazione consiste, in un'espressione in cui compaiono operatori dell'algebra e istanze di relazioni della base di dati, in una sequenza che prescrive in maniera puntuale l'ordine delle operazioni e i loro operandi.
+
+\section{Proiezione e Selezione}
+
+\begin{redbar}
+    Una \textbf{proiezione} consente di effettuare un “taglio verticale” su una relazione, cioè di selezionare solo alcune colonne (attributi). Si denota con il simbolo $\pi$ e $\pi_{A_1,A_2,...,A_k}(r)$ seleziona le colonne di $r$ che corrispondono agli attributi $A_1,A_2,...,A_k$.
+\end{redbar}
+
+\begin{Example}{Proiezione}{}
+    \textit{Supponiamo di voler ottenere una lista di tutti i clienti presenti in questa relazione:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Rossi & C3 & Roma\\
+            Bianchi & C4 & Roma\\
+            Verdi & C5 & Roma\\\hline 
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Effettuando la proiezione $\pi_{\verb|Nome|}$(\verb|Cliente|) otterremo come output:
+    \begin{center}
+        \begin{tabular}{|c|}
+            \hline\multicolumn{1}{|c|}{$\pi$\scriptsize{\Verb|Nome|}\normalsize\Verb|(Cliente)|}\\\hline
+            Rossi\\
+            Bianchi\\
+            Verdi\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+    la proiezione elimina i duplicati e, in questo caso, risponde ad una richiesta diversa (la lista dei nomi diversi dei clienti). Per prevenire totalmente la perdita di informazione possiamo sfruttare l'unicità della chiave \verb|C#|, effettuando la proiezione $\pi_{\verb|Nome,C#|}$(\verb|Cliente|), il cui output sarà:
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{$\pi$\scriptsize{\Verb|Nome,C|\#}\normalsize\Verb|(Cliente)|}\\\hline
+            Rossi & C1\\
+            Rossi & C2\\
+            Rossi & C3\\
+            Bianchi & C4\\
+            Verdi & C5\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\begin{redbar}
+    Una \textbf{selezione} consente di effettuare un “taglio orizzontale” su una relazione, cioè di selezionare solo le righe (tuple) che soddisfano una data condizione. Si denota con il simbolo $\sigma$ e $\sigma_C(r)$ seleziona le tuple di $r$ che soddisfano la condizione $C$.
+\end{redbar}
+
+La condizione di selezione è un'espressione booleana composta (tramite operatori $\land$,$\lor$ e $\lnot$) in cui i termini semplici sono del tipo $A\theta B$ dove $\theta$ è un operatore di confronto ($<,=,>,\leq,\geq$) e $A$ e $B$ sono due attributi con lo stesso dominio ($dom(A)=dom(B)$).
+
+\begin{Example}{Selezione}{}
+    \textit{Vogliamo ottenere tutte le informazioni riguardo i clienti provenienti da Roma presenti in questa relazione:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} &\textbf{ C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Rossi & C3 & Roma\\
+            Bianchi & C4 & Roma\\
+            Verdi & C5 & Roma\\\hline 
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Possiamo effettuare una selezione $\sigma_{\verb|Città='Roma'|}$(\verb|Cliente|) per ottenere le tuple richieste:
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{$\sigma$\scriptsize{\Verb|Città='Roma'|}\normalsize\Verb|(Cliente)|}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C3 & Roma\\
+            Bianchi & C4 & Roma\\
+            Verdi & C5 & Roma\\\hline 
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+    Nel caso in cui vogliamo ottenere tutte le informazioni riguardo i clienti che si chiamano Rossi e provengono da Roma, possiamo effettuare una selezione $\sigma_{\verb|Città='Roma'|\land\verb|Nome='Rossi'|}$(\verb|Cliente|) per ottenere le tuple richieste:
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{$\sigma$\scriptsize\Verb|Città='Roma'|$\land$\Verb|Nome='Rossi'|\normalsize\Verb|(Cliente)|}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C3 & Roma\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\section{Unione, Differenza e Intersezione}
+\begin{redbar}
+    L'\textbf{unione} consente di costruire una relazione contenente tutte le ennuple che appartengono ad almeno uno dei due operandi. Si denota con il simbolo $\cup$ e può essere applicata solo a operandi \textit{union compatibili} cioè tali che:
+    \begin{itemize}
+        \item hanno lo stesso numero di attributi;
+        \item gli attributi corrispondenti (nell'ordine) sono definiti sullo stesso dominio.
+    \end{itemize}
+\end{redbar}
+Da notare che non è necessario che gli attributi union compatibili abbiano lo stesso nome, ma ovviamente il risultato ha senso solo se hanno lo stesso significato.
+
+\begin{Example}{Unione}{}
+    \textit{Consideriamo le seguenti due relazioni, descriventi gli insegnanti e i responsabili di vari dipartimenti di una scuola ed effettuiamo la loro unione:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Docenti}}\\\hline
+            \textbf{Nome} & \textbf{CodDoc} & \textbf{Dipartimento}\\\hline
+            Rossi & C1 & Matematica\\
+            Rossi & C2 & Lettere\\
+            Bianchi & C3 & Matematica\\
+            Verdi & C4 & Lingue\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Amministrativi}}\\\hline
+            \textbf{Nome} & \textbf{CodAmm} & \textbf{Dipartimento}\\\hline
+            Esposito & C1 & Lingue\\
+            Riccio & C2 & Matematica\\
+            Pierro & C3 & Lettere\\
+            Bianchi & C4 & Lingue\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Effettuando l'unione tra \verb|Docenti| e \verb|Amministrativi|, otteniamo una nuova relazione contenente tutti i membri dello staff:
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\Verb|Docenti| $\cup$ \Verb|Amministrativi|}\\\hline
+            \textbf{Nome} & \textbf{Cod} & \textbf{Dipartimento}\\\hline
+            Rossi & C1 & Matematica\\
+            Rossi & C2 & Lettere\\
+            Bianchi & C3 & Matematica\\
+            Verdi & C4 & Lingue\\
+            Esposito & C1 & Lingue\\
+            Riccio & C2 & Matematica\\
+            Pierro & C3 & Lettere\\
+            Bianchi & C4 & Lingue\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\begin{Example}{Unione}{}
+    \textit{Consideriamo le seguenti due relazioni e applichiamo l'unione:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Docenti}}\\\hline
+            \textbf{Nome} & \textbf{CodDoc} & \textbf{Dipartimento}\\\hline
+            Rossi & D1 & Matematica\\
+            Rossi & D2 & Lettere\\
+            Bianchi & D3 & Matematica\\
+            Verdi & D4 & Lingue\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{\textit{Amministrativi}}\\\hline
+            \textbf{Nome} & \textbf{CodAmm} & \textbf{Dipartimento} & \textbf{Stip}\\\hline
+            Esposito & A1 & Lingue & 1250\\
+            Riccio & A2 & Matematica & 2000\\
+            Pierro & A3 & Lettere & 1000\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    In questo esempio non è possibile unire le due relazioni in quanto non sono union compatibili perché hanno un numero diverso di attributi. Per risolvere il problema, possiamo effettuare prima una proiezione su \verb|Amministrativi|, per poi effettuare l'unione con \verb|Docenti|:
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\Verb|Docenti|$\cup$$\pi$\scriptsize{\Verb|Nome,CodAmm,Dipartimento|}\normalsize\Verb|(Amministrativi)|}\\\hline
+            Rossi & D1 & Matematica\\
+            Rossi & D2 & Lettere\\
+            Bianchi & D3 & Matematica\\
+            Verdi & D4 & Lingue\\
+            Esposito & A1 & Lingue\\
+            Riccio & A2 & Matematica\\
+            Pierro & A3 & Lettere\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\begin{redbar}
+    La \textbf{differenza} consente di costruire una relazione contenente tutte le tuple che appartengono al primo operando e non appartengono al secondo. Si denota con il simbolo $-$ ed è applicabile solo a operandi union compatibili.
+\end{redbar}
+
+\begin{Example}{Differenza}{}
+    \textit{Consideriamo le seguenti due relazioni, descriventi gli insegnanti e i responsabili di vari dipartimenti di una scuola ed applichiamo la differenza:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Docenti}}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Rossi & C1 & Matematica\\
+            Rossi & C2 & Lettere\\
+            Bianchi & C3 & Matematica\\
+            Verdi & C4 & Lingue\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Amministrativi}}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Esposito & C5 & Lettere\\
+            Riccio & C6 & Matematica\\
+            Pierro & C7 & Lingue\\
+            Bianchi & C3 & Matematica\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Effettuando la differenza tra \verb|Docenti| e \verb|Amministrativi|, otteniamo una nuova relazione contenente tutti gli insegnanti che non sono responsabili. Analogamente, effettuando la differenza tra \verb|Amministrativi| e \verb|Docenti|, otteniamo una nuova relazione contenente tutti i responsabili che non sono insegnanti.
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\Verb|Docenti| $-$ \Verb|Amministrativi|}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Rossi & C1 & Matematica\\
+            Rossi & C2 & Lettere\\
+            Verdi & C4 & Lingue\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\Verb|Amministrativi| $-$ \Verb|Docenti|}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Esposito & C5 & Lettere\\
+            Riccio & C6 & Matematica\\
+            Pierro & C7 & Lingue\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\begin{redbar}
+    L'\textbf{intersezione} consente di costruire una relazione contenente tutte le tuple che appartengono ad entrambi gli operandi. Si denota con il simbolo $\cap$ si applica solo a operandi union compatibili.
+\end{redbar}
+
+\begin{Example}{Intersezione}{}
+    \textit{Consideriamo le seguenti due relazioni, descriventi gli insegnanti e i responsabili di vari dipartimenti di una scuola ed applichiamo l'intersezione:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Docenti}}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Rossi & C1 & Matematica\\
+            Rossi & C2 & Lettere\\
+            Bianchi & C3 & Matematica\\
+            Verdi & C4 & Lingue\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Amministrativi}}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Esposito & C5 & Lettere\\
+            Riccio & C6 & Matematica\\
+            Pierro & C7 & Lingue\\
+            Bianchi & C3 & Matematica\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Effettuando l'intersezione tra \verb|Docenti| e \verb|Amministrativi|, otteniamo una nuova relazione contenente tutti gli insegnanti che sono anche responsabili:
+
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\Verb|Docenti| $\cap$ \Verb|Amministrativi|}\\\hline
+            \textbf{Nome} & \textbf{CodFiscale} & \textbf{Dipartimento}\\\hline
+            Bianchi & C3 & Matematica\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\section{Prodotto Cartesiano e Ridenominazione}
+Capita molto spesso che le informazioni per rispondere ad una interrogazione sono distribuite in più relazioni, in quanto coinvolgono più oggetti in qualche modo associati. Occorre, pertanto, individuare le relazioni in cui si trovano le informazioni che ci interessano, e combinare queste informazioni in maniera opportuna.
+
+\begin{redbar}
+    Il \textbf{prodotto cartesiano} consente di costruire una relazione contenente tutte le ennuple che si ottengono concatenando una ennupla del primo operando con una ennupla del secondo operando. Si denota con il simbolo $\times$ e si usa quando le informazioni per rispondere ad una query si trovano in relazioni diverse.
+\end{redbar}
+
+\begin{redbar}
+    Per poter distinguere gli attributi con lo stesso nome nello schema risultante di un prodotto cartesiano possiamo usare l'operazione di \textbf{ridenominazione}, che si denota con il simbolo $\rho$.
+\end{redbar}
+
+\begin{Example}{Prodotto cartesiano e ridenominazione}{}
+    \textit{Consideriamo le seguenti relazioni da cui vogliamo ottenere l'elenco di tutti i clienti e gli ordini da loro effettuati:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Bianchi & C3 & Roma\\
+            Verdi & C4 & Roma\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{\textit{Ordine}}\\\hline
+            \textbf{O\#} & \textbf{C\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            O1 & C1 & A1 & 100\\
+            O2 & C2 & A2 & 200\\
+            O3 & C3 & A2 & 150\\
+            O4 & C4 & A3 & 200\\
+            O1 & C1 & A2 & 200\\
+            O1 & C1 & A3 & 100\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Prima di poter effettuare il prodotto cartesiano tra le due relazioni, è necessario ridenominare uno dei due attributi \verb|C#| presenti in entrambe le relazioni:
+    \begin{equation*}
+        \verb|OrdineR| = \rho_{\verb|C#|\leftarrow \verb|CC#|}(\verb|Ordini|)
+    \end{equation*}
+    Successivamente, effettuando il prodotto cartesiano \verb|Cliente| × \verb|OrdineR|, otteniamo:
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline\multicolumn{7}{|c|}{\Verb|Cliente| $x$ \Verb|OrdineR|}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{O\#} & \textbf{CC\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            Rossi & C1 & Roma & O1 & C1 & A1 & 100\\
+            Rossi & C1 & Roma & O2 & C2 & A2 & 200\\
+            Rossi & C1 & Roma & O3 & C3 & A2 & 150\\
+            Rossi & C1 & Roma & O4 & C4 & A3 & 200\\
+            Rossi & C1 & Roma & O1 & C1 & A2 & 200\\
+            Rossi & C2 & Milano & O1 & C1 & A1 & 100\\
+            Rossi & C2 & Milano & O2 & C2 & A2 & 200\\
+            . . . & . . . & . . . & . . . & . . . & . . . & . . .\\
+            . . . & . . . & . . . & . . . & . . . & . . . & . . .\\
+            Verdi & C4 & Roma & O4 & C4 & A3 & 200\\
+            Verdi & C4 & Roma & O1 & C1 & A2 & 200\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+    A questo punto, però, notiamo la presenza di alcune incorrettezze. Ad esempio, il cliente "Rossi", avente codice \verb|C1|, non ha mai effettuato l'ordine "\verb|(O2, C2, 200)|", il quale invece è stato effettuato dal cliente avente codice \verb|C2|. Possiamo risolvere tale problema effettuando una selezione dopo aver effettuato il prodotto cartesiano:
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline\multicolumn{7}{|c|}{$\sigma$\scriptsize{\Verb|C|\#\Verb|=CC|\#} (\normalsize\Verb|Cliente|$\times$\Verb|OrdineR|)}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{O\#} & \textbf{CC\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            Rossi & C1 & Roma & O1 & C1 & A1 & 100\\
+            Rossi & C1 & Roma & O1 & C1 & A2 & 200\\
+            Rossi & C1 & Roma & O1 & C1 & A3 & 100\\
+            Rossi & C2 & Milano & O2 & C2 & A2 & 200\\
+            Bianchi & C3 & Roma & O3 & C3 & A2 & 150\\
+            Verdi & C4 & Roma & O4 & C4 & A3 & 200\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+    Infine, per via del select svolto, le colonne \verb|C#| e \verb|CC#| risultano essere uguali, dunque potremmo rimuovere una delle due effettuando una proiezione. La query finale risulta essere:
+    \begin{equation*}
+        \pi_{\verb|Nome C# Città O# A# N-pezzi|}(\sigma_{\verb|C#=CC#|}(\verb|Cliente|\times\verb|OrdineR|))
+    \end{equation*}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline\multicolumn{6}{|c|}{$\pi$\scriptsize\Verb|Nome,C|\#\Verb|,Città,O|\#\Verb|,A|\#\Verb|,N-pezzi|\normalsize($\sigma$\scriptsize{\Verb|C|\#\Verb|=CC|\#} (\normalsize\Verb|Cliente|$\times$\Verb|OrdineR|))}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{O\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            Rossi & C1 & Roma & O1 & A1 & 100\\
+            Rossi & C1 & Roma & O1 & A2 & 200\\
+            Rossi & C1 & Roma & O1 & A3 & 100\\
+            Rossi & C2 & Milano & O2 & A2 & 200\\
+            Bianchi & C3 & Roma & O3 & A2 & 150\\
+            Verdi & C4 & Roma & O4 & A3 & 200\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+\end{Example}
+
+\section{Join Naturale e Theta Join}
+\begin{redbar}
+    Il \textbf{join naturale} consente di selezionare le tuple del prodotto cartesiano dei due operandi che soddisfano la condizione:
+    \begin{equation*}
+        R_1A_1=R_2A_1\land R_1A_2= R_2A_2\land ...\land R_1A_k=R_2A_k
+    \end{equation*}
+    dove $R_1$ ed $R_2$ sono i nomi degli schemi di relazioni e $A_1$,$A_2$,...,$A_k$ sono gli attributi comuni, cioè con lo stesso nome, delle relazioni. Il join naturale unisce le tuple delle istanze delle due relazioni che hanno gli stessi valori in corrispondenza degli attributi con la stessa etichetta. Si indica con il simbolo $\bowtie$:
+    \begin{equation*}
+        r_1 \bowtie r_2 = \pi_{XY}(\sigma_C(r_1 \times r_2 ))
+    \end{equation*}
+    con $C=R_1A_1=R_2A_1\land ...\land R_1A_k=R_2A_k$, $X$ è l'insieme di attributi di $r_1$ e $Y$ è l'insieme di attributi di $r_2$ che non sono attributi di $r_1$.
+\end{redbar}
+
+\begin{Example}{Join naturale}{}
+    \textit{Consideriamo le seguenti relazioni da cui vogliamo ottenere i nomi e le città dei clienti che hanno ordinato più di 100 pezzi per almeno un articolo con prezzo superiore a 2:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Bianchi & C3 & Roma\\
+            Verdi & C4 & Roma\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{\textit{Ordine}}\\\hline
+            \textbf{O\#} & \textbf{C\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            O1 & C1 & A1 & 100\\
+            O2 & C2 & A2 & 200\\
+            O3 & C3 & A2 & 150\\
+            O4 & C4 & A3 & 200\\
+            O1 & C1 & A2 & 200\\
+            O1 & C1 & A3 & 100\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Articolo}}\\\hline
+            \textbf{A\#} & \textbf{Denom.} & \textbf{Prezzo}\\\hline
+            A1 & Piatto & 3\\
+            A2 & Bicchiere & 2\\
+            A3 & Tazza & 4\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    Prima di tutto, effettuiamo un join naturale tra le tre relazioni:
+    \begin{equation*}
+        (\verb|Cliente| \bowtie \verb|Ordine|) \bowtie \verb|Articolo|
+    \end{equation*}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|}
+            \hline\multicolumn{8}{|c|}{(\Verb|Cliente| $\bowtie$ \Verb|Ordine|) $\bowtie$ \Verb|Articolo|}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{O\#} & \textbf{A\#} & \textbf{N-pezzi} & \textbf{Denom.} & \textbf{Prezzo}\\\hline
+            Rossi & C1 & Roma & O1 & A1 & 100 & Piatto & 3\\
+            Rossi & C1 & Roma & O1 & A2 & 200 & Bicchiere & 2\\
+            Rossi & C1 & Roma & O1 & A3 & 100 & Tazza & 4\\
+            Rossi & C2 & Milano & O2 & A2 & 200 & Bicchiere & 2\\
+            Bianchi & C3 & Roma & O3 & A2 & 150 & Bicchiere & 2\\
+            Verdi & C4 & Roma & O4 & A3 & 200 & Tazza & 4\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+    \end{center}
+    Successivamente, selezioniamo le tuple che rispettano le condizioni che ci interessano ed effettuiamo una proiezione sul nome e la città delle tuple ottenute:
+    \begin{equation*}
+        \pi_{\verb|Nome,Città|}(\sigma_{\verb|N-pezzi|>100\land\verb|Prezzo|>2}((\verb|Cliente| \bowtie \verb|Ordine|) \bowtie \verb|Articolo|))
+    \end{equation*}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{$\pi$\scriptsize\Verb|Nome,Città|\normalsize($\sigma$\scriptsize\Verb|N-pezzi|$>100\land$\Verb|Prezzo|$>2$\normalsize(\Verb|CliOrdArt|))}\\\hline
+            \textbf{Nome} & \textbf{Città}\\\hline
+            Verdi & Roma\\\hline
+        \end{tabular}
+    \end{center}
+\end{Example}
+
+\begin{Proposition}{Casi limite del join naturale}{}
+    I casi limite del join naturale si verificano quando:
+    \begin{enumerate}
+        \item due relazioni hanno un insieme di attributi in comune ma nessun valore è uguale per tali attributi, e il risultato sarà un insieme vuoto;
+        \item due relazioni non hanno degli attributi in comune, e il join naturale degenera in un prodotto cartesiano.
+    \end{enumerate}
+\end{Proposition}
+
+\begin{redbar}
+    Il \textbf{theta join} consente di selezionare le tuple del prodotto cartesiano dei due operandi che soddisfano una condizione del tipo A$\theta$B, dove $\theta$ è un operatore di confronto ($\theta\in\{<,=,>,\leq,\geq\}$), $A$ è un attributo dello schema del primo operando, $B$ è un attributo dello schema del secondo operando, con $dom(A)=dom(B)$.
+
+    Il theta join equivale a:
+    \begin{equation*}
+        r_1\bowtie_{A\theta B}r_2=\sigma_{A\theta B}(r_1\times r_2)
+    \end{equation*}
+\end{redbar}
+
+In alcuni casi può essere necessario effettuare il join tra una relazione e se stessa (self join), in modo da ottenere combinazioni di tuple della stessa relazione. Attenzione: utilizzare il join naturale al posto del theta join genererebbe una relazione identica a quella di partenza, poiché ogni tupla verrebbe joinata con se stessa scartando automaticamente gli attributi doppioni.
+
+
+\begin{Example}{Theta join}{}
+    \textit{Data la seguente relazione, vogliamo ottenere una lista dei codici e dei nomi dei dipendenti aventi un salario maggiore dei loro supervisori:}
+     \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline\multicolumn{5}{|c|}{\textit{Impiegato}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Sezione} & \textbf{Salario} & \textbf{Supervisore}\\\hline
+            Rossi & C1 & B & 100 & C3\\
+            Pirlo & C2 & A & 200 & C3\\
+            Bianchi & C3 & A & 500 & NULL\\
+            Verdi & C4 & B & 200 & C2\\
+            Neri & C5 & B & 150 & C1\\
+            Tosi & C6 & B & 100 & C1\\\hline
+        \end{tabular}
+    \end{center}
+    In tal caso, la soluzione migliore risulta essere una selezione effettuata su self join di \verb|Impiegato|, in modo da poter accoppiare ogni dipendente al suo supervisore. Quindi creiamo una copia della relazione per poi effettuare un theta join tra il codice dei dipendenti e il codice dei loro supervisori, specificando la relazione di appartenenza di ognuno dei due attributi confrontati:
+    \begin{center}
+        \verb|ImpiegatoC| = \verb|Impiegato|\\
+        \verb|ImpSup| = \verb|ImpiegatoC| $\bowtie_{\footnotesize\verb|ImpiegatoC.Supervisore| = \verb|Impiegato.C#|}$\verb|Impiegato|
+    \end{center}
+    Successivamente, eseguiamo la selezione richiesta, mantenendo solo le tuple dove il salario del dipendente è maggiore del salario del suo supervisore:
+    \begin{center}
+        $\sigma_{\footnotesize\verb|Impiegato.Salario| > \verb|ImpiegatoC.Salario|}$\verb|(ImpSup)|
+    \end{center}
+     \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline\multicolumn{10}{|c|}{$\sigma${\scriptsize\Verb|Impiegato.Salario| $>$ \Verb|ImpiegatoC.Salario|}\Verb|(ImpSup)|}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Sezione} & \textbf{Salario} & \textbf{Supervisore} & \textbf{CNome} &\textbf{ CC\#} & \textbf{CSez} & \textbf{CSal} & \textbf{CSup}
+\\\hline
+            Verdi & C4 & B & 200 & C2 & Pirlo & C2 & A & 200 & C3\\
+            Neri & C5 & B & 150 & C1 & Rossi & C1 & B & 100 & C3\\
+            Tosi & C6 & B & 100 & C1 & Rossi & C1 & B & 100 & C3\\\hline
+        \end{tabular}
+    \end{center}
+    Infine, effettuiamo una proiezione sul nome e il codice del dipendente:
+    \begin{center}
+        $\pi_{\footnotesize\verb|Impiegato.Nome|, \verb|Impiegato.C#|}$($\sigma_{\footnotesize\verb|Impiegato.Salario| > \verb|ImpiegatoC.Salario|}$\verb|(ImpSup)|)
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{\Verb|ImpRes|}\\\hline
+            \textbf{Nome} & \textbf{C\#}\\\hline
+            Verdi & C4\\
+            Neri & C5\\
+            Tosi & C6\\\hline
+        \end{tabular}
+    \end{center}
+\end{Example}
+
+\section{Quantificazione universale}
+Fino ad ora, abbiamo visto solo query inerenti la quantificazione esistenziale ($\exists$ - esiste almeno un), ossia la selezione di oggetti che soddisfino almeno una volta una determinata condizione.
+
+Tuttavia, utilizzando solo gli operatori visti precedentemente, non abbiamo un modo per poter effettuare query inerenti alla quantificazione universale ($\forall$ - per ogni), ossia la selezione di oggetti che soddisfino sempre una determinata condizione.
+
+\begin{Osservation}{Quantificazione universale}{}
+    Nella logica del primo ordine, la negazione di \textit{"Per ogni oggetto x la condizione è vera"} corrisponde a \textit{"Esiste almeno un oggetto x per cui la condizione è falsa"}.
+    
+    Per selezionare tutte le tuple di una relazione per cui una determinata condizione è sempre valida, quindi, ci basta scartare tutte le tuple per cui almeno una volta la condizione non è valida.
+\end{Osservation}
+
+\begin{Example}{Quantificazione universale}{}
+    \textit{Data la seguente relazione, vogliamo ottenere un elenco di tutti i nomi e la città di provenienza dei clienti che hanno sempre effettuato un ordine di più di 100 pezzi.}
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Bianchi & C3 & Roma\\
+            Verdi & C4 & Roma\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Ordine}}\\\hline
+            \textbf{C\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            C1 & A1 & 100\\
+            C2 & A2 & 200\\
+            C3 & A2 & 150\\
+            C4 & A3 & 200\\
+            C1 & A2 & 200\\
+            C1 & A3 & 100\\\hline
+        \end{tabular}
+    \end{center}
+    Per ottenere l'elenco richiesto, ci basta scartare l'elenco dei nomi e delle città che almeno una volta non hanno acquistato più di 100 pezzi dall'elenco totale dei nomi e delle città:
+    \begin{center}
+        \verb|ElencoNonValidi| = $\sigma_{\lnot(Qnty>100)}$(\verb|Cliente| $\bowtie$ \verb|Ordine|)
+    \end{center}
+    \begin{center}
+         \begin{tabular}{|c|c|c|c|c|}
+            \hline\multicolumn{5}{|c|}{\Verb|ElencoNonValidi|}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            Rossi & C1 & Roma & A1 & 100\\
+            Rossi & C1 & Roma & A3 & 100\\\hline
+        \end{tabular}\\
+    \end{center}
+    Ora possiamo effettuare la proiezione su nome e città eliminando quelli che non ci interessano:
+    \begin{center}
+        \verb|R| = $\pi_{\verb|Nome, Città|}$(\verb|Cliente| $\bowtie$ \verb|Ordine|) $-$ $\pi_{\verb|Nome, Città|}$(\verb|ElencoNonValidi|)
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{\Verb|R|}\\\hline
+            \textbf{Nome} & \textbf{Città}\\\hline
+            Bianchi & Roma\\
+            Verdi & Roma\\\hline
+        \end{tabular}
+    \end{center}
+    Da notare che effettuiamo il join ($\pi_{\verb|Nome, Città|}$(\verb|Cliente| $\bowtie$ \verb|Ordine|)) perché in Cliente potremmo avere clienti che non hanno mai effettuato ordini, che sarebbero preservati dalla sottrazione. Utilizzare il join assicura di effettuare la sottrazione a partire solo dai clienti che hanno effettuato almeno un ordine.
+\end{Example}
+
+\begin{Example}{Quantificazione universale}{}
+    \textit{Data la seguente relazione, vogliamo ottenere una lista dei codici e dei nomi dei capi aventi un salario maggiore di tutti i loro impiegati.}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline\multicolumn{5}{|c|}{\textit{Impiegato}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Dipart} & \textbf{Stip} & \textbf{Capo}\\\hline
+            Rossi & C1 & B & 100 & C3\\
+            Pirlo & C2 & A & 200 & C3\\
+            Bianchi & C3 & A & 500 & NULL\\
+            Verdi & C4 & B & 200 & C2\\
+            Neri & C5 & B & 150 & C1\\
+            Tosi & C6 & B & 100 & C1\\\hline
+        \end{tabular}
+    \end{center}
+    Anche in questo caso, per ottenere l'elenco richiesto ci basta scartare i supervisori aventi il salario minore di almeno un dipendente:
+    \begin{center}
+        \verb|ImpiegatoC| $=$ \verb|Impiegato|\\
+        \verb|ImpSup| $=$ \verb|ImpiegatoC| $\bowtie_{\verb|ImpiegatoC.Capo| = \verb|Impiegato.C#|}$\verb|Impiegato|\\
+        \verb|NonValidi| $=$ $\pi_{\verb|Name, C#|}$($\sigma_{\lnot(\verb|Impiegato.Stip| < \verb|ImpiegatoC.Stip|)}$(\verb|ImpSup|))\\
+        \verb|R| $=$ $\pi_{\verb|Name, C#|}$(\verb|ImpSup|) $-$ \verb|NonValidi|
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{\Verb|R|}\\\hline
+            \textbf{Nome} & \textbf{C\#}\\\hline
+            Bianchi & C3\\\hline
+        \end{tabular}
+    \end{center}
+\end{Example}

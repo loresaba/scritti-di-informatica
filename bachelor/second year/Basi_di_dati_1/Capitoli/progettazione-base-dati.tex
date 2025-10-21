@@ -1,0 +1,317 @@
+\chapter{Progettazione di una base di dati}
+
+\section{Problemi e vincoli}
+Uno schema di dati ben progettato ha la premura di mantenere separati tra di loro concetti diversi. In caso contrario si possono presentare delle anomalie che rendono inconsistenti i nostri dati. Tra queste troviamo:
+\begin{itemize}
+    \item \textit{Ridondanza}, quando le informazioni si ripetono più volte nelle tabelle, con conseguente spreco di spazio e problemi di gestione dei dati;
+    \item \textit{Anomalie di aggiornamento}, quando un dato deve essere modificato più volte all'interno di una tabella per essere aggiornato;
+    \item \textit{Anomalie di inserimento}, quando alcuni campi non possono essere memorizzati;
+    \item \textit{Anomalie di cancellazione}, quando con l'eliminazione di alcuni dati si perdono delle informazioni importanti.
+\end{itemize}
+
+Quindi uno schema di basi di dati è ben progettato se non presenta ridondanze, anomalie di aggiornamento, inserimento e cancellazione.
+
+Spesso la cattiva progettazione, cioè in particolare l'errore di rappresentare più concetti nella stessa relazione, deriva dalla necessità di eseguire frequentemente delle operazioni che fanno apparire più “comodo” memorizzare tutti i dati insieme.
+Abbiamo visto che le operazioni dell'algebra relazionale consentono, attraverso i riferimenti per valore tra gli oggetti e opportuni join tra relazioni, di ottenere le stesse informazioni senza incorrere nei problemi che abbiamo discusso.
+
+\begin{Example}{Buona progettazione di una base di dati}{}
+    \textit{Riprogettiamo la seguente relazione tenendo conto della separazione tra concetti diversi e delle anomalie che possono presentarsi.}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline\multicolumn{7}{|c|}{\textit{Ordini}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città} & \textbf{A\#} & \textbf{N-pezzi} & \textbf{Denom} & \textbf{Prezzo}\\\hline
+            Rossi & C1 & Roma & A1 & 100 & Piatto & 3\\
+            Rossi & C2 & Milano & A2 & 200 & Bicchiere & 2\\
+            Bianchi & C3 & Roma & A2 & 150 & Bicchiere & 2\\
+            Verdi & C4 & Roma & A3 & 200 & Tazza & 4\\
+            Rossi & C1 & Roma & A2 & 200 & Bicchiere & 2\\
+            Rossi & C1 & Roma & A3 & 100 & Tazza & 4\\\hline
+        \end{tabular}
+    \end{center}
+    In questo schema abbiamo tutte le informazioni disponibili in un solo colpo, ma se bisogna aggiornare la città di un cliente, bisogna aggiornare tutte le tuple di quel cliente; se si cancella un articolo che va fuori produzione, si rischiano di perdere i dati di un cliente che l'ha ordinato; per inserire un articolo deve esserci per forza un cliente che lo ordina. 
+    
+    Un buon approccio è dividere i concetti di \verb|Cliente|, \verb|Articolo| e \verb|Ordine| in tre relazioni separate.
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Cliente}}\\\hline
+            \textbf{Nome} & \textbf{C\#} & \textbf{Città}\\\hline
+            Rossi & C1 & Roma\\
+            Rossi & C2 & Milano\\
+            Bianchi & C3 & Roma\\
+            Verdi & C4 & Roma\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Articolo}}\\\hline
+            \textbf{A\#} & \textbf{Denom} & \textbf{Prezzo}\\\hline
+            A1 & Piatto & 3\\
+            A2 & Bicchiere & 2\\
+            A3 & Tazza & 4\\\hline
+        \end{tabular}
+         \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Ordine}}\\\hline
+            \textbf{C\#} & \textbf{A\#} & \textbf{N-pezzi}\\\hline
+            C1 & A1 & 100\\
+            C2 & A2 & 200\\
+            C3 & A2 & 150\\
+            C4 & A3 & 200\\
+            C1 & A2 & 200\\
+            C1 & A3 & 100\\\hline
+        \end{tabular}
+    \end{center}
+\end{Example}
+
+Per individuare i concetti rappresentati in una relazione si utilizza il concetto di chiave che determina una particolare dipendenza funzionale, che è un particolare tipo di vincolo.
+
+\section{Dipendenze funzionali}
+Un vincolo è la rappresentazione nello schema di una base di dati di una condizione valida nella realtà di interesse. Un'istanza della base di dati è legale se soddisfa tutti i vincoli (cioè se è una rappresentazione fedele della realtà).
+Un DBMS è dotato di procedure per la verifica dei vincoli (vincoli di dominio, chiavi, contenimento di domini) che ricorrono più frequentemente, per verificare che un'istanza della base di dati sia legale.
+
+Le dipendenze funzionali definite su uno schema di relazione esprimono particolari vincoli di dipendenza tra sottoinsiemi di attributi dello schema stesso, che devono essere soddisfatti da ogni istanza dello schema.
+
+\begin{Definition}{Schema di relazione}{}
+    Uno schema di relazione $R$ è un insieme di attributi $\{A_1,A_2,...,A_n\}$
+\end{Definition}
+
+\begin{Definition}{Tupla}{}
+    Dato uno schema di relazione $R=A_1 A_2 ... A_n$, una tupla $t$ su $R$ è una funzione che associa ad ogni attributo $A_i$ in $R$ un valore $t[A_i]$ nel corrispondente dominio $dom(A_i)$.
+
+    Se $X$ è un sottoinsieme di $R$ e $t_1$ e $t_2$ sono due tuple su $R$, $t_1$ e $t_2$ coincidono su $X$ ($t_1[X]=t_2[X]$) se:
+    \begin{equation*}
+        \forall A\in X(t_1[A]=t_2[A])    
+    \end{equation*}    
+\end{Definition}
+
+\begin{Definition}{Istanza di relazione}{}
+    Dato uno schema di relazione $R$, una istanza di $R$ è un insieme di tuple su $R$.
+
+    Tutte le “tabelle” che abbiamo visto finora negli esempi sono istanze di qualche schema di relazione.
+\end{Definition}
+
+\begin{redbar}
+    Dato uno schema di relazione $R$, una \textbf{dipendenza funzionale} su $R$ è una coppia ordinata di sottoinsiemi non vuoti $X$ ed $Y$ di $R$. Si indica con $X\to Y$ e vuol dire che $X$ determina funzionalmente $Y$, oppure, $Y$ dipende funzionalmente da $X$.
+
+    Dati uno schema $R$ e una dipendenza funzionale $X\to Y$ su $R$, un'istanza $r$ di $R$ soddisfa la dipendenza funzionale $X\to Y$ se:
+    \begin{equation*}
+        \forall t_1,t_2\in r(t_1[X]=t_2[X]\implies t_1[Y]=t_2[Y])
+    \end{equation*}
+    \begin{osservation}
+        Ovviamente se $t_1[X]\neq t_2[X]$ la dipendenza è soddisfatta qualunque siano i valori di $t_1[Y]$ e $t_2[Y]$.
+    \end{osservation}
+\end{redbar}
+
+Da notare che le dipendenze funzionali non fanno altro che esprimere dei vincoli di sui dati. Ad esempio se due tuple hanno uguale codice fiscale (si riferiscono alla stessa persona) devono avere uguale anche la data di nascita.
+
+\begin{Example}{Dipendenze funzionali}{}
+    \textit{Consideriamo le seguenti relazioni:}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{$R_1$}\\\hline
+            \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D}\\\hline
+            \textcolor{blue}{a1} & \textcolor{blue}{b1} & \textcolor{blue}{c1} & d1\\
+            a1 & b2 & c1 & d2\\
+            \textcolor{blue}{a1} & \textcolor{blue}{b1} & \textcolor{blue}{c1} & d3\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{$R_2$}\\\hline
+            \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D}\\\hline
+            \textcolor{red}{a1} & \textcolor{red}{b1} & \textcolor{red}{c1} & d1\\
+            \textcolor{red}{a1} & \textcolor{red}{b1} & \textcolor{red}{c2} & d2\\
+            a1 & b2 & c1 & d3\\\hline
+        \end{tabular}
+    \end{center}
+    La relazione $R_1$ soddisfa la dipendenza funzionale $AB\to C$ per la prima e la terza tupla. La relazione $R_2$, invece, non soddisfa la dipendenza funzionale $AB\to C$ per la prima e seconda tupla.
+\end{Example}
+
+\begin{redbar}
+    Dati uno schema di relazione $R$ e un insieme $F$ di dipendenze funzionali, un'istanza di $R$ è \textbf{legale} se soddisfa tutte le dipendenze in $F$.
+\end{redbar}
+
+\begin{Example}{Istanza legale}{}
+    \textit{Consideriamo la seguente relazione su cui sono definite le seguenti dipendenze funzionali:}
+    \begin{equation*}
+        F\{A\to B, B\to C\}
+    \end{equation*}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D}\\\hline
+            a1 & b1 & c1 & d1\\
+            a1 & b1 & c1 & d2\\
+            a2 & b2 & c1 & d3\\\hline
+        \end{tabular}
+    \end{center}
+    Tale istanza è legale su $F$, poiché soddisfa le dipendenze funzionali in $F$: tutte le tuple aventi $t[A] = a1$ hanno anche $t[B] = b1$ e tutte le tuple aventi $t[B] = b1$ hanno anche $t[C] = c1$. In realtà, indirettamente, soddisfa anche la dipendenza $A\to C$ che può essere considerata come se fosse in $F$.
+\end{Example}
+
+\subsection{Chiusura di F}
+\begin{redbar}
+    Dato uno schema di relazione $R$ e un insieme $F$ di dipendenze funzionali su $R$ la \textbf{chiusura di F} è l'insieme delle dipendenze funzionali che sono soddisfatte da ogni istanza legale di $R$. Si indica con $F^+$ e banalmente si ha che $F\subseteq F^+$.
+\end{redbar}
+
+\begin{Definition}{Chiave}{}
+    Dati uno schema di relazione $R$ e un insieme $F$ di dipendenze funzionali un sottoinsieme $K$ di uno schema di relazione $R$ è una \textbf{chiave} di $R$ se: 
+    \begin{enumerate}
+        \item $K\to R \in F^+$
+        \item non esiste un sottoinsieme proprio $K'$ di $K$ tale che $K'\to R \in F$.
+    \end{enumerate}
+
+\end{Definition}
+
+\begin{Osservation}{Dipendenze funzionali banali}{}\label{oss:dipendenze-funzionali}
+    Dati uno schema di relazione $R$ e due sottoinsiemi non vuoti $X$, $Y$ di $R$ tali che $Y\subseteq X$ si ha che ogni istanza $r$ di $R$ soddisfa la dipendenza funzionale $X\to Y$.
+
+    Pertanto, la dipendenza funzionale $Y\subseteq X$ $X\to Y\in F^+$ è detta banale.
+\end{Osservation}
+
+\begin{Proposition}{Proprietà delle dipendenze funzionali}{}\label{prop:dipendenze-funzionali}
+    Dati uno schema di relazione R e un insieme di dipendenze funzionali F, si ha:
+    \begin{equation*}
+        X\to Y\in F^+\iff \forall A\in Y(X\to A\in F^+)
+    \end{equation*}
+    $X\to Y$ deve essere soddisfatta da ogni istanza legale di $R$ e:
+    \begin{itemize}
+        \item Se $t_1[X]=t_2[X]$ allora deve essere $t_1[Y]=t_2[Y]$;
+        \item Se $A\in Y$ e $t_1[A]\neq t_2[A]$, non può essere $t_1[Y]=t_2[Y]$;
+        \item Se $\forall A\in Y t_1[A]=t_2[A]$, avremo $t_1[Y]=t_2[Y]$.
+    \end{itemize}
+\end{Proposition}
+
+\section{Assiomi di Armstrong}
+Il nostro problema è calcolare l'insieme di dipendenze $F^+$ che vengono soddisfatte da ogni istanza legale di uno schema $R$ su cui è definito un insieme di dipendenze funzionali $F$. Abbiamo concluso che banalmente $F\subseteq F^+$ e possiamo introdurre un nuovo insieme che chiameremo $F^A$.
+
+\begin{redbar}
+    Definiamo $F^A$ come l'insieme di tutte le dipendenze funzionali ottenibili partendo da $F$ e applicando i seguenti \textbf{assiomi di Armstrong}:
+    \begin{itemize}
+        \item \textit{Inclusione iniziale:}\begin{equation*}f\in F\implies f\in F^A\end{equation*}
+        \item \textit{Assioma della riflessività:}\begin{equation*}Y\subseteq X\subseteq R\implies X\to Y\in F^A\end{equation*}
+        \item \textit{Assioma dell'aumento:}\begin{equation*}X\to Y\in F^A\implies XZ\to YZ\in F^A, \forall Z\subseteq R\end{equation*}
+        \item \textit{Assioma della transitività:}\begin{equation*}X\to Y\in F^A, Y\to Z\in F^A\implies X\to Z\in F^A\end{equation*}
+    \end{itemize}
+\end{redbar}
+
+\begin{Proposition}{Regole secondarie di Armstrong}{}
+    Tramite gli assiomi di Armstrong è possibile ricavare le seguenti regole aggiuntive:
+    \begin{itemize}
+        \item \textit{Regola dell'unione:}
+        \begin{equation*}
+            X \to Y \in F^A, X \to Z \in F^A \implies X \to YZ \in F^A
+        \end{equation*}
+        \item \textit{Regola della decomposizione:}
+        \begin{equation*}
+            X \to Y \in F^A, Z \subseteq Y \implies X \to Z \in F^A
+        \end{equation*}
+        \item \textit{Regola della pseudo-transitività:}
+        \begin{equation*}
+            X \to Y \in F^A, WY \to Z \in F^A \implies WX \to Z \in F^A
+        \end{equation*}
+    \end{itemize}
+    \begin{demonstration}\phantom{}
+    \begin{itemize}
+        \item Se $X\to Y\in F^A$, per l'assioma dell'aumento si ha $X\to XY\in F^A$. Analogamente, se $X\to Z\in F^A$, per l'assioma dell'aumento si ha $XY\to YZ\in F^A$. Quindi, poiché $X\to XY\in F^A$ e $XY\to YZ\in F^A$, per l'assioma della transitività si ha $X\to YZ\in F^A$.
+
+        \item Se $Z\subseteq Y$ allora, per l'assioma della riflessività, si ha $Y\to Z\in F^A$. Quindi, poiché $X\to Y\in F^A$ e $Y\to Z\in F^A$, per l'assioma della transitività si ha $X\to Z\in F^A$.
+        
+        \item Se $X\to Y\in F^A$, per l'assioma dell'aumento si ha $WX\to WY\in F^A$. Quindi, poiché $WX\to WY\in F^A$ e $WY\to Z\in F^A$, per l'assioma della transitività si ha $WX\to Z\in F^A$.
+    \end{itemize}
+    \end{demonstration}
+\end{Proposition}
+
+\begin{Proposition}{}{}
+    Dato uno schema $R$ e un insieme $F$ di dipendenze funzionali definite su $R$, si ha che:
+    \begin{equation*}
+        X \to Y \in F^A \iff \forall A \in Y, X \to A \in F^A
+    \end{equation*}
+    \begin{demonstration}
+        Siano $X, Y \subseteq R$, dove $Y = \{A_1, . . . , A_k\}$. Per la regola dell'unione, si ha che:
+        \begin{equation*}
+            \forall A_i \in Y, X \to A \in F^A \implies X \to \{A_1, . . . , A_k\} = Y \in F^A
+        \end{equation*}
+        Per la regola della decomposizione, invece si ha che:
+        \begin{equation*}
+            X \to Y \in F^A \implies \forall A \in Y, X \to A \in F^A
+        \end{equation*}
+    \end{demonstration}
+\end{Proposition}
+
+\subsection{Chiusura di un insieme di attributi}
+\begin{redbar}
+    Siano $R$ uno schema di relazione, $F$ un insieme di dipendenze funzionali su $R$ e $X$ un sottoinsieme di $R$. La \textbf{chiusura di $X$} rispetto ad $F$, denotata con $X^+_F$ (o semplicemente $X^+$, se $F$ è l'unico insieme di dipendenze su $R$) è definito da:
+    \begin{equation*}
+        X^+_F=\{A\in R|X\to A\in F^A\}
+    \end{equation*}
+\end{redbar}
+
+In pratica fanno parte della chiusura di un insieme di attributi $X$ tutti quelli che sono determinati funzionalmente da $X$ eventualmente applicando gli assiomi di Armstrong.
+
+\begin{Lemma}{Relazione tra $F^+$ e $X^+$}{}\label{lemma:chiusura}
+    Siano $R$ uno schema di relazione ed $F$ un insieme di dipendenze funzionali su $R$. Si ha che: 
+    \begin{equation*}
+        X\to Y\in F^A \iff Y\subseteq X^+    
+    \end{equation*}
+    \begin{demonstration}
+        Sia $Y=A1, A2,..., An$, poiché $Y\subseteq X^+$, $\forall i=1,...,n$, si ha che $X\to Ai\in F^A$. Pertanto, per la regola dell'unione, $X\to Y\in F^A$. Poiché $X\to Y\in F^A$, per la regola della decomposizione si ha che, $\forall i=1,...,n$, $X\to A_i\in F^A$, cioè $A_i\subseteq X^+$, $\forall i=1,...,n$, e, quindi, $Y\subseteq X^+$.
+    \end{demonstration}
+\end{Lemma}
+
+\subsection{$F^+=F^A$}
+\begin{Thm}{$F^+=F^A$}{}\label{thm:F+=FA}
+    Siano $R$ uno schema di relazione ed $F$ un insieme di dipendenze funzionali su $R$. Si ha:
+    \begin{equation*}
+        F^+=F^A
+    \end{equation*}
+    \begin{demonstration}
+        $F^+=F^A$ vuol dire che:
+        \begin{align*}
+            &\circled{1}\hspace{0.5cm}F^A\subseteq F^+\hspace{1cm}X\to Y\in F^A\implies X\to Y\in F^+\\
+            &\circled{2}\hspace{0.5cm}F^+\subseteq F^A\hspace{1cm}X\to Y\in F^+\implies X\to Y\in F^A\\
+        \end{align*}
+        \begin{enumerate}
+            \item Per provare che $F^A\subseteq F^+$ dimostriamo che $X\to Y\in F^+$ per induzione sul numero $i$ di applicazioni di uno degli assiomi di Armstrong.
+            
+            Per il \textit{caso base} ($i = 0$) non abbiamo applicato alcun assioma di Armstrong, allora l'unica possibilità è che:
+            \begin{equation*}
+                X\to Y\in F\implies X\to Y\in F^+
+            \end{equation*}
+            Per \textit{ipotesi induttiva} abbiamo che ogni dipendenza funzionale ottenuta a partire da $F$ applicando gli assiomi di Armstrong un numero di volte minore o uguale a $i-1$ è in $F^+$:
+            \begin{equation*}
+                X \to Y \in F^A \mbox{ tramite }i-1\mbox{ assiomi }\implies X \to Y \in F^+
+            \end{equation*}
+            Per il \textit{passo induttivo} è necessario dimostrare che se $X \to Y \in F^A$ dopo aver applicato $i + 1$ assiomi di Armstrong, allora $X \to Y \in F^+$. E' possibile ritrovarsi in uno dei seguenti tre casi:
+            \begin{enumerate}[label=(\alph*)]
+                \item se $X\to Y$ è stata ottenuta mediante l'\textit{assioma della riflessività}, in tal caso $Y\subseteq X$. Sia $r$ un'istanza di $R$ e siano $t_1$ e $t_2$ due tuple di $r$ tali che $t_1[X]=t_2[X]$; banalmente si ha $t_1[Y]=t_2[Y]$.
+
+                \item se $X\to Y$ è stata ottenuta applicando l'\textit{assioma dell'aumento} ad una dipendenza funzionale $V\to W \in F^A$, con $X=VZ$ e $Y=WZ$, ottenuta a sua volta applicando ricorsivamente gli assiomi di Armstrong un numero di volte minore o uguale a $i-1$ (quindi per l'ipotesi induttiva $V\to W \in F^+$); sarà quindi $X\to VZ$ e $Y\to WZ$, per qualche $Z\subseteq R$. Sia $r$ un'istanza legale di $R$ e siano $t_1$ e $t_2$ due tuple di $r$ tali che $t_1[X]=t_2[X]$; banalmente si ha che $t_1[VZ]=t_2[VZ]\implies t_1[V]=t_2[V]\land t_1[Z]=t_2[Z]$. Per l'ipotesi induttiva da $t_1[V]=t_2[V]$ segue $t_1[W]=t_2[W]$; da $t_1[W]=t_2[W]$ e $t_1[Z]=t_2[Z]$ segue $t_1[Y]=t_2[Y]$.
+
+                \item se $X\to Y$ è stata ottenuta applicando l'\textit{assioma della transitività} a due dipendenze funzionali $X\to Z$ e $Z\to Y \in F^A$, ottenute a loro volta applicando ricorsivamente gli assiomi di Armstrong un numero di volte minore o uguale a $i-1$ (quindi per l'ipotesi induttiva $X\to Z$ e $Z\to Y \in F^+$). Sia $r$ un'istanza legale di $R$ e siano $t_1$ e $t_2$ due tuple di $r$ tali che $t_1[X]=t_2[X]$. Per l'ipotesi induttiva da $t_1[X]=t_2[X]$ segue $t_1[Z]=t_2[Z]$; da $t_1[Z]=t_2[Z]$, ancora per l'ipotesi induttiva segue $t_1[Y]=t_2[Y]$.
+            \end{enumerate}
+
+            \item Per provare che $F^+\subseteq F^A$ supponiamo per assurdo che esista una dipendenza funzionale $X\to Y\in F^+$ tale che $X\to Y\notin F^A$. Useremo una particolare istanza legale di $R$ per dimostrare che questa supposizione porta ad una contraddizione.
+
+            Consideriamo la seguente istanza $r$ di $R$:
+            \begin{center}
+                \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                    \hline\multicolumn{8}{|c|}{\Verb|r|}\\
+                    \hline\multicolumn{4}{|c|}{$X^+$} & \multicolumn{4}{|c|}{$R-X^+$}\\\hline
+                    1 & 1 & ... & 1 & 1 & 1 & ... & 1\\
+                    1 & 1 & ... & 1 & 0 & 0 & ... & 0\\\hline
+                \end{tabular}
+            \end{center}
+            L'istanza da solo due tuple, uguali sugli attributi in $X^+$ e diverse in tutti gli altri $R-X^+$. Dimostreremo che (a) l'istanza è legale e che (b) se $X\to Y\in F^+$ avremo necessariamente che $X\to Y \in F^A$.
+
+            \begin{enumerate}[label=(\alph*)]
+                \item Sia $V\to W$ una dipendenza funzionale in $F$ e se le due tuple sono diverse su $V$, allora la dipendenza è soddisfatta, se hanno gli stessi valori per $V$ allora $V\subseteq X^+$, perché le tuple sono uguali solo per quell'insieme di attributi; per il Lemma \ref{lemma:chiusura}, si ha che $X\to V\in F^A$; pertanto, per l'assioma della transitività ($X\to V$ e $V\to W$), $X\to W\in F^A$ e, quindi, di nuovo per il Lemma \ref{lemma:chiusura}, $W\subseteq X^+$ quindi le due tuple sono uguali anche sui valori di $W$. Quindi $V\to W$ è soddisfatta e poiché abbiamo considerato una qualunque dipendenza in $F$, $r$ le soddisfa tutte, quindi è legale.
+
+                \item Supponiamo per assurdo che $X\to Y\in F^+$ e $X\to Y\notin F^A$. Abbiamo mostrato che la nostra $r$ è un'istanza legale. Poiché le dipendenze in $F^+$ sono soddisfatte da ogni istanza legale, allora $r$ soddisfa $X\to Y\in F^+$. Abbiamo due tuple uguali su $X$ poiché $X\subseteq X^+$ (per l'assioma della riflessività e il Lemma \ref{lemma:chiusura}) le due tuple di $r$ coincidono sugli attributi $X$ e quindi, poiché $r$ soddisfa $X\to Y$, devono coincidere anche sugli attributi di $Y$. Questo implica che $Y\subseteq X^+$ e, per il Lemma \ref{lemma:chiusura}, che $X\to Y\in F^A$.
+            \end{enumerate}
+        \end{enumerate}
+    \end{demonstration}
+    E' utile notare che la dimostrazione di questo teorema si basa su due collegamenti molto importanti: 
+    \begin{itemize}
+        \item Il collegamento che esiste tra l'insieme di dipendenze $F^+$ e le istanze legali: se una istanza è legale allora soddisfa anche tutte le dipendenze in $F^+$ e d'altra parte $F^+$ è l'insieme di dipendenze soddisfatte da ogni istanza legale.
+        \item Il collegamento che esiste tra la chiusura $X^+$ di un insieme di attributi $X$ e il sottoinsieme di dipendenze in $F^A$ (che abbiamo appena visto essere uguale a $F^+$) che hanno $X$ come determinante, cioè $Y\subseteq X^+\iff X\to Y \in F^A$ che equivale a dire che $Y\subseteq X^+ \iff X\to Y \in F^+$ e in particolare che $X\to Y$ deve essere soddisfatta da ogni istanza legale.
+    \end{itemize}
+\end{Thm}
+
+Quindi ora abbiamo un modo per identificare tutte le dipendenze in $F^+$ partendo da $F$ e applicando gli assiomi di Armstrong e le regole derivate. Tuttavia, calcolare $F^+ = F^A$ richiede tempo esponenziale dato che ogni possibile sottoinsieme di $R$ genera una dipendenza.
+
+Quindi parleremo di terza forma normale (3NF), delle sue proprietà e di come ottenerla dallo schema di relazione che abbiamo progettato.

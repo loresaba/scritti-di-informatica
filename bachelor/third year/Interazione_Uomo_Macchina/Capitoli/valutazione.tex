@@ -1,0 +1,127 @@
+\chapter{Tecniche di valutazione}
+\section{Metodi di osservazione}
+I metodi osservazionali sono tecniche impiegate per valutare l'usabilità e la funzionalità di un sistema interattivo, testando direttamente il modo in cui gli utenti reali utilizzano l'interfaccia. A differenza delle valutazioni teoriche, l’osservazione richiede un artefatto concreto: può trattarsi di una simulazione, di un prototipo o del sistema completo. Questi test possono svolgersi in laboratori, sul campo o in collaborazione con gli utenti e offrono informazioni preziose sia sull’aspetto progettuale che sull’implementazione. Idealmente, la valutazione dovrebbe avvenire in tutte le fasi del ciclo di vita del design per garantire una migliore aderenza alle esigenze dell'utente finale.
+
+La valutazione ha tre obiettivi principali:
+\begin{enumerate}
+    \item verificare l'efficacia delle funzionalità del sistema,
+    \item valutare l'impatto dell'interfaccia sull'utente,
+    \item identificare eventuali problemi specifici di usabilità. 
+\end{enumerate}
+Questi obiettivi aiutano a comprendere se il sistema risponde ai bisogni dell'utente e se ci sono aree da migliorare.
+
+Quando si conduce una valutazione, è importante selezionare utenti rappresentativi del target, con conoscenze e competenze simili, per ottenere dati utili e rilevanti. La numerosità del campione è cruciale: secondo l’esperto di usabilità Jakob Nielsen, è consigliabile includere almeno 3-5 utenti per ottenere feedback significativo.
+
+L'approccio con scenario prevede la simulazione di una situazione reale in cui l'utente si immedesima. Lo scenario permette di definire i contesti, le azioni e gli strumenti coinvolti. I task, invece, sono i compiti specifici che l’utente è chiamato a svolgere, come ad esempio eseguire una ricerca o completare una transazione online. Alcune valutazioni prevedono anche task liberi, in cui si lascia l’utente esplorare liberamente il sistema.
+
+La valutazione può avvenire in laboratorio o sul campo. In laboratorio, i progettisti hanno accesso a strumentazioni specializzate e possono condurre i test in un ambiente privo di distrazioni, ma questo contesto manca di autenticità e rende difficile osservare interazioni collaborative tra utenti. Al contrario, i test sul campo mantengono intatto il contesto naturale e consentono di effettuare studi longitudinali, ma presentano sfide come rumori di fondo e distrazioni.
+
+I metodi osservazionali sono per loro natura soggettivi, poiché dipendono dalla competenza del valutatore nel riconoscere i problemi e interpretare il comportamento dell'utente. Esiste inoltre il rischio di bias del valutatore, che può influenzare inconsapevolmente le osservazioni. Questo rischio può essere ridotto coinvolgendo più valutatori per ottenere una visione più equilibrata e affidabile.
+
+Le misure prodotte da questi metodi osservazionali sono generalmente qualitative e non numeriche, ma offrono dettagli ricchi che non emergerebbero da misure quantitative. I dati qualitativi consentono di esplorare le esperienze degli utenti, le emozioni e i problemi riscontrati, fornendo una base più approfondita per miglioramenti progettuali.
+
+Durante la valutazione osservazionale, è essenziale rispettare l'anonimato dei partecipanti, utilizzando identificativi anonimi e informazioni aggregate. In alcuni casi, è opportuno prevedere una ricompensa per i partecipanti, per compensare il tempo dedicato alla valutazione e incentivare una partecipazione più attiva e sincera.
+
+\subsection{Think aloud}
+Nel metodo Think Aloud (pensare ad alta voce), l’utente è osservato mentre svolge i task e viene invitato a descrivere verbalmente cosa sta facendo e perché. Questa tecnica, semplice e senza bisogno di competenze avanzate, fornisce informazioni dirette sull’esperienza d’uso e su come il sistema viene realmente utilizzato. Tuttavia, è soggettiva e può influenzare le prestazioni dell’utente, poiché il parlare richiede uno sforzo cognitivo aggiuntivo.
+
+\subsection{Cooperative evaluation}
+La Cooperative Evaluation è una variante del Think Aloud, in cui l'utente e il valutatore collaborano e possono fare domande a vicenda. Questo metodo, meno rigido e più informale, incoraggia l'utente a criticare il sistema e consente chiarimenti in tempo reale, offrendo un feedback immediato e dettagliato.
+
+\subsection{Protocol analysis}
+La Protocol Analysis implica la registrazione delle sessioni di valutazione per consentire un’analisi approfondita successiva. Le modalità di registrazione possono includere l’uso di carta e penna, audio, video o log su computer. Ciascun metodo ha vantaggi e svantaggi: ad esempio, l’audio è ottimo per il Think Aloud, ma difficile da sincronizzare con altre fonti, mentre i video offrono realismo ma sono più invasivi e richiedono attrezzature specifiche. I log su computer raccolgono molti dati automaticamente, ma la quantità può rendere l’analisi complessa. Le trascrizioni richiedono competenze specifiche e talvolta supporto tecnologico.
+
+\subsection{Post-task walkthroughs}
+Nella tecnica dei Post-task Walkthroughs, la registrazione della sessione viene riprodotta per il partecipante, che può commentare e spiegare le proprie azioni. Se immediato, il feedback è fresco nella memoria dell’utente; se ritardato, il valutatore ha tempo di formulare domande mirate. Questo metodo è utile per approfondire i motivi dietro le scelte e le alternative considerate dall'utente, risultando particolarmente valido quando il Think Aloud non è fattibile.
+
+\section{Esperimenti}
+La valutazione sperimentale è un metodo fondamentale per esaminare aspetti specifici del comportamento interattivo degli utenti con un sistema. A differenza dei metodi osservazionali, la valutazione sperimentale permette di condurre test in condizioni controllate, con l'obiettivo di valutare l'effetto di una o più variabili sulle prestazioni degli utenti. In un esperimento, il valutatore stabilisce delle ipotesi da verificare e sceglie le variabili da modificare o misurare, suddividendo i partecipanti in gruppi che sperimentano condizioni diverse.
+
+Per progettare un esperimento efficace, ci sono alcuni fattori chiave da considerare:
+\begin{itemize}
+    \item \textit{Partecipanti:} È essenziale selezionare utenti rappresentativi del target del sistema, e avere un campione di dimensioni sufficienti per ottenere dati significativi.
+    \item \textit{Variabili:} Si distinguono le variabili indipendenti (IV), che rappresentano i fattori da modificare tra le diverse condizioni, come lo stile dell’interfaccia o il numero di elementi in un menu, e le variabili dipendenti (DV), che sono le misure raccolte durante l'esperimento, come il tempo di completamento di un task o il numero di errori.
+    \item \textit{Ipotesi:} L'ipotesi è un'affermazione provvisoria che il test deve validare o confutare.
+\end{itemize}
+
+Nella progettazione sperimentale, due tipi di ipotesi sono centrali:
+\begin{enumerate}
+    \item \textit{Ipotesi alternativa:} Propone che la variazione di una variabile indipendente causi un cambiamento misurabile nella variabile dipendente. Ad esempio, \textit{"il tasso di errore aumenta al diminuire della dimensione del font"}.
+    \item \textit{Ipotesi nulla:} Afferma che non ci sarà alcun cambiamento nella variabile dipendente a seguito della variazione della variabile indipendente, ad esempio, \textit{"non ci sarà alcuna differenza nel tasso di errore cambiando la dimensione del font"}. 
+    
+    Lo scopo dell'esperimento è spesso quello di provare a rigettare l'ipotesi nulla per confermare l’effetto della variabile indipendente.
+\end{enumerate}
+Per creare un design sperimentale efficace, il valutatore deve prendere diverse decisioni. Dopo aver definito ipotesi, variabili e partecipanti, il prossimo passo è selezionare il metodo sperimentale. Esistono due approcci principali:
+\begin{enumerate}
+    \item \textit{Between Subjects:} In questo metodo, ogni partecipante sperimenta solo una condizione. Richiede un numero maggiore di partecipanti e può risultare meno influenzato dal "trasferimento dell’apprendimento", ma i risultati potrebbero variare a causa delle differenze tra i partecipanti stessi.
+    \item \textit{Within Subjects:} In questo metodo, ogni partecipante sperimenta tutte le condizioni, eseguendo quindi il test più volte. È meno costoso poiché richiede meno partecipanti e le differenze individuali incidono meno sui risultati. Tuttavia, risente del “trasferimento dell’apprendimento”, poiché l’utente potrebbe migliorare nel test solo grazie alla ripetizione.
+\end{enumerate}
+Per ridurre l'effetto del trasferimento dell’apprendimento nei test within subjects, si possono alterare le condizioni tra i partecipanti. Ad esempio, una metà inizia con la condizione di controllo, passando poi a quella sperimentale, mentre l'altra metà segue il percorso opposto. Questo approccio aiuta a ridurre i bias derivanti dall'ordine di esposizione alle condizioni.
+
+Una volta completato l'esperimento, i dati raccolti dalla variabile dipendente vengono analizzati statisticamente. È consigliabile esaminare graficamente i dati per identificare possibili outliers e salvare una copia dei dati originali per futuri approfondimenti.
+
+Durante la fase di analisi statistica, è utile distinguere tra variabili discrete e continue. Le variabili continue, come il tempo di completamento di un task, assumono valori superiori a zero e possono essere rappresentate su una scala numerica. Le variabili indipendenti sono generalmente discrete, poiché rappresentano categorie o condizioni separate.
+
+La scelta dei metodi statistici dipende dalla distribuzione dei dati:
+\begin{itemize}
+    \item Se i dati presentano una distribuzione normale, si possono usare test parametrici per analizzare le differenze tra i gruppi.
+    \item Se i dati non seguono una distribuzione normale, si preferiscono test non parametrici, come la tabella di contingenza.
+\end{itemize}
+L’analisi si conclude con la verifica delle ipotesi. Si valuta se i risultati permettono di accettare o rigettare l’ipotesi nulla. Per esempio, si potrebbe concludere che "al 99\% possiamo rigettare l'ipotesi nulla", indicando un'elevata probabilità che l'ipotesi alternativa sia corretta.
+
+\subsection{A/B testing}
+L’A/B testing è una delle tecniche di valutazione più semplici ed efficaci nell’ambito dell’usabilità. Consiste in un esperimento in cui viene testata una sola variabile indipendente che ha due valori distinti, indicati come A e B. Questi due valori rappresentano due diverse condizioni di un’interfaccia o di un elemento dell’interfaccia. Gli utenti vengono casualmente esposti a una delle due condizioni e i risultati delle interazioni vengono misurati e confrontati.
+
+Questo metodo viene largamente utilizzato per i test online, specialmente su siti web, dove ogni utente che accede può visualizzare una delle due versioni (A o B) a caso. Questo permette di raccogliere dati quantitativi su come gli utenti interagiscono con le diverse versioni e di identificare quale delle due condizioni è più efficace in termini di usabilità.
+
+Come per ogni esperimento, l’A/B testing parte dalla definizione di un’ipotesi. Esistono due ipotesi principali:
+\begin{enumerate}
+    \item \textit{Ipotesi nulla:} non c’è differenza significativa tra le condizioni A e B. In questo caso, i risultati ottenuti non dimostrano un vantaggio specifico per una delle due varianti.
+    \item \textit{Ipotesi alternativa:} esiste una differenza significativa tra le condizioni A e B, e quindi una delle due condizioni risulta superiore. L’obiettivo dell’A/B testing è spesso quello di confermare l'ipotesi alternativa e dimostrare che una delle due condizioni porta a risultati migliori.
+\end{enumerate}
+Per verificare queste ipotesi si utilizza solitamente il t-test, un test statistico che si basa sulla distribuzione Gaussiana (o normale). Questo test permette di misurare se le differenze tra i risultati delle due condizioni sono statisticamente significative, e quindi di determinare con maggiore sicurezza quale delle due varianti è preferibile.
+
+L’A/B testing presenta diversi vantaggi. Uno dei principali è la semplicità: progettare e implementare un A/B test richiede pochi passaggi e può essere eseguito rapidamente. Inoltre, i risultati sono generalmente facili da misurare e interpretare, offrendo un feedback chiaro su quale variante ha ottenuto i migliori risultati. Questo lo rende particolarmente utile per prendere decisioni basate su dati concreti piuttosto che su ipotesi o preferenze soggettive.
+
+Tuttavia, l’A/B testing ha anche alcuni limiti. È adatto solo per situazioni in cui sono presenti due condizioni distinte. Quando è necessario testare più di due varianti, si ricorre a tecniche come il multivariate testing. Inoltre, non è sempre facile definire quale aspetto specifico misurare tra le due condizioni, poiché ogni cambiamento può influenzare vari fattori del comportamento utente.
+
+\section{Basato su esperti}
+Nel design dell'interazione uomo-macchina, le tecniche di valutazione basate su esperti offrono un modo per identificare potenziali problemi senza coinvolgere direttamente gli utenti. Questo approccio permette a uno o più esperti di valutare un’interfaccia, considerando come potrebbe essere percepita e utilizzata dall’utente tipico. Queste tecniche si basano su principi teorici e empirici dell’usabilità e della psicologia cognitiva, consentendo di evidenziare problemi che violano regole note o principi fondamentali dell'interazione uomo-macchina.
+
+Le valutazioni basate su esperti presentano diversi vantaggi. Innanzitutto, sono meno costose rispetto a quelle che coinvolgono utenti reali e possono essere utilizzate in ogni fase del progetto, anche nelle fasi iniziali, quando l’interfaccia è ancora in fase di sviluppo. Tuttavia, non sono in grado di rappresentare il vero uso del sistema, ma solo di misurare l'aderenza a principi e linee guida conosciute. Di conseguenza, potrebbero non evidenziare problemi specifici dell’interazione reale.
+
+Esistono diverse metodologie di valutazione basate su esperti, ognuna con specifiche caratteristiche e aree di applicazione.
+
+\subsection{Cognitive walkthrough}
+Il Cognitive Walkthrough è una tecnica proposta da Polson et al. nel 1992, mirata a valutare quanto il design di un'interfaccia supporti l'utente nell'apprendimento di un task. Questo metodo è spesso condotto da esperti in psicologia cognitiva, i quali esaminano il design passo dopo passo per identificare eventuali difficoltà o incoerenze cognitive. Per effettuare un cognitive walkthrough, sono necessari dettagli sul sistema, la descrizione del task da svolgere, le caratteristiche dell'utente tipo e una sequenza dei passaggi da eseguire.
+
+Durante il walkthrough, per ogni passo, l’esperto risponde a domande chiave come:
+\begin{itemize}
+    \item L'effetto dell'azione è lo stesso dell'obiettivo dell'utente?
+    \item L'utente può vedere che l'azione è disponibile?
+    \item L'utente capirà che quella è l'azione da eseguire?
+    \item Dopo averla eseguita, capirà il feedback ricevuto?
+\end{itemize}
+
+\subsection{Heuristic evaluation}
+L'Heuristic Evaluation, sviluppata da Jakob Nielsen e Rolf Molich, è una tecnica in cui gli esperti valutano un’interfaccia in base a una serie di euristiche – principi generali e regole pratiche per il design dell’usabilità. Ogni violazione delle euristiche viene registrata, classificata in base alla severità, e contribuisce a identificare problemi di usabilità.
+
+Le dieci euristiche di Nielsen includono:
+\begin{enumerate}
+    \item Visibilità dello stato del sistema
+    \item Corrispondenza tra il sistema e il mondo reale
+    \item Libertà e controllo da parte degli utenti
+    \item Coerenza e standard
+    \item Prevenzione degli errori
+    \item Riconoscere piuttosto che ricordare
+    \item Flessibilità ed efficienza d'uso
+    \item Design minimalista ed estetico
+    \item Aiutare gli utenti a riconoscere, diagnosticare e correggere gli errori
+    \item Aiuto/guida e documentazione
+\end{enumerate}
+
+\subsection{Model-Based evaluation}
+La model-based evaluation si basa su modelli teorici, come GOMS (Goals, Operators, Methods, Selections), KLM (Keystroke-Level Model) e Dialog Models, per prevedere le prestazioni e valutare l’interazione tra l'utente e il sistema. Questi modelli permettono di stimare il tempo di completamento di task specifici o di identificare sequenze di dialogo problematiche, offrendo un approccio strutturato per prevedere e prevenire difficoltà.
+
+\subsection{Review-Based evaluation}
+La Review-Based Evaluation utilizza i risultati di studi precedenti per valutare e informare le decisioni progettuali. Si tratta di una tecnica che richiede la consulenza di un esperto per assicurare che i risultati siano rilevanti e trasferibili al nuovo contesto di design. Questa tecnica è particolarmente utile per verificare assunzioni o miglioramenti rispetto a sistemi simili.

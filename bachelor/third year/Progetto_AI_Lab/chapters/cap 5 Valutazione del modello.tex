@@ -1,0 +1,61 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Valutazione del modello}\label{sec:cap 5}
+\subsection{Caricamento del DataSet e del modello finale}
+
+È stato inizializzato un DataLoader per il test set, utilizzando le stesse trasformazioni applicate in fase di validazione. Questo garantisce coerenza nel pre-processing e rende il confronto delle prestazioni più accurato:
+
+\begin{itemize}
+    \item I percorsi e le etichette sono stati letti tramite load\_image\_paths\_and\_labels.
+    \item I dati sono stati caricati in batch (batch size 32) e senza shuffle, in quanto l'ordine dei campioni non influisce sul testing.
+\end{itemize}
+
+\noindent Il modello migliore ottenuto durante l’addestramento (quello con la validation loss più bassa) viene caricato dalla memoria locale o da Google Drive, a seconda di cosa scegliamo. È stata gestita la compatibilità con CUDA per sfruttare eventuali GPU disponibili, e il modello è stato impostato in modalità eval() per disattivare il dropout e batch normalization.
+
+\subsection{Esecuzione dell'inferenza e metriche di valutazione}
+
+Per ottimizzare le prestazioni e risparmiare memoria, è stato utilizzato torch.no\_grad(). Durante questa fase:
+
+\begin{itemize}
+    \item Le immagini del test set sono state processate in batch.
+    \item Il modello ha prodotto predizioni che sono state confrontate con le etichette reali.
+    \item Le predizioni (all\_preds) e le etichette (all\_labels) sono state memorizzate per il calcolo delle metriche.
+\end{itemize}
+Sono state utilizzate metriche classiche per compiti di classificazione binaria:
+
+\begin{itemize}
+    \item \textbf{Accuracy}: percentuale di predizioni corrette.
+    \item \textbf{Precision, Recall, F1-score}: metriche derivate dal bilancio tra falsi positivi e falsi negativi.
+    \item È stato inoltre stampato il \textbf{classification report} di sklearn, che fornisce una panoramica dettagliata per ciascuna classe ("fallo" e "no\_fallo").
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/classReport.png}
+        \caption{Report del modello}
+        \label{fig:report}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/confusMatrix.png}
+        \caption{Matrice di confusione}
+        \label{fig:confusion}
+    \end{minipage}
+\end{figure}
+
+\noindent
+Come ultimo passo è stata stampata una \textbf{confusion matrix} con seaborn, che aiuta a valutare visivamente gli errori del modello, rendendo più chiare le aree dove il modello effettua valutazioni con più o meno precisione.
+\subsection{Conclusioni}
+Il nostro risultato finale deriva anche da alcuni problemi riscontrati nell’allenamento, uno fra tutti quello dell’overfitting; nonostante il modello avesse raggiunto un'accuratezza dell'80\% in fase di training, durante i test  non superava il 60\%. Per ovviare a questo problema,  abbiamo diminuito i trial nella fase di Hyperparameter Tuning e l’aumento del numero di immagini. Questa soluzione ha richiesto tempo, poiché è stato necessario testare numerosi valori per il trial prima di individuare una configurazione efficace. 
+Nonostante ciò il modello comunque non è molto preciso, soprattutto quando si parla delle immagini che non sono falli, infatti ha un accuracy più o meno del 70\%. Nonostante ciò crediamo che con un database più ampio e con una scelta migliore delle immagini per effettuare training e test si possa aumentare di molto la precisione del modello.
+
+
+
+
+
+
+\end{document}

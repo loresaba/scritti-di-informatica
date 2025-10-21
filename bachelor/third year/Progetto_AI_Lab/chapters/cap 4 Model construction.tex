@@ -1,0 +1,137 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Costruzione del modello}\label{sec:cap 4}
+
+Per il riconoscimento automatico di falli nel calcio da immagini, è stata progettata una rete neurale convoluzionale (CNN) personalizzata, denominata FoulClassifierCNN. L'obiettivo del modello è classificare ciascuna immagine come contenente un fallo (fallo) o meno (no\_fallo), ovvero un problema di classificazione binaria.
+
+\noindent L'architettura del modello è stata definita interamente da zero, senza utilizzare modelli pre-addestrati. È composta da una serie di blocchi convoluzionali seguiti da livelli di pooling e fully connected, secondo lo schema:
+
+\subsubsection*{Blocchi convoluzionali}
+
+La parte “feature extractor” di FoulClassifierCNN è articolata in quattro blocchi ripetuti, ciascuno composto da:
+
+\begin{itemize}
+    \item \textbf{Conv2D + ReLU}
+
+ Un filtro 2D applica una convoluzione sull’immagine (o sulla precedente feature map), producendo un insieme di mappe di attivazione su cui la ReLU introduce non-linearità e favorisce la sparsity.
+    \item \textbf{BatchNorm2D}
+
+ Questa normalizzazione dei batch stabilizza la distribuzione delle attivazioni, riduce il rischio di “covariate shift” interno e permette di usare learning rate più elevati.
+    \item \textbf{MaxPool2D}
+
+ Riduce la dimensione spaziale delle feature map (ad esempio da 224×224 → 112×112, e così via) concentrando le informazioni più salienti in ogni regione, diminuendo al contempo il numero di parametri e il carico computazionale.
+\end{itemize}
+All’interno di ogni blocco, il numero di filtri aumenta progressivamente (ad esempio 32 → 64 → 128 → 256), in modo da catturare, nei livelli più profondi, pattern sempre più complessi e ricchi di contesto (ad esempio la sovrapposizione di gambe, il contatto tra due giocatori, la postura corporea).
+
+\subsubsection*{“Head” completamente connesso}
+
+ Dopo l’ultimo MaxPool, le feature map vengono appiattite e passate a uno stack di layer fully connected:
+
+\begin{itemize}
+    \item \textbf{Linear + ReLU}
+
+ Un primo livello lineare riduce le migliaia di valori provenienti dalle feature map in un vettore di dimensione intermedia. La ReLU successiva mantiene la capacità di rappresentare relazioni non-linearmente separabili.
+
+    \item \textbf{Dropout}
+
+ Con un tasso studiato sperimentalmente (ad esempio 0.5), il dropout “spenge” in modo casuale parte dei neuroni durante il training, agendo da regolarizzatore e riducendo l’overfitting.
+
+    \item \textbf{Linear (2 unità)}
+
+ L’ultimo layer lineare proietta il vettore su due logit, uno per ciascuna classe (“fallo” vs “no\_fallo”).
+
+\end{itemize}
+\subsubsection*{Output e interpretazione}
+
+ I due logit prodotti vengono convertiti in probabilità tramite softmax, consentendo di interpretare in modo diretto quanto il modello “creda” che nell’immagine sia presente un fallo. In fase di inferenza, basta confrontare le due probabilità per assegnare la classe più probabile.
+
+\subsection{Addestramento}
+
+Una volta definita l'architettura del modello, è stata avviata la fase di addestramento, suddivisa in tre momenti principali:
+
+\begin{enumerate}
+    \item Un primo addestramento del modello
+    \item Fase di tuning e validazione, per identificare la miglior combinazione di iperparametri.
+    \item Fase di training finale, eseguita sull'intero dataset (training + validation) con la configurazione ottimale.
+\end{enumerate}
+La fase di addestramento è stata progettata per essere robusta, tracciabile e facilmente ottimizzabile. L’obiettivo era non solo migliorare le prestazioni del modello, ma anche monitorare in tempo reale l’andamento delle metriche principali per prevenire fenomeni come overfitting o underfitting. Per farlo, abbiamo integrato vari componenti fondamentali nel training loop.
+
+\noindent Il processo ha avuto inizio con l’inizializzazione degli strumenti essenziali:
+
+\begin{itemize}
+    \item Il modello FoulClassifierCNN è stato istanziato e spostato sul dispositivo disponibile (GPU o CPU).
+    \item La funzione di perdita utilizzata è stata la \textbf{CrossEntropyLoss}, standard per compiti di classificazione.
+    \item L’\textbf{ottimizzatore} scelto è Adam, noto per la sua stabilità e adattabilità, impostato con un learning rate iniziale di 1e-4.
+    \item È stato aggiunto uno \textbf{scheduler CosineAnnealingLR} per modificare il learning rate in modo dinamico durante le epoche.
+    \item È stato configurato un \textbf{early stopping} con una soglia di pazienza pari a 10 epoche consecutive senza miglioramento della validation loss.
+\end{itemize}
+È stato inizializzato un SummaryWriter per il \textbf{monitoraggio su TensorBoard}.
+
+\subsection{Allenamento iniziale}
+Durante ogni epoca, nella fase di addestramento iniziale, il modello ha alternato le seguenti fasi:
+
+\begin{enumerate}
+    \item \textbf{Fase di addestramento}:
+    \begin{itemize}
+        \item Il modello veniva messo in modalità train().
+        \item Per ogni batch di immagini:
+        \begin{itemize}
+            \item I tensori venivano spostati sul dispositivo.
+            \item Si calcolavano gli output tramite forward pass.
+            \item Veniva calcolata la loss e si eseguiva il backpropagation.
+            \item L’ottimizzatore aggiornava i pesi.
+        \end{itemize}
+        \item Alla fine della fase, venivano calcolati:
+        \begin{itemize}
+            \item La \textbf{loss media} su tutto il training set.
+            \item L’\textbf{accuratezza} totale (numero di predizioni corrette / totale delle predizioni).
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Fase di validazione}:
+    \begin{itemize}
+        \item Il modello veniva valutato in modalità eval() senza calcolo dei gradienti.
+        \item Si calcolavano loss e accuratezza su validation set.
+    \end{itemize}
+    \item \textbf{Logging su TensorBoard}:
+    \begin{itemize}
+        \item Loss e accuracy, sia per il training che per la validazione, venivano registrate a ogni epoca.
+        \item Questo ha permesso di visualizzare in tempo reale le metriche su TensorBoard.
+    \end{itemize}
+    \item \textbf{Gestione dell’early stopping}:
+    \begin{itemize}
+        \item Se la validation loss migliorava, il modello veniva salvato (best\_model.pth).
+        \item Altrimenti, veniva incrementato un contatore. Se il contatore raggiungeva 10, il training veniva interrotto.
+    \end{itemize}
+\end{enumerate}
+Grazie a questa struttura, è stato possibile monitorare in modo dettagliato l’intero processo di addestramento, evitare l’overfitting e selezionare automaticamente il modello con le migliori prestazioni su validation set. L’uso di TensorBoard si è rivelato particolarmente utile per visualizzare graficamente le tendenze delle metriche durante l’addestramento, fornendo insight preziosi per eventuali modifiche.
+
+\subsection{Hyperparameter Tuning}
+
+L'Hyperparameter Tuning è il processo mediante il quale si identifica la migliore combinazione di configurazioni di training al fine di massimizzare le prestazioni del modello. 
+\noindent
+Tipicamente, questo processo include la selezione e l'ottimizzazione di parametri quali:
+
+\begin{itemize}
+    \item Tasso di apprendimento (lr)
+    \item Dimensione del batch
+    \item Tipo di ottimizzatore (Adam, SGD, ecc.)
+    \item Numero di filtri in ogni blocco convoluzionale
+    \item Tasso di abbandono
+    \item Tipo di scheduler
+\end{itemize}
+\noindent
+Il nostro processo utilizza Optuna, una libreria di ottimizzazione bayesiana, per il \textit{tuning} automatico degli iperparametri di un modello di classificazione, con l’obiettivo di massimizzare l’accuratezza sul validation set. L’ottimizzazione prevede due trial, durante i quali si ottimizzano tre parametri chiave: il tasso di apprendimento (\texttt{lr}), su scala logaritmica tra 1e-5 e 1e-2; la dimensione del batch (\texttt{batch\_size}), scelta tra 32 e 64; il dropout (\texttt{dropout}), in un intervallo continuo tra 0.2 e 0.5.\\
+\noindent
+Per ogni trial, si definisce la struttura del modello con i parametri suggeriti, si crea l’ottimizzatore Adam e uno scheduler StepLR che riduce gradualmente il learning rate per una convergenza stabile. Il modello viene allenato per 10 epoche con il processo descritto precedentemente e poi valutato. Alla fine, viene restituita l’accuratezza come metrica da massimizzare.\\
+\noindent
+Dopo i due trial, si sceglie la configurazione migliore e si esegue un retraining di 10 epoche con questi iperparametri ottimali. Il modello finale viene salvato in \texttt{best\_model\_optuna.pth}.
+
+
+\subsection{Training finale}
+
+Dopo la fase di tuning e validazione viene fatto un training finale sull'intero dataset (training + validation) con la configurazione ottimale. Inizialmente vengono unificati i dataset, train\_dataset e val\_dataset vengono combinati in un unico ConcatDataset che sarà usato per l’addestramento finale. Di seguito si ricostruisce il modello finale per includere il valore di dropout ottimale. Poi si configurano l’ottimizzatore, con il learning rate ottimale, lo scheduler e il criterio di perdita. Dopo di che si avvia l’addestramento del modello sull’intero dataset per 10 epoche.\\
+Infine si salva il modello nel file best\_model\_optuna.pth. 
+
+
+\end{document}

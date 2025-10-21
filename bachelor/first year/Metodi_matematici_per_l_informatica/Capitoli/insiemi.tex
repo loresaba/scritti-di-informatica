@@ -1,0 +1,53 @@
+\chapter{Teoria degli insiemi}
+
+\begin{definition}[Insiemi]
+Un insieme è una qualsiasi collezione di oggetti su cui è possibile determinare una condizione di appartenenza.
+\end{definition}
+
+Quando parliamo di insiemi non siamo interessati al tipo degli elementi o al loro ordine. $\{0,1,2\} = \{0,2,0,1\}$
+
+\section{Sottoinsiemi}
+\begin{definition}[Sottoinsiemi]
+    Poniamo due insiemi $A$ e $B$, diciamo che l’insieme $B$ è sottoinsieme dell’insieme $A$ se ogni elemento di $B$ è elemento di $A$.
+    Cioè se (un generico) $x\in B$ allora $x\in A$; si dice anche che $B$ è incluso in $A$ e si scrive $B\subseteq A$.\begin{center}$\forall a[(a\in A)\rightarrow(a\in B)]$\end{center}
+\end{definition}
+
+\subsection*{Inclusione propria e inpropria}
+    Tra tutti i sottoinsiemi di un insieme dato $A$ troviamo sempre l’insieme $A$ stesso e l’insieme vuoto $\emptyset$: essi sono detti sottoinsiemi \textbf{impropri} di $A$; un sottoinsieme di $A$ diverso da $A$ stesso e da $\emptyset$ si dice sottoinsieme \textbf{proprio} di $A$.
+
+\subsection*{Insieme vuoto}
+    Un insieme vuoto è sottoinsieme di qualunque insieme, anche di sè stesso.\begin{center}$\emptyset \subseteq A, \forall A$\end{center}
+
+\section{Operazioni tra insiemi}
+\subsection*{Unione}
+    E' l'insieme di tutti gli oggetti di $x$ tali che $x$ appartiene ad $A$ o $x$ appartiene a $B$.\begin{center}$A\cup B = \{\forall x|x\in A \vee x\in B\}$\end{center}
+
+\subsection*{Intersezione}
+    E' l'insieme di tutti gli oggetti di $x$ tali che $x$ appartiene ad $A$ e $x$ appartiene a $B$.\begin{center}$A \cap B = \{\forall x|x\in A \wedge x\in B\}$\end{center}
+
+\subsection*{Differenza}
+    E' l'insieme di tutti gli oggetti di $x$ tali che $x$ appartiene ad $A$ tolti gli elementi di $B$.\begin{center}$A-B = \{\forall x|x\in A \wedge x\notin B\}$\end{center}
+
+\subsection*{Complemento}
+    L'insieme completo di $A$ nasce quando $A$ è sottoinsieme di $I$ a cui comprendono tutti gli elementi di $I$ tolti quelli di $A$.\begin{center}$A \subseteq I\hspace{0,5cm} A=\{\forall x|x\in I \wedge x\notin A\}$\end{center}
+
+\section{Prodotto cartesiano}
+\begin{definition}[Prodotto cartesiano]
+    Dati due insiemi $A$ e $B$, si dice prodotto cartesiano l'insieme di tutte le coppie $A$ e $B$ tali che $a$ è un elemento di $A$ e $b$ è un elemento di $B$.\begin{center}$AxB = \{(a,b)|a\in A \wedge b\in B\}$\end{center}
+\end{definition}
+
+\section{Insieme delle parti}
+\begin{definition}[Insieme delle parti]
+    Si chima insieme delle parti l'insieme di tutti i sottoinsiemi di $A$.\begin{center}$P(A) = \{x|x\subseteq A\}$\end{center}
+\end{definition}
+Per trovare il numero di elementi dell'insieme delle parti o cardinalità si applica $2^a$.
+\begin{center}
+    \begin{tabular}{c|c c}
+        \centering
+        Insieme & Cardinalità & Insieme per parti \\\hline
+        $A=\emptyset$&$2^0$&$P(A)=\emptyset$\\\hline
+        $A=\{0\}$&$2^1$&$P(A)=\{\emptyset,A\}$\\\hline
+        $A=\{0,1\}$&$2^2$&$P(A)=\{\emptyset,\{0\},\{1\},A\}$\\\hline
+        $A=\{0,1,2\}$&$2^3$&$P(A)=\{\emptyset,\{0\},\{1\},\{2\},\{0,1\},\{0,2\},\{1,2\},A\}$
+    \end{tabular}
+\end{center}

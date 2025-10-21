@@ -1,0 +1,334 @@
+\part{Equazioni Differenziali}
+
+\chapter{Introduzione alle equazioni differenziali}
+Un'equazione differenziale è un'equazione dove l'incognita è una funzione e sono coinvolte le derivate della funzione stessa.
+
+\begin{definition*}[Equazione differenziale]
+    Un'equazione differenziale ordinaria è una relazione tra una funzione (incognita) $\mathbb{R}\to\mathbb{R}$ e le sue derivate.
+\end{definition*}
+
+\begin{example}\phantom{}
+\begin{itemize}
+    \item Trovare $f(x)$ tale che $f^2(x)+x^2-2=0$.
+        $$f(x)=\begin{cases}\sqrt{2-x^2}\\-\sqrt{2-x^2}\end{cases} \forall x\in[-\sqrt{2}, \sqrt{2}]$$
+        L'incognita è una funzione ma non sono coinvolte le derivate quindi non è un'equazione differenziale ordinaria;
+    \item Data $f(x)=\cos(x)$ trovare $g(x)$ tale che $g'(x)=f(x)$.
+    
+    Dato che $g'(x)=f(x)$, $g'(x)=\cos(x)$ quindi $g(x)=\int\cos(x)dx=\sin(x)+c$.\\E' un'equazione differenziale ordinaria;
+    
+    \item $\cos(y'(t))e^{y^{IV}(t)}+y^2(t)=\sin(t)$ è un'equazione differenziale ordinaria.
+\end{itemize}
+\end{example}
+
+\section{Ordine di un'equazione differenziale}
+\begin{definition*}
+    L'ordine di un'equazione differenziale è stabilito dall'ordine massimo che compare nella relazione. Ovvero è l'ordine più alto della derivata della funzione incognita.
+\end{definition*}
+
+\begin{example}\phantom{}
+\begin{itemize}
+    \item $y'''(t)+3e^{y'(t)}=\cos(t)$ è di $3^o$ ordine;
+    \item $y''(t)=\cos(y^{IV}(t))$ è di $4^o$ ordine.
+\end{itemize}
+\end{example}
+
+Se l'ordine dell'equazione è 1 si può risolvere integrando per il teorema del calcolo integrale (vedi \ref{sec:TFCI}). Se maggiore di 1 si itera su questo procedimento risolvendo con gli integrali.
+
+\begin{example}\phantom{}
+\begin{itemize}
+    \item $y''(t)=2$\begin{equation*}[y'(t)]'=2\hspace{1cm} [y'(t)=2t+c]\hspace{1cm}y(t)=t^2+ct+d\end{equation*}
+    \item $y'''(6)$\begin{equation*}y(t)=t^3+ct^2+dt+g\end{equation*}
+\end{itemize}
+\end{example}
+
+Un'equazione differenziale ordinaria di ordine N ha infinite soluzioni dipendenti da N parametri reali.
+
+\begin{osservation*}
+    Da $y''(t)=g$ otteniamo $y(t)=\frac{gt^2}{2}+at+b$, come posso fissare i valori di $a$ e $b$?
+    
+    Vediamo che per $y(0)$ otteniamo $0+0+b=b$. Mentre per $y'(0)$ otteniamo $(\frac{gt^2}{2}+at+b)'=gt+a=0+a=a$. Quindi per fissare la soluzione sono necessarie delle condizioni iniziali.
+\end{osservation*}
+
+\section{Problema di Cauchy}
+\begin{thm}[Problema di Cauchy]
+Il problema di Cauchy per un'equazione differenziale ordinata è formato da un sistema composto da:
+$$\begin{cases}\text{un'equazione differenziale ordinata di ordine N}\geq1\text{ nell'incognita }y(t)\\\text{N condizioni iniziali}\end{cases}$$
+Il problema di Cauchy ha un'unica soluzione. Ovvero tra le infinite soluzioni dell'equazione differenziale, ce n'è solo una che soddisfa le condizioni iniziali.
+\end{thm}
+
+\begin{example}\phantom{}
+\begin{itemize}
+    \item $\begin{cases}y'(t)=-e^{-t}\\y(0)=3\end{cases}$
+    
+        Calcoliamo $y(t)=\int -e^{-t}dx=e^{-t}+c$. Ora sostituiamo la condizione iniziale $3=e^{-0}+c$ e otteniamo $c=2$. Quindi $y(t)=e^{-x}+2$ è l'unica soluzione al problema di Cauchy.
+
+    \item $\begin{cases}y''(t)=t\\y(0)=1\\y'(0)=4\end{cases}$
+        
+        Calcoliamo $y(t)=\frac{t^3}{6}+ct+d$. Con la prima condizione $1=\frac{0^3}{6}+c*0+d$ otteniamo $d=1$, mentre dalla seconda $4=\frac{0^2}{2}+c$ otteniamo $c=4$. Quindi $y(t)=\frac{t^3}{6}+4t+1$ è l'unica soluzione al problema di Cauchy.
+\end{itemize}
+\end{example}
+
+\begin{osservation*}
+    Notiamo come per ogni problema di Cauchy, le condizioni iniziali devono essere tante quanti sono i paramentri da determinare. Inoltre le condizioni devono fissare i valori della funzione e, eventualmente, di una o più derivate in uno stesso punto.
+\end{osservation*}
+
+
+\chapter{Metodi risolutivi}
+
+\section{Lineari di primo ordine}
+Sono equazioni differenziali lineari di primo ordine, le equazioni nella forma: \begin{equation*}y'(t)=a(t)y(t)+b(t)\end{equation*} in base ai valori di $a(t)$ e $b(t)$ possono verificarsi tre casi:
+\begin{itemize}
+    \item $a(t),b(t)$ sono costanti, è un'equazione lineare con coefficienti costanti;
+    \item $b(t)=0$ è un'equazione lineare omogenea;
+    \item $b(t)\neq0$ è un'equazione lineare non omogenea.
+\end{itemize}
+
+\subsubsection{Lineare con coefficienti costanti}
+Se abbiamo che $\begin{cases}y'(t)=0\\y(t_0)=y_0\end{cases}$, essendo $y(t)=y_0=0$ otteniamo come soluzione: \begin{equation*}
+    y(t)=y_0
+\end{equation*}
+
+Se invece abbiamo $\begin{cases}y'(t)=g(t)\\y(t_0)=y_0\end{cases}$, tramite gli integrali:
+\begin{equation*}y(t)]^s_{t_0}=\int^s_{t_0}y'(t)dt=\int^s_{t_0}g(t)dt\hspace{1cm}
+                 y(s)-y(t_0)=\int^s_{t_0}g(t)dt\end{equation*}
+essendo $y(t_0)=y_0$ otteniamo come unica soluzione:
+\begin{equation*}y(t)=y_0+\int^t_{t_0}g(s)ds\end{equation*}
+
+\subsubsection{Lineare omogenea}
+Se l'equazione differenziale lineare omogenea è nella forma $\begin{cases}y'(t)=Ay(t)\\y(t_0)=y_0\end{cases}$, è soluzione:
+\begin{equation*}y(t)=y_0e^{a(t-t_0)}\end{equation*}
+
+Se i coefficienti non sono costanti, ovvero $\begin{cases}y'(t)=A(t)y(t)\\y(t_0)=y_0\end{cases}$ otteniamo:
+\begin{equation*}\int^s_{t_0}\frac{y'(t)}{y(t)}dt=\int^s_{t_0}A(t)dt\end{equation*} e come risultato:
+\begin{equation*}y(s)=y_0e^{\int^s_{t_0}A(t)dt}\end{equation*}
+
+\subsubsection{Lineare non omogenea}
+Data $y'(t)=a(t)y(t)+b(t)$, tutte le infinite soluzioni sono nella forma:
+\begin{equation*}y(t)=y_0(t)+\overline{y}(t)\end{equation*}
+dove $y_0(t)$ è soluzione dell'equazione omogenea associata, ovvero $y'_0(t)=a(t)y(t)$, e $\overline{y}(t)$ è una soluzione particolare dell'equazione.
+
+Data l'equazione non omogenea $\begin{cases}y'(t)=a(t)y(t)+b(t)\\y(t_0)=y_0\end{cases}$, il procedimento risolutivo consiste nel trovare la soluzione dell'equazione differenziale omogenea associata, trovare una soluzione particolare e infine risolvere il problema di Cauchy.
+
+\begin{enumerate}
+    \item Per l'\textit{omogenea associata} utilizziamo i metodi visti per le equazioni differenziali lineari omogenee. Ovvero in generale vale:
+        \begin{equation*}y_0(t)=ce^{A(t)}\end{equation*}
+    
+    \item La \textit{soluzione particolare} $\overline{y}(t)$ in generale vale:
+        \begin{equation*}\overline{y}(t)=c(t)e^{A(t)}=\left[\int^t_{t_0}b(s)e^{-A(s)}ds\right]e^{A(t)}\end{equation*}
+        Se l'equazione è non omogenea a coefficienti costanti allora $\overline{y}(t)$ è costante perchè $y'(t)=ay(t)+b$, quindi $\overline{y'}(t)=0$ e $0+ay(t)+b$ dà come soluzione:
+    \begin{equation*}\overline{y}(t)=-\frac{b}{a}\end{equation*}
+    
+    \item Unendo l'omogenea associata e la soluzione particolare nell'equazione $y(t)=y_0(t)+\overline{y}(t)$ otteniamo:
+        \begin{equation*}y(t)=ce^{A(t)}+\left[\int^t_{t_0}b(s)e^{-A(s)}ds\right]e^{A(t)}=
+            e^{A(t)}\left[c+\int^t_{t_0}b(s)e^{-A(s)}ds\right]\end{equation*}
+            
+    \item Applicando Cauchy vogliamo trovare il valore della costante tale che $y(t_0)=y_0$ ovvero:
+        \begin{equation*}e^{A(t_0)}\left[c+\int^{t_0}_{t_0}b(s)e^{-A(s)}ds\right]=ce^{A(t_0)}\end{equation*}
+        dato che $A(t)=\int^t_{t_0}a(s)ds=0$, $c=y_0$;
+        
+    \item La formula finale si può scrivere come:
+        \begin{equation*}y(t)=e^{A(t)}\left[y_0+\int^t_{t_0}b(s)e^{-A(s)}ds\right]\end{equation*}
+        dove $A(t)=\int^t_{t_0}a(s)ds$.
+\end{enumerate}
+
+\begin{example}\phantom{}
+\begin{itemize}
+    \item \begin{equation*}\begin{cases}y'(t)=ty(t)+e^{\frac{t^2}{2}}\\y(0)=0\end{cases}\end{equation*}
+    Troviamo l'equazione differenziale associata:
+    \begin{equation*}y'(t)=ty(t)\hspace{1cm}y_0(t)=ce^{\int^t_\alpha sds}=ce^{\frac{t^2}{2}}\end{equation*}
+    Calcoliamo la soluzione particolare:\\$\overline{y}(t)=te^{\frac{t^2}{2}}$ è una soluzione particolare perchè $\overline{y'}(t)=e^{\frac{t^2}{2}}+t^2e{\frac{t^2}{2}}$
+    \begin{equation*}\overline{y}(t)=e^{A(t)}\int^t_{t_0}b(s)e^{-A(s)}ds=e^{\frac{t^2}{2}}e^{-\frac{t^2}{2}}ds=e^{\frac{t^2}{2}}\int^t_{t_0}1ds=e^{\frac{t^2}{2}}(t-t_0)\end{equation*}
+    Ora possiamo dire che:
+    \begin{equation*}y(t)=t_0(t)+\overline{y}(t)=ce^{\frac{t^2}{2}}+te^{\frac{t^2}{2}}\end{equation*}
+    sostituendo con il problema di Cauchy otteniamo $y(0)=c+0=0$, $c=0$.
+    
+    \item \begin{equation*}\begin{cases}y'(t)=ty(t)+e^{\frac{t^2}{2}}\sin(t)\\y(0)=0\end{cases}\end{equation*}
+        Calcoliamo $A(t)$:\begin{equation*}A(t)=\int^t_{t_0}a(s)ds=\int^t_{0}sds=\frac{t^2}{2}\end{equation*}
+        Troviamo ora l'omogenea associata: \begin{equation*}y_0(t)=ce^{A(t)}=ce^{\frac{t^2}{2}}\end{equation*}
+        La soluzione particolare sarà: \begin{equation*}\overline{y}(t)=e^{A(t)}\int^t_{t_0}b(s)e^{-A(s)}ds=e^{\frac{t^2}{2}}\int^t_0e^{\frac{s^2}{2}}\sin(s)e^{-\frac{s^2}{2}}ds=\end{equation*}
+        \begin{equation*}=e^{\frac{t^2}{2}}[-\cos(s)]^t_0=e^{\frac{t^2}{2}}[1-\cos(t)]\end{equation*}
+        Infine la soluzione si otterrà come:
+        \begin{equation*}y(t)=e^{A(t)}\left[y_0+\int^t_{t_0}b(s)e^{-A(s)}ds\right]=e^{\frac{t^2}{2}}[1-\cos(t)]\end{equation*}
+\end{itemize}
+\end{example}
+
+
+\section{A variabili separabili}
+
+Un'equazione differenziale ordinaria di primo ordine a variabili separabili si presenta nella forma:
+\begin{equation*}\begin{cases}y'(t)=f(y(t))g(t)\\y(t_0)=y_0\end{cases}\end{equation*}
+\begin{example}
+    $y'(t)=e^{y(t)}(t^2+3)$ è un'equazione differenziale a variabili separabili.
+\end{example}
+Per risolverla dobbiamo vedere se $\begin{cases}f(y_0)=0\\f(y_0)\neq0\end{cases}$:
+\begin{enumerate}
+    \item Se $f(y_0)=0$ allora $y(t)=y_0$ è la sua soluzione. Perchè $\begin{cases}y'(t)=y_0'=f(y_0)g(t)\\y(t_0)=y_0\end{cases}$ essendo $f(y_0)=0$, per il problema di Cauchy, $y(t)=y_0$;
+    
+    \item Se $f(y_0)\neq0$ è facile dimostrare che $f(y(t))\neq0$. Quindi posso scrivere $y'(t)=f(y(t))g(t)$ come:
+        \begin{equation*}\frac{y'(t)}{f(y(t))}=g(t)\hspace{1cm}\int^s_{t_0}\frac{y'(t)}{f(y(t))}dt=\int^s_{t_0}g(t)dt\end{equation*}
+        
+        A questo punto non resta che risolvere gli integrali con un cambio di variabile ed unire le soluzioni.
+        
+        \begin{example}
+            \begin{equation*}\begin{cases}y'(t)=e^{y(t)}(t^2+2)\\y(0)=1\end{cases}\end{equation*}
+            \begin{equation*}\int^s_0\frac{y'(t)}{e^{y(t)}}dt=\int^s_0t^2+2dt\end{equation*}
+            Posso sostituire al primo membro $z=y(t)$ $dz=y'(t)dt$ e risolvere l'integrale al secondo membro. Partiamo dal primo e otteniamo:
+            \begin{equation*}\int^{y(s)}_{y_0}\frac{dz}{f(z)}=F(z)]^{y(s)}_{y_0}=F(y(s))-F(y_0)=\end{equation*}
+            \begin{equation*}=\int^s_1\frac{dz}{e^z}=\int^{y(s)}_{1}e^{-2}dz=-e^{-2}]^{y(s)}_{1}=-e^{-y(s)}+e^{-1}\end{equation*}
+            Il secondo membro, invece, tramite l'integrale diretto diventa:
+            \begin{equation*}\int^s_0t^2+2dt=\frac{t^3}{3}+2t]^s_0=\frac{s^3}{3}+2s\end{equation*}
+            Unendo le soluzioni otteniamo:
+            \begin{equation*}-e^{-y(s)}+e^{-1}=\frac{s^3}{3}+2s\hspace{1cm}e^{-y(s)}=\frac{s^3}{3}-2s+e^{-1}\end{equation*}
+            \begin{equation*}\frac{1}{y(s)}=\ln|e^{-1}-\frac{s^3}{3}-2s|\hspace{1cm}y(s)=\frac{1}{\ln|e^{-1}-\frac{s^3}{3}-2s|}\end{equation*}
+            
+        \end{example}
+\end{enumerate}
+
+\subsection*{Studio di funzioni a variabili separabili}
+Prima di risolvere qualsiasi equazione differenziale, possiamo ottenere delle informazioni importati. In particolar modo data l'equazione differenziale $\begin{cases}y'(t)=f(y(t))g(t)\\y(t_0)=y_0\end{cases}$, possiamo, tramite la derivata prima, trovare la monotonia della funzione e, tramite la derivata seconda, calcolare la convessità.
+\begin{equation*}y(t_0)=y_0\hspace{1cm}y'(t_0)=f(y_0)g(t_0)\hspace{1cm}y''(t_0)=f'(y_0)y'(t_0)g(t_0)+f(y_0)g'(t_0)\end{equation*}
+Possiamo, inoltre, anche calcolare con i polinomi di Taylor un'approssimazione della funzione:
+\begin{equation*}T(y(t),t_0)=y(t_0)+y'(t_0)(t-t_0)+\frac{y''(t_0)}{2}(t-t_0)^2\end{equation*}
+
+\section{Secondo ordine con coefficienti costanti}
+Un'equazione differenziale di secondo ordine con coefficienti costanti è nella forma:
+\begin{equation*}\begin{cases}y''+Ay'+By=g(t)\\y(t_0)=y_0\\y'(t_0)=y_1\end{cases}\end{equation*}
+Se $g(t)=0$ è omogenea, al contrario, se $g(t)\neq0$ non è omogenea.
+
+Tutte le infinite soluzioni sono date da:
+\begin{equation*}
+    y(t)=y_0(t)+\overline{y}(t)    
+\end{equation*}
+dove $y_0(t)$ è la soluzione dell'omogenea associata $y''_0+Ay'_0+By_0=0$, mentre $\overline{y}(t)$ è una soluzione particolare $\overline{y}''+A\overline{y}'+B\overline{y}=g(t)$.
+
+Per l'\textit{omogenea associata} vogliamo trovare $y_0(t)$ tale che $y''_0+Ay'_0+By_0=0$, ovvero dobbiamo risolvere il suo polinomio caratteristico.
+\begin{definition*}
+    Data $y_0^{(2)}+Ay_0^{(1)}+By_0^{(0)}$, il suo polinomio caratteristico associato è $\lambda^2+A\lambda+B=0$.
+    \begin{example}
+        Il polinomio caratteristico dell'equazione $y''+3y'+8=0$ è $\lambda^2+3\lambda+8$.
+    \end{example}
+\end{definition*}
+
+Impostato il polinomio caratteristico $\lambda^2+A\lambda+B=0$, a seconda del risultato di questa equazione di secondo grado, possono generarsi tre risultati differenti:
+\begin{itemize}
+    \item Se $\lambda_1\neq\lambda2$\begin{equation*}y_0(t)=Ce^{\lambda_1t}+De^{\lambda_2t}\hspace{1cm}C, D\in\mathbb{R}\end{equation*}
+    \item Se $\lambda_1=\lambda2$\begin{equation*}y_0(t)=(C+Dt)e^{\overline{\lambda}t}\hspace{1cm}C, D\in\mathbb{R}\end{equation*}
+    \item Se $\lambda_{1,2}=\alpha\pm C\beta$\begin{equation*}y_0(t)=e^{\alpha t}[C\cos(\beta t)+D\sin(\beta t)]\hspace{1cm}C, D\in\mathbb{R}\end{equation*}
+\end{itemize}
+
+Per la \textit{soluzione particolare}, invece: se l'equazione è omogenea allora non c'è bisogno di calcolarla perchè vale 0; se non è omogenea dobbiamo trovare una soluzione che dipende da $g(t)$. In generale cerchiamo una soluzione dello stesso tipo di $g(t)$, ma allo stesso tempo diversa rispetto all'omogenea. Se la soluzione particolare è uguale all'omogenea si moltiplicherà per $t$, ottenendo $tg(t)$.
+
+\begin{example} Trovare la soluzione particolare della seguente equazione differenziale:
+\begin{equation*}\begin{cases}y''+by'+5y=2+3t\\y(0)=0\\y'(0)=0\end{cases}\end{equation*}
+
+    Essendo $g(t)=2+3t$ la soluzione particolare diventa $\overline{y}t=Qt+R$.
+    
+    Imponiamo che sia soluzione $\overline{y}t=Qt+R$ e troviamo le sue derivate $\overline{y}'(t)=Q$ e $\overline{y}''(t)=0$. Sostituendo nell'equazione otterremo:
+    \begin{equation*}
+        \overline{y}''+6\overline{y}'+5\overline{y}=2+3t\hspace{1cm}0+6Q+5(Qt+R)=2+3t
+    \end{equation*}
+    Mettendo a sistema otteniamo come soluzioni:
+    $\begin{cases}5Q=3\\6Q+5R=2\end{cases}$ $\begin{cases}Q=\frac{3}{5}\\R=-\frac{8}{25}\end{cases}$
+    e la soluzione particolare sarà $\overline{y}(t)=\frac{3}{5}t-\frac{8}{25}$.
+\end{example}
+
+Dobbiamo infine risolvere il \textit{problema di Cauchy} sostituendo le condizioni iniziali dell'equazione $y(t)=y_0(t)+\overline{y}t$ per trovare i valori delle variabili $C$ e $D$.
+
+
+
+\chapter*{Esercizi svolti}
+\addcontentsline{toc}{chapter}{Esercizi svolti}
+\begin{exercise}[A variabili separabili]\phantom{}
+\begin{enumerate}
+    \item \begin{equation*}\begin{cases}y'(t)=\frac{t}{y(t)+1}\\y(0)=0\end{cases}\end{equation*}
+    E' un'equazione differenziale di primo ordine a variabili separabili. $f(y(t))=\frac{1}{y(t)+1}$ e $g(t)=t$. $f(y_0)=0$? No, perchè $f(0)=\frac{1}{0+1}=1\neq0$, quindi anche $f(y(t))\neq0$.
+    \begin{equation*}y'(t)=\frac{t}{y(t)+1}\hspace{1cm}y'(t)(y(t)+1)=t\end{equation*}
+    \begin{equation*}\int^s_0y'(t)(y(t)+1)dt=\int^s_0tdt\end{equation*}
+    Ora con la sostituzione $z=y(t)$, $dz=y'(t)dt$ otteniamo:
+    \begin{equation*}\int^{y(s)}_{y_0}(1+z)dz=z+\frac{z^2}{2}]^{y(s)}_0=\frac{y^2(s)}{z}+y(s)+y(s)\end{equation*}
+    Mentre, per il secondo membro otteniamo:
+    \begin{equation*}\int^s_0tdt=\frac{s^2}{2}\end{equation*}
+    Quindi unendo i risultati:
+    \begin{equation*}\frac{y^2(s)}{2}+y(s)=\frac{s^2}{2}\hspace{1cm}y^2(s)+2y(s)-s^2=0\end{equation*}
+    E la risolviamo come un'equazione di secondo grado:
+    \begin{equation*}y(s)_{1,2}=\frac{-b\pm\sqrt{\Delta}}{2a}=\frac{-2\pm\sqrt{4+4s^2}}{2}=-1\pm\sqrt{1+s^2}\end{equation*}
+    Abbiamo ottenuto due soluzioni, ma non è possibile tenerle entrambe per l'unicità. Dobbiamo quindi scegliere una soluzione ricordando che soddisfa:
+    \begin{equation*}y_1(s)=-1+\sqrt{1+s^2}\hspace{1cm}y_1(0)=-1+1=0\end{equation*}
+    \begin{equation*}y_2(s)=-1-\sqrt{1+s^2}\hspace{1cm}y_2(0)=-1-1=-2\neq0\end{equation*}
+    Dobbiamo scegliere $y_1(s)$ perchè la traccia del problema di Cauchy ci dice che $y(0)=0$.
+    
+    \item \begin{equation*}\begin{cases}y'(t)=y(t)(y(t)-2)\cos(t)\\y(0)=2\end{cases}\end{equation*}
+    E' un'equazione differenziale di primo ordine a variabili separabili. $f(y(t))=y(t)(y(t)-2)$ e $g(t)=\cos(t)$. $f(y_0)=0$? Si, perchè $f(2)=2(2-2)=0$. Allora $y(t)=2$ è l'unica soluzione dell'equazione differenziale.
+    
+    \item \begin{equation*}\begin{cases}y'(t)=y(t)(y(t)-2)\cos(t)\\y(0)=1\end{cases}\end{equation*}
+    E' un'equazione differenziale di primo ordine a variabili separabili. $f(y(t))=y(t)(y(t)-2)$ e $g(t)=\cos(t)$. $f(y_0)=0$? No, perchè $f(1)=1(1-2)\neq0$ allora anche $f(y(t))\neq0$.
+    \begin{equation*}y'(t)=y(t)(y(t)-2)\cos(t)\hspace{1cm}\int^s_0\frac{y'(t)}{y(t)(y(t)-2)}dt=\int^s_0\cos(t)dt\end{equation*}
+    Con la sostituzione $z=y(t)$, $dz=y'(t)dt$ otteniamo:
+    \begin{equation*}\int^{y(s)}_{y_0}\frac{dz}{z(z-2)}=\frac{1}{2}\ln|\frac{z-2}{z}|]^{y(s)}_{1}=\frac{1}{2}\ln|\frac{y(s)-2}{y(s)}|\end{equation*}
+    Mentre, per il secondo membro otteniamo:
+    \begin{equation*}\int^s_0\cos(t)dt=\sin(s)\end{equation*}
+    Quindi, unendo i risultati:
+    \begin{equation*}\ln|\frac{y(s)-2}{y(s)}|=2\sin(s)\hspace{1cm}|\frac{y(s)-2}{y(s)}|=e^{2\sin(s)}\end{equation*}
+    Vogliamo il valore assoluto positivo quindi scriviamo $|1-\frac{2}{y(s)}|$ come $|\frac{2}{y(s)}-1|=e^{2\sin(s)}$.
+    Otteniamo come risultato:
+    \begin{equation*}y(s)=\frac{2}{e^{2\sin(s)}+1}\end{equation*}
+    
+    \item \begin{equation*}\begin{cases}y'(t)=1+y^2(t)\\y(0)=0\end{cases}\end{equation*}
+    E' un'equazione differenziale di primo ordine a variabili separabili. $f(y(t))=1+y^2(t)$ e $g(t)=1$. $f(y_0)=0$? No, perchè $f(0)=1+0\neq0$ allora anche $f(y(t))\neq0$.
+    \begin{equation*}\int^s_0\frac{y'(t)}{1+y^2(t)}dt=\int^s_01dt\end{equation*}
+    Con la sostituzione $z=y(t)$, $dz=y'(t)dt$ otteniamo:
+    \begin{equation*}\int^{y(s)}_{y_0}\frac{dz}{1+z^2}=\arctan(z)]^{y(s)}_0=\arctan(y(s))\end{equation*}
+    Mentre, per il secondo membro otteniamo:
+    \begin{equation*}\int^s_01dt=s\end{equation*}
+    Quindi, unendo i risultati:
+    \begin{equation*}\arctan(y(t))=s\hspace{1cm}y(s)=\tan(s)\end{equation*}
+    
+    \item \begin{equation*}\begin{cases}y'(t)=e^2\cos^2(y(t))\\y(0)=0\end{cases}\end{equation*}
+    E' un'equazione differenziale a variabili separabili $y'=g(t)f(y)$. Come prima cosa vediamo se $f(y_0)=0$, $f(0)=\cos^2(0)\neq0$
+    
+    \begin{equation*}
+        \int^s_{t_0}\frac{y'(t)}{\cos^2(y(t))}dt=\int^s_{t_0}t^2dt
+    \end{equation*}
+    Con la sostituzione $z=y(t)$, $dz=y'(t)dt$:
+    \begin{equation*}
+        \int^{y(s)}_{y_0}\frac{dz}{\cos^2(z)}=\tan(y(s))
+    \end{equation*}
+    Mentre
+    \begin{equation*}
+        \int^s_0t^2dt=\frac{s^3}{3}
+    \end{equation*}
+    Unendo le soluzioni otteniamo:
+    \begin{equation*}
+        \tan(y(s))=\frac{s^3}{3}\hspace{1cm}y(s)=\arctan(\frac{s^3}{3})
+    \end{equation*}
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[Di secondo ordine]\phantom{}
+\begin{enumerate}
+    \item \begin{equation*}\begin{cases}y''+4y'+4y=9e^t\\y(0)=0\\y'(0)=0\end{cases}\end{equation*}
+    Troviamo l'omogenea associata imponendo $y''+4y'+4y=0$ e trovando il polinomio caratteristico:
+    \begin{equation*}
+        P(\lambda)=\lambda^2+4\lambda+4=0\hspace{1cm}\lambda_{1,2}=-2\hspace{1cm}y_0(t)=(C+Dt)e^{-2t}
+    \end{equation*}
+    Per la soluzione particolare abbiamo che $g(t)=9e^t$, troviamo le derivate di $\overline{y}(t)=Qe^t$ che sono a loro volta $Qe^t$.
+    Non resta che trovare $Q$ sostituendo nell'equazione:
+    \begin{equation*}
+        \overline{y}''+4\overline{y}'+4\overline{y}=9e^t\hspace{1cm}Qe^t+4Qe^t+4Qe^t=9e^t\hspace{1cm}Q+4Q+4Q=9
+    \end{equation*}
+    Abbiamo trovato che $Q=1$ e la soluzione particolare è $\overline{y}(t)=e^t$.
+    
+    Infine, unendo le soluzioni otteniamo:
+    \begin{equation*}
+        y(t)=y_0(t)+\overline{y}(t)=(C+Dt)e^{-2t}+e^t
+    \end{equation*}
+    troviamo le soluzioni di $C$ e $D$ tramite le condizioni iniziali:
+    \begin{equation*}y(0)=0\hspace{1cm}(C+D0)e^0+e^0=0\hspace{1cm}C+1=0\hspace{1cm}C=-1\end{equation*}
+    \begin{equation*}y'(0)=0\hspace{1cm}y'(t)=De^{-2t}-2(C+Dt)e^{-2t}+e^t\end{equation*}
+    \begin{equation*}y'(0)=De^0-2Ce^0+e^0\hspace{1cm}D-2C+1=0\hspace{1cm}D=-3\end{equation*}
+    Con le variabili $C=-1$ e $D=-3$ otteniamo come unica soluzione dell'equazione:
+    \begin{equation*}
+        y(t)=(-1-3t)e^{-2t}+e^t
+    \end{equation*}
+\end{enumerate}
+\end{exercise}

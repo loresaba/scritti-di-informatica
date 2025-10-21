@@ -1,0 +1,93 @@
+\chapter{Containers with Docker}
+\section{Introduction to Linux Containers and Docker}
+Containers are a revolutionary technology in modern computing, designed to provide lightweight and efficient application isolation. They allow processes to run in restricted environments, making it easier to manage dependencies and improve scalability. Containers have become a cornerstone of cloud computing and microservices architecture, simplifying application deployment and maintenance.
+
+Before understanding containers, it’s essential to compare them with traditional virtualization.
+
+In virtualization, there are two roles:
+\begin{enumerate}
+    \item The host operating system runs on the actual hardware.
+    \item The guest operating systems run inside virtual machines.
+\end{enumerate}
+A hypervisor manages the guest machines, translating their instructions to the host. Virtual machines are isolated, with virtual hardware devices. This isolation ensures that crashes or security incidents in one VM do not affect others. However, VMs require more resources because each VM has its own OS.
+
+Containers offer a lighter alternative:
+\begin{enumerate}
+    \item The host operating system runs directly on the hardware.
+    \item Containerized processes run in isolated environments.
+\end{enumerate}
+Unlike VMs, containers share the host's kernel but operate in restricted environments. This makes containers faster and less resource-intensive, though with slightly reduced isolation compared to VMs. For example:
+\begin{itemize}
+    \item Containerized processes cannot interact by default.
+    \item The filesystem is isolated unless explicitly shared.
+\end{itemize}
+
+Containers have a rich history across various operating systems:
+\begin{itemize}
+    \item 1982: UNIX introduced chroot for isolated filesystems.
+    \item 2000: FreeBSD added Jails, and Solaris introduced Zones.
+    \item 2005: Linux introduced LXC (Linux Containers).
+    \item 2013: Docker popularized container usage, expanding to Windows and FreeBSD.
+\end{itemize}
+Linux containers leverage technologies like cgroups, introduced by Google in 2006 and published in 2008. Cgroups provide:
+\begin{itemize}
+    \item \textit{Resource Limiting:} Controlling CPU, memory, and I/O usage.
+    \item \textit{Prioritization:} Assigning higher priority to specific processes.
+    \item \textit{Accounting:} Measuring resource usage for billing or debugging.
+    \item \textit{Lifecycle Contol:} Restarting on crashes or scheduling processes.
+\end{itemize}
+
+\subsection*{Namespace isolation}
+Namespaces are a fundamental feature of Linux containers. They create isolated environments for processes, preventing interaction across namespaces. Each namespace controls specific aspects:
+\begin{itemize}
+    \item \textit{Process ID (PID):} Isolates process numbers.
+    \item \textit{Network:} Isolates network interfaces and configurations.
+    \item \textit{UTS/Hostname:} Isolates system identification.
+    \item \textit{Mount:} Controls access to filesystems.
+    \item \textit{IPC:} Isolates inter-process communication.
+    \item \textit{User:} Isolates user and group IDs.
+    \item \textit{Cgroup:} Manages resource constraints.
+\end{itemize}
+Linux namespaces draw inspiration from Plan 9, an experimental OS from Bell Labs, which also influenced UNIX and programming languages like C and Go.
+
+\subsection*{Docker}
+Docker, introduced in 2013, is a set of tools for managing Linux containers. It has standardized containers through the Open Container Initiative (OCI), enabling interoperability with tools like Podman.
+\begin{itemize}
+    \item \textit{Container:} The isolated environment.
+    \item \textit{Container }Image: An archive of files and configurations to create containers.
+    \item \textit{Registry:} A repository for sharing and storing images (e.g., DockerHub).
+    \item \textit{Dockerfile:} A script defining how to build an image.
+    \item \textit{Volume:} An external storage area accessible to containers.
+\end{itemize}
+By default, containers use ephemeral storage. However, volumes can be mounted to preserve data across container lifecycles. For instance:
+\begin{verbatim}
+docker run -v /host/path:/container/path myimage    
+\end{verbatim}
+This command mounts \texttt{/host/path} as \texttt{/container/path} inside the container.
+
+Container images are created using a Dockerfile, which defines the setup instructions. Each instruction forms a "layer," enabling caching and reuse. For example:
+\begin{verbatim}
+FROM debian:stable
+RUN apt-get update && apt-get install -y python3    
+\end{verbatim}
+\begin{itemize}
+    \item \textit{Base Image:} Typically includes essential tools (e.g., \texttt{debian:stable} or \texttt{python:3}).
+    \item \textit{Layers:} Incremental changes on top of the base image.
+\end{itemize}
+This modularity allows efficient sharing and distribution of images.
+
+\subsection*{Containers in the cloud}
+A key advantage of containers is their portability. A container built on one Linux platform can run on any other platform that supports cgroups and container-related technologies. This feature has made containers indispensable for cloud computing, where they enable consistent application deployment across diverse environments.
+
+\section{Running Your First Container}
+Once an image is ready, running a container is straightforward. For example:
+\begin{verbatim}
+docker run -it --rm debian:bullseye    
+\end{verbatim}
+This command:
+\begin{itemize}
+    \item \texttt{-it}: Starts the container interactively.
+    \item \texttt{--rm}: Automatically removes the container after it stops.
+    \item \texttt{debian:bullseye}: Specifies the image to use.
+\end{itemize}
+The container will launch with an isolated environment based on the Debian Bullseye distribution.

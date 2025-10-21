@@ -1,0 +1,102 @@
+\chapter{Prototyping}
+\setcounter{page}{10}
+\section{Prototipi cartacei}
+Abbiamo sviluppato due prototipi cartacei con l'obiettivo di esplorare e valutare diverse soluzioni di design per la nostra applicazione seguendo le linee guida di Material Design 3 (Android), con l'obiettivo di garantire un'interfaccia intuitiva e coerente con gli standard delle applicazioni mobile moderne. 
+Per valutare l'usabilità dei nostri prototipi cartacei, abbiamo adottato due metodi distinti: Cognitive Walkthrough per i test con esperti e Cooperative Evaluation per i test con utenti non esperti.
+Abbiamo scelto il Cognitive Walkthrough perché è una tecnica particolarmente efficace per individuare problemi di usabilità in fase iniziale. Questo metodo si concentra sul modo in cui un utente inesperto affronta un’interfaccia per la prima volta, analizzando se riesce a completare i task previsti senza difficoltà. Gli esperti di usabilità, simulando il percorso di un nuovo utente, hanno valutato la chiarezza delle azioni richieste e l’efficacia del design nell’indirizzare l’utente verso il completamento dei task.
+Per i test con utenti non esperti, abbiamo scelto la Cooperative Evaluation, un approccio più collaborativo in cui gli utenti eseguono i task mentre esprimono verbalmente il loro ragionamento. Questo metodo ci ha permesso di raccogliere feedback diretti, identificare barriere cognitive e comprendere meglio il punto di vista degli utenti reali.
+
+\subsection{Prototipo cartaceo 1}
+Questo prototipo si concentra sulla gestione e sull'interazione con le infrastrutture verdi, permettendo agli utenti di cercare e aggiornare le informazioni sulle aree verdi, conoscere eventi e iniziative, interagire con altre persone e visualizzare i servizi disponibili. Per testare l'usabilità dell'interfaccia, abbiamo definito cinque task principali, attraverso i quali gli utenti potevano esplorare e valutare le funzionalità chiave dell'applicazione.
+
+\href{https://docs.google.com/document/d/1TPPLwieViGN1jy8PAt7PTH-LxQp3Fji3LhYYNQ60Oz4/edit?tab=t.0#heading=h.8hgxc9gkc90q}{Link ai test e i risultati del prototipo cartaceo 1}.
+
+Durante la valutazione con esperti del prototipo cartaceo, sono emersi due principali problemi di usabilità:
+\begin{enumerate}
+    \item Feedback sui filtri – Gli utenti potrebbero non ricevere un’indicazione chiara dell'avvenuta applicazione dei filtri, portando a incertezza nell’interazione.
+    \item Ambiguità nella distanza – Non è chiaro se il valore della distanza inserito si riferisca a tempo di percorrenza o a distanza in chilometri, generando confusione nell’uso del filtro.
+\end{enumerate}
+Per quanto riguarda i test con utenti non esperti durante la valutazione del prototipo, sono stati individuati diversi problemi di usabilità:
+\begin{enumerate}
+    \item Difficoltà nell’aggiungere una nuova attività – 3 utenti su 4 hanno avuto difficoltà nel processo di inserimento di una nuova attività.
+    \item Ambiguità nella valutazione della pulizia – 2 utenti su 4 hanno cercato di premere direttamente sulla mappa per valutare la pulizia dell’infrastruttura verde.
+    \item Problema nella scelta dell’orario degli eventi – Quando l’utente modifica l’orario di inizio (es. dalle 21), il sistema aggiorna automaticamente anche l’orario di fine, impedendo di visualizzare tutti gli eventi disponibili dalle 21 in poi.
+    \item Ambiguità nella ricerca di eventi – 1 utente su 4 ha cercato di utilizzare la barra di ricerca per trovare eventi nelle vicinanze, suggerendo una possibile confusione nell’interfaccia.
+    \item Confusione nel filtro della distanza – Non è chiaro se il valore inserito nella distanza si riferisca al tempo (minuti a piedi) o alla distanza effettiva (chilometri). Inoltre, l’utente si aspetta di dover confermare i filtri prima di applicarli.
+\end{enumerate}
+
+\subsection{Prototipo cartaceo 2}
+Nel secondo prototipo cartaceo, abbiamo apportato alcune modifiche per migliorare l'usabilità sulla base dei problemi emersi nei test precedenti. Per semplificare la condivisione delle attività, abbiamo introdotto una pagina dedicata, accessibile tramite un Floating Action Button (FAB), rendendo il processo più chiaro e intuitivo per gli utenti.
+Abbiamo inoltre modificato il filtro della distanza dalle infrastrutture, aggiungendo la possibilità di inserire un orario. In questo modo, gli utenti possono specificare il tempo di percorrenza desiderato, eliminando l’ambiguità tra distanza in chilometri e tempo a piedi riscontrata nel primo prototipo.
+
+\href{https://docs.google.com/document/d/1tHGeyCZ8hoAeUjqVQE73V_cnl-hZVUCU8NZMXUOQrx0/edit?tab=t.0#heading=h.8hgxc9gkc90q}{Link ai test e i risultati del prototipo cartaceo 2}.
+
+Durante il test con esperti, la maggior parte dei task non ha presentato problemi di usabilità.
+L’unico aspetto che potrebbe generare incertezza riguarda l’inserimento della distanza: alcuni utenti potrebbero non comprendere immediatamente come impostare correttamente questo parametro. Questo suggerisce la necessità di fornire istruzioni più chiare o un’indicazione visiva che aiuti a distinguere tra diverse modalità di input della distanza.
+Invece i test senza esperti, non sono emersi problemi critici nell’usabilità del prototipo. Tuttavia, sono state rilevate alcune difficoltà che potrebbero influenzare l’esperienza utente.
+Un utente si sarebbe aspettato un feedback chiaro dopo aver applicato i filtri, suggerendo che potrebbe essere utile introdurre un messaggio di conferma o un’indicazione visiva per rendere l’azione più evidente.
+Per quanto riguarda la selezione della distanza in tempo dalle infrastrutture, due utenti non hanno compreso bene il funzionamento dello strumento, evidenziando la necessità di un’indicazione più chiara su come interpretare e inserire il valore.
+Infine, alcuni utenti hanno trovato poco intuitiva la visualizzazione di alcune informazioni, anche se questo non ha compromesso significativamente la loro esperienza d’uso.
+Nel complesso, il test ha evidenziato piccoli miglioramenti da apportare, soprattutto in termini di chiarezza del linguaggio e della presentazione delle informazioni.
+
+\section{Prototipi digitali}
+Dopo l'analisi e i test sui prototipi cartacei, abbiamo sviluppato tre prototipi digitali utilizzando Figma, con l’obiettivo di affinare l’interfaccia e migliorare l’esperienza utente. Questi prototipi incorporano le soluzioni ai problemi riscontrati nei test precedenti, garantendo un'interazione più intuitiva e aderendo alle linee guida di Material Design 3 (Android) tramite l’utilizzo dell’apposita libreria su figma..
+I tre prototipi digitali rappresentano diverse iterazioni dell’applicazione, con miglioramenti progressivi basati sui feedback raccolti. Abbiamo lavorato per rendere l’app più chiara, ottimizzando la navigazione, migliorando la gestione dei filtri e affinando la presentazione delle informazioni.
+Come nei test dei 2 precedenti prototipi cartacei abbiamo adottato due metodi distinti: Cognitive Walkthrough per i test con esperti e Cooperative Evaluation per i test con utenti non esperti ( le motivazioni sono le medesime).
+Questa fase di prototipazione digitale ci ha permesso di testare l’usabilità in un ambiente più realistico, avvicinandoci sempre di più alla versione definitiva dell’applicazione.
+
+\subsection{Prototipo digitale 1}
+Il Prototipo Digitale 1 è stato sviluppato per risolvere le criticità emerse durante i test sui prototipi cartacei, con un focus particolare sull’usabilità e sull'interazione fluida. Utilizzando Figma, abbiamo implementato le modifiche necessarie per rendere l’applicazione più intuitiva e rispondente alle aspettative degli utenti.
+Abbiamo utilizzato plugin come il theme builder per la scelta del colore principale dell’applicazione, che è ricaduta su una particolare sfumatura di verde.
+Per rendere più realistico il prototipo abbiamo fatto uso di immagini e testi veritieri in modo tale da rendere l’esperienza dei test con gli utenti più simile possibile ad un applicativo vero e proprio, sono stati inseriti  ed utilizzati in oltre date picker, menù a tendina, snackbar, navigation bar e tanto altro in linea con il material design di android.
+
+\href{https://docs.google.com/document/d/191id0R8jCigYp_66I8CCrCStzwEtUhKlE9EzxcQVM0I/edit?tab=t.0}{Link ai test e i risultati del prototipo digitale 1}.\\
+\href{https://www.figma.com/files/project/321365683}{Prototipo digitale 1 Figma}.
+
+Per la valutazione con esperti, abbiamo utilizzato il metodo Cognitive Walkthrough, analizzando ogni passaggio attraverso quattro domande chiave:
+\begin{enumerate}
+    \item Gli utenti sanno cosa fare per procedere?
+    \item Gli utenti vedono come farlo?
+    \item Gli utenti capiscono dalle risposte del sistema se hanno fatto la cosa giusta?
+    \item Quali difficoltà potrebbero incontrare?
+\end{enumerate}
+Dall’analisi condotta, non sono emersi problemi critici, ciò verrà poi smentito con i test sugli utenti non esperti.
+Per i test con utenti non esperti, abbiamo ottenuto le seguenti osservazioni principali:
+\begin{itemize}
+    \item Interazioni corrette: La maggior parte degli utenti ha completato le attività previste senza problemi. Sono stati in grado di segnalare lo stato della pulizia di un parco, impostare filtri per eventi e attività, e visualizzare i servizi delle infrastrutture verdi.
+    \item Problemi riscontrati:
+    \begin{itemize}
+        \item Formato AM/PM poco chiaro: Un utente ha avuto difficoltà a distinguere il formato AM/PM durante l’inserimento dell’orario, dovendo modificare l’impostazione dopo un primo errore.
+        \item Distanza in tempo vs distanza in km: Alcuni utenti non hanno compreso subito che il selettore della distanza permetteva di inserire sia la misura temporale che quella spaziale, causando confusione iniziale.
+        \item Mancanza di data e ora per la creazione di un’attività: Un utente ha segnalato la necessità di poter impostare una data e l'orario al momento della creazione di un’attività.
+    \end{itemize}
+\end{itemize}
+Nel complesso, i test hanno evidenziato una buona usabilità dell’interfaccia, con alcuni aspetti migliorabili per rendere l’esperienza più chiara e intuitiva.
+
+\subsection{Prototipo digitale 2}
+Dopo il primo ciclo di test e feedback raccolti, il secondo prototipo digitale ha introdotto alcuni miglioramenti significativi per rendere l’esperienza utente più chiara e intuitiva. In particolare, sono stati aggiunti testi e immagini reali, per rendere l’interfaccia più comprensibile, e un feedback visivo per gli eventi, in modo che gli utenti possano avere un riscontro immediato dopo aver applicato i filtri.
+Anche in questa fase, il prototipo è stato sottoposto a test basati sia su esperti che su utenti non esperti.
+
+\href{https://docs.google.com/document/d/14B2WcuVyL4053sf5h5g5lDa-m5fLmWLRVHaaozB6VmI/edit?tab=t.0#heading=h.v3zfp3tumtu5}{Link ai test e i risultati del prototipo digitale 2}.\\
+\href{https://www.figma.com/files/project/321365683}{Prototipo digitale 2 Figma}.
+
+Dal test expert-based è emerso che:
+\begin{itemize}
+    \item Gli utenti riescono a completare i task previsti senza difficoltà.
+    \item L’introduzione del feedback visivo per l’inserimento dei filtri negli eventi è stata efficace.
+    \item È stata riscontrata la mancanza di un feedback visivo per l’applicazione dei filtri sulla distanza, il che potrebbe generare confusione sull’unità di misura utilizzata.
+    \item È stata evidenziata la possibile necessità di implementare un sistema di notifiche per segnalare agli utenti quando qualcuno si unisce a un’attività condivisa.
+\end{itemize}
+Nei test utente-based sono stati confermati i miglioramenti introdotti, ma sono emerse alcune criticità:
+\begin{itemize}
+    \item Alcuni utenti hanno tentato di cliccare direttamente sulla mappa per segnalare la propria posizione, aspettandosi un’interazione che al momento non è implementata.
+    \item Due utenti non hanno compreso immediatamente se la distanza nei filtri fosse riferita alla percorrenza a piedi o con un altro mezzo.
+    \item È stata richiesta l’aggiunta di un segnalino sulla mappa per indicare la posizione dell’utente e facilitare l’interazione.
+\end{itemize}
+
+\subsection{Prototipo digitale 3}
+\href{https://docs.google.com/document/d/15gM4u7e1iwK6NzTnSJ2TVb7U_66R-ykh94UbGy8O2V0/edit?tab=t.0}{Link ai test e i risultati del prototipo digitale 3}.\\
+\href{https://www.figma.com/files/project/321365683}{Prototipo digitale 3 Figma}.
+
+I test sul prototipo digitale numero 3 sono andati a colmare tutti i problemi riscontrati nel prototipo digitale precedente.
+Sia nei test expert base che nei test non esperti gli utenti sono stati in grado di procedere correttamente per risolvere ogni singolo task, facendo capire l’intuitività del prototipo digitale finito e la semplicità nell’utilizzarlo.

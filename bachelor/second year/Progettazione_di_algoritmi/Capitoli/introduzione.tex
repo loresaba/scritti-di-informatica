@@ -1,0 +1,54 @@
+-\chapter{Introduzione al corso}
+
+In questo corso descriveremo alcuni algoritmi "classici" per risolvere problemi di base e vedremo particolari tecniche che si sono dimostrate utili per la soluzione di una vasta gamma di problemi: tecnica greedy, divide et impera, programmazione dinamica, backtraking.
+
+\section{Algoritmi efficienti}
+
+\begin{redbar}
+    Un algoritmo si dice efficiente se la sua complessità è di ordine polinomiale nella dimensione $n$ dell'input. Ovvero di complessità $O(n^c)$ per una qualche costante $c$.
+\end{redbar}
+
+\textit{Perché per un algoritmo efficiente si intende un algoritmo a complessità $O(n^c)$ per un generico $c$ e non più semplicemente $O(n^2)$ o $O(n^3)$?}
+Secondo la testi di Church-Turing\footnote{"I modelli di calcolo realistici sono tra loro polinomialmente correlati. Il concetto di trattabilità è dunque indipendente dalla macchina."} la complessità di un algoritmo è indipendente dal sistema di calcolo utilizzato quindi è inutile dare un valore alla variabile $c$, ma l'importante è che la funzione sia polinomiale. Questa tesi è tutt'altro che accettata universalmente. Molti ad esempio ritengono che con l'avvento dei calcolatori quantistici molti problemi che attualmente risultano intrattabili diventeranno trattabili. Ma allo stato attuale per questi problemi non si può escludere l'esistenza di un algoritmo classico efficiente.
+
+Di conseguenza un algoritmo è inefficiente se la sua complessità è di ordine super-polinomiale, ovvero se è compresa tra $O(n^c)$ e $2^{\Theta(n)}$, ad esempio $O(n^{\log{n}})$ dato che $n^{\log n}=2^{\log^2 n}=2^{\Theta(\log^2n)}$ oppure i problemi di fattorizzazione con $2^{\Theta(\sqrt{n})}$.
+
+\begin{Exercise}{Test di primalità}{}
+    \textit{Ho un numero e voglio verificare che sia primo o meno.}
+
+    Con un algoritmo banale, dato $n$ cerco tutti i divisori tra 2 e $n-1$, posso pensare erroneamente che abbia complessità $O(n)$. In realtà in $O(n^c)$, $n$ rappresenta il numero di valori in input, ma in questo problema la dimensione dell'input non è $n$ ma $\log n$. Quindi questo algoritmo ha complessità $O(2^{\log n})$.
+
+    Nella ricerca dell'eventuale divisore posso fermarmi alla radice in modo da velocizzare l'algoritmo, ma non ne cambia la complessità asintotica che resta esponenziale:
+    \begin{equation*}
+        O(\sqrt{n})=O(2^{\log\sqrt{n}})=O(2^{\frac{1}{2}\log n})=2^{\Theta(\log n)}
+    \end{equation*}
+
+    Quindi in entrambe i casi il costo dell'algoritmo è esponenziale $O(2^{\Theta(n)})$ quindi inefficiente.
+\end{Exercise}
+
+Non bisogna confondere la complessità dell'algoritmo con la complessità del problema. Un algoritmo di complessità $O(g(n))$ per un problema produce una limitazione superiore alla complessità del problema. Se si dimostra che qualunque algoritmo per quel problema ha complessità $\Omega(f(n))$, si è stabilita una limitazione inferiore alla complessità del problema. Se $f(n)=g(n)$ allora l'algoritmo è detto ottimo, perché la sua complessità in ordine di grandezza risulta la migliore possibile.
+
+\begin{Exercise}{Maggiore assoluto}{}
+    \textit{Data una lista di $n$ interi voglio determinare se la lista ha un elemento di maggioranza assoluta, ovvero un elemento la cui frequenza nella lista è maggiore della metà (almeno $\frac{n}{2}+1$).}
+
+    Intuitivamente questo problema non potrà avere complessità minore di $\Omega(n)$, dato che è necessario almeno uno scorrimento di tutti gli elementi nel vettore. 
+    
+    Si può creare un algoritmo ottimo che usa una lista inizialmente vuota (B) e che scorrendo tra gli elementi della lista A aggiunge l'elemento a B se esso è uguale all'ultimo elemento di B, altrimenti viene cancellato. Dopo questo procedimento, la lista B, se contiene elementi allora sono tutti uguali e, se c'è un elemento a maggioranza, allora è nella lista. Quindi non resta da verificare se la frequenza degli elementi di B è almeno la metà. Il seguente algoritmo risolve il problema in $O(n)$:
+    \begin{lstlisting}[language=Python]
+    def es(A):
+        B=[]
+        n=len(A)
+        for i in range(n):
+            if B==[] or B[-1]==A[i]
+                B.append(A[i])
+            else:
+                B.pop()
+        if B==[]:
+            return None
+        x=A.count(B[0])
+        if x>=n//2+1:
+            return B[0]
+        else:
+            return None
+    \end{lstlisting}
+\end{Exercise}

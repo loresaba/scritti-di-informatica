@@ -1,0 +1,69 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Dataset}\label{sec:cap 2}
+\subsection{Creazione del DataSet}
+
+Poiché la rilevazione automatica dei falli nel calcio è un compito relativamente raro e complesso, non esiste un dataset pubblico standard specifico per questo scopo. Per questa ragione, abbiamo utilizzato un dataset reperito da Kaggle intitolato \textbf{"Football Tackles"} (zaikali/football-tackles) e lo abbiamo adattato ai nostri obiettivi. Il dataset è stato salvato e gestito all’interno di Google Drive per garantire accessibilità e persistenza durante l’uso in Google Colab.
+
+\noindent Il dataset è suddiviso in due classi principali:
+
+\begin{itemize}
+    \item Fouls – immagini contenenti situazioni di fallo,
+
+    \item Clean\_Tackles – immagini di tackle regolari, senza fallo.
+
+
+\end{itemize}
+\noindent 
+Le immagini sono contenute nella cartella VAR del dataset e sono già etichettate in due directory distinte, corrispondenti alle due classi. Dopo un'analisi preliminare, abbiamo verificato che le immagini variano in dimensioni, risoluzioni e qualità: ciò ha richiesto una successiva fase di normalizzazione e preprocessing.
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/SamplingVar400.png}
+        \caption{Campioni di esempio di immagini dalla classe var 400}
+        \label{fig:samplingvar400}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ClassDistrib.png}
+        \caption{Distribuzione delle classi nell'intero dataset}
+        \label{fig:classdistrib}
+    \end{minipage}
+\end{figure}
+
+
+
+\subsection{Preparazione del DataSet}
+
+Per uniformare la risoluzione delle immagini, tutte sono state ridimensionate a (224, 224) pixel. Le immagini valide sono state poi normalizzate e convertite in tensori per l’addestramento del modello.
+Per aumentare la capacità generalizzativa del modello ed evitare fenomeni di overfitting, sono state applicate tecniche di data augmentation su tutte le immagini del training set. In particolare, le trasformazioni applicate includono:
+
+\begin{itemize}
+    \item \textbf{Flip orizzontale casuale}
+    \item \textbf{Rotazione casuale}
+    \item \textbf{Modifica casuale della luminosità}
+    \item \textbf{Zoom e cropping casuale}
+\end{itemize}
+Tutte le operazioni di trasformazione sono state implementate mediante la libreria \texttt{torchvision.\allowbreak transforms}.
+
+
+\subsection{DataSet splitting e formation}
+
+Dopo aver pulito e verificato il dataset, lo abbiamo suddiviso in tre sottoinsiemi secondo le seguenti proporzioni: Training set: 70\% , Validation set: 15\% e Test set: 15\%
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

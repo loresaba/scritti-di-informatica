@@ -1,0 +1,42 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+
+\section{Introduzione}\label{sec:introduction}
+
+Il buffer overflow attack è uno dei più comuni attacchi riscontrati e deriva da una programmazione inaccurata delle applicazioni.\\ 
+Questo tipo di attacco è noto da quando è stato utilizzato per la prima volta dal Morris Internet Worm nel 1988.
+Può verificarsi come conseguenza di un errore di programmazione quando un processo tenta di memorizzare dati oltre i limiti di un buffer di dimensioni fisse e di conseguenza sovrascrive le celle di memoria adiacenti.
+Le conseguenze di questo errore comprendono la corruzione dei dati utilizzati dal programma, l'inaspettato trasferimento del controllo del programma, possibili violazioni di accesso alla memoria e molto probabilmente l'interruzione del programma stesso.
+
+\noindent Lo stack buffer overflow, l'attacco sviluppato in questo progetto, si verifica quando il buffer attaccato si trova sullo stack, di solito come una variabile locale nello stack frame di una funzione.\\
+Ogni funzione in un programma C utilizza uno \textbf{stack frame}, una zona di memoria temporanea che contiene:
+\begin{itemize}
+    \item variabili locali
+    \item il valore di \textbf{EBP} (base pointer), punta alla base dello stack frame
+    \item il \textbf{return address (EIP)} → dove tornare alla fine della funzione
+\end{itemize}
+
+\noindent Quando una funzione come \verb|gets()|, \verb|scanf("%s", ...)|, o \verb|strcpy()| copia più dati del previsto nel buffer locale, si possono sovrascrivere:
+
+\begin{enumerate}
+    \item Dati interni (altre variabili locali)
+    \item \textbf{Saved EBP}
+    \item \textbf{Return address (EIP)}
+\end{enumerate}
+Una volta sovrascritto l’EIP, il programma salta all’indirizzo indicato dall’attaccante, invece di ritornare correttamente, e a quell'indirizzo l'attaccante può inserirci un exploit che permette di svolgere codice malevolo, come l'apertura di una shell.\\
+Tra le principali misure adottate vi sono gli stack canary, l'Address Space Layout Randomization (ASLR) e la Data Execution Prevention (DEP).
+
+\begin{itemize}
+    \item \textbf{Stack Canary}: Questa tecnica inserisce un valore sentinella (canary) tra le variabili locali e il puntatore di ritorno nello stack. Prima che una funzione ritorni, il programma verifica l'integrità del canary; se il valore è stato alterato, ciò indica un possibile overflow, e l'esecuzione viene interrotta per prevenire exploit. 
+    \item \textbf{ASLR (Address Space Layout Randomization)}: ASLR randomizza gli indirizzi delle aree di memoria chiave di un processo, come stack, heap e librerie, rendendo più difficile per un attaccante prevedere la posizione del codice o dei dati da sfruttare. 
+    \item \textbf{DEP (Data Execution Prevention)}: DEP impedisce l'esecuzione di codice in aree di memoria destinate solo ai dati, come lo stack o l'heap, sfruttando funzionalità hardware come il bit NX (No eXecute). Questo ostacola l'esecuzione di codice malevolo iniettato in queste regioni.
+\end{itemize}
+Queste misure, spesso implementate congiuntamente, hanno significativamente aumentato la difficoltà di sfruttare vulnerabilità di buffer overflow, contribuendo a migliorare la sicurezza complessiva dei sistemi informatici.
+
+
+
+
+
+
+\end{document}

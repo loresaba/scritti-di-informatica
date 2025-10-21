@@ -1,0 +1,320 @@
+\chapter{Web protocols}
+\section{REpresentational State Transfer (REST) }
+In modern web development, REST (REpresentational State Transfer) plays a pivotal role in designing distributed systems, particularly in the context of web services. REST defines a set of architectural principles that govern how networked resources should be transferred between clients and servers.
+
+At its core, REST is an architectural style used for distributed hypermedia systems. This architecture facilitates communication between various components, such as a client and a server, by transferring representations of resources. The term "representational" refers to the fact that REST doesn’t directly expose resources but offers a current representation of them through a medium like JSON, XML, or HTML. A resource in REST refers to any identifiable information or entity that can be accessed or manipulated. This could be anything from a document, image, or service, to a real-world object like a person or a collection of data. The critical feature of a resource is its ability to vary over time. For instance, a resource might represent the latest version of a software program, which would naturally evolve as new updates are made. 
+
+When interacting with a resource in a RESTful system, what is transferred between components is not the resource itself but its representation. The representation of a resource encapsulates its current state, which may include metadata and a structured format such as JSON or XML. This data format is known as the media type.
+
+\section{Uniform Resource Indentifier (URI)}
+In REST, each resource is uniquely identified by a Uniform Resource Identifier (URI), which is a string of characters that points to a resource's location. A URI can represent either a logical or physical resource and typically takes the form of a URL, such as: \texttt{http://example.com/users}. This URI addresses the "users" resource on a given server, allowing clients to access or manipulate the resource by sending HTTP requests to this address.
+
+\begin{Notation}{URI}{}
+    When constructing URIs, REST adheres to several conventions to maintain simplicity and readability: Forward slashes (/) express hierarchy within the URI structure. However, trailing slashes should only be used when the resource is not a "leaf" node (i.e., it is not a final, single resource). Use hyphens (-) rather than underscores (\_) to separate words in a URI, as hyphens are more readable. Stick to lowercase letters for consistency. Avoid file extensions in URIs (such as .html or .json), as the media type is specified in the HTTP headers. Use query components to filter or refine the results. For instance, to access only resources from a specific region: \texttt{http://example.com/managed-devices/?region=USA}.
+\end{Notation}
+
+URIs serve the purpose of identifying resources, but the actions performed on these resources are not specified within the URI. Instead, REST utilizes HTTP methods to interact with resources. Common HTTP methods include:
+\begin{itemize}
+    \item \textit{GET:} Retrieve the representation of a resource. 
+    
+    Example: \texttt{GET http://example.com/managed-devices/\{id\}}.
+    \item \textit{PUT:} Update or create a new resource at the specified URI. 
+    
+    Example: \texttt{PUT http://example.com/managed-devices/\{id\}}.
+    \item \textit{DELETE:} Remove a resource. 
+    
+    Example: \texttt{DELETE http://example.com/managed-devices/\{id\}}.
+\end{itemize}
+
+REST operates on five fundamental constraints that ensure scalability, simplicity, and performance:
+\begin{enumerate}
+    \item \textit{Client-Server:} The client-server model enforces a clear separation of concerns: the client focuses on the user interface, while the server manages data storage and business logic. This separation enhances scalability and portability, making it easier to update the system without disrupting users.
+    \item \textit{Stateless:} Each client request must be self-contained. The server does not maintain any session state between requests, meaning that every request carries with it all the information needed to process it. This simplifies server design and allows for easy scalability, as servers don't need to track individual clients.
+    \item \textit{Cacheable:} REST supports cacheable responses, meaning that clients can store resource representations for later use, thus reducing the need for repeated server requests. The duration for which a resource can be cached is typically specified in the response headers.
+    \item \textit{Uniform Interface:} REST employs a uniform interface to standardize the interactions between clients and servers. This ensures that implementations are decoupled from the services they provide, promoting interoperability across systems. There are four main constraints for the uniform interface: \textit{Identification of Resources:} Resources must be uniquely identifiable. \textit{Manipulation of Resources Through Representations:} Clients interact with resources via representations, such as JSON or XML. \textit{Self-descriptive Messages:} Each message exchanged between components should contain enough information to describe how it is processed. \textit{Hypermedia as the Engine of Application State (HATEOAS):} The client only needs the initial URI to interact with the system.
+    \item \textit{Layered System:} In a layered system, different components handle different aspects of communication. For example, requests may pass through a proxy, gateway, or intermediary before reaching the origin server. These intermediary components forward requests and responses, potentially translating them or adding extra functionality such as load balancing. Each component interacts only with the immediate layer next to it, enhancing modularity and security.
+\end{enumerate}
+
+\section{Hyper‑text Transfer Protocol (HTTP)}
+The HyperText Transfer Protocol (HTTP) is a cornerstone of the modern web, governing how information is exchanged over the internet. Initially invented by Tim Berners-Lee between 1989 and 1991 while at CERN, it has evolved to become an essential part of the internet’s application layer protocol suite. A more recent version, HTTP/3, was published in 2022, and alongside it, HTTPS (the secure version of HTTP) offers enhanced security for web communications.
+
+\subsection*{Client-Server architecture}
+At the heart of HTTP is the client-server model. The client, or user agent (UA), can be any application, such as a web browser, mobile app, or even smart appliances, that initiates requests. On the server side, the origin server (O) is responsible for responding to these requests, often providing authoritative data such as website content, video streams, or sensor readings.
+
+When a user interacts with a web service, the client sends a request to the server, and the server responds accordingly. This exchange of information is the foundation of how we experience the web today.
+
+A typical HTTP interaction follows a simple request-response model. For example, a client might send a request like this:
+
+\lstset{basicstyle=\ttfamily, breaklines=true}
+
+\begin{lstlisting}
+GET /hello.txt HTTP/1.1
+User-Agent: curl/7.64.1
+Host: www.example.com
+Accept-Language: en, it
+\end{lstlisting}
+This is a basic \texttt{GET} request, asking the server for the file \texttt{hello.txt}. The server's response could be:
+
+\begin{lstlisting}
+HTTP/1.1 200 OK
+Date: Mon, 27 Jul 2009 12:28:53 GMT
+Server: Apache
+Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT
+ETag: "34aa387-d-1568eb00"
+Content-Length: 51
+Content-Type: text/plain
+
+Hello World! My content includes a trailing CRLF.
+\end{lstlisting}
+This response provides a status code of \texttt{200 OK}, signaling a successful request, and includes details like the file’s modification date and its content, "\texttt{Hello World!}".
+
+HTTP interactions can also involve intermediaries such as proxies, gateways, or tunnels. These intermediaries can process or forward the requests and responses between clients and servers. In some cases, caches store previous responses to reduce the need for repeated requests to the server. For example, a cache can hold a stored response, which the client can reuse if the server has declared the resource as cacheable. However, tunnels, unlike proxies, do not store responses.
+
+\subsection*{HTTP Methods}
+HTTP defines several methods that indicate the desired action to be performed on the resource identified by the request URI. These include:
+\begin{itemize}
+    \item \texttt{GET}: Requests a representation of the resource. It is safe and cacheable.
+    \item \texttt{POST}: Submits data to be processed to the resource, creating or modifying its subordinates.
+    \item \texttt{PUT}: Creates or replaces a resource at the URI provided.
+    \item \texttt{DELETE}: Removes the resource specified.
+    \item \texttt{HEAD}: Like GET but without the response body, used to retrieve headers.
+    \item \texttt{CONNECT}: Establishes a tunnel to a server, typically used for HTTPS.
+    \item \texttt{OPTIONS}: Describes communication options for the resource.
+    \item \texttt{TRACE}: Performs a message loop-back test along the request path.
+    \item \texttt{PATCH}: Partially modifies a resource.
+\end{itemize}
+
+Each method has unique properties. For instance, \texttt{GET} and \texttt{HEAD} are considered safe because they do not modify resources, while \texttt{PUT} and \texttt{DELETE} are idempotent, meaning repeated requests yield the same outcome. \texttt{POST}, on the other hand, is neither safe nor idempotent, as multiple identical requests can result in different outcomes (e.g., creating multiple resources).
+
+Some methods, like \texttt{GET}, \texttt{HEAD}, and under certain conditions \texttt{POST}, are also cacheable. This means that responses to these requests can be stored and reused by caches without needing to send another request to the origin server, potentially improving performance. However, cacheability often depends on specific conditions such as the presence of cache-control headers or expiration settings.
+
+When a server responds to a request, it sends back a status code to indicate the result of the request. These codes are divided into five categories:
+\begin{enumerate}
+    \item \textit{\texttt{1xx} Informational:} The request was received and is being processed.
+    \item \textit{\texttt{2xx} Successful:} The request was successfully processed. For example, \texttt{200 OK} indicates success, while \texttt{201 Created} means a new resource was created.
+    \item \textit{\texttt{3xx} Redirection:} Further actions are needed to complete the request. A common example is \texttt{301 Moved Permanently}, where the resource has been moved to a new URI.
+    \item \textit{\texttt{4xx} Client Error:} There was a problem with the request. For instance, \texttt{404 Not Found} means the server could not find the requested resource, and \texttt{401 Unauthorized} requires authentication.
+    \item \textit{\texttt{5xx} Server Error:} The server encountered a problem while processing the request. \texttt{500 Internal Server Error} is a general error code for unexpected conditions, while \texttt{503 Service Unavailable} means the server is overloaded or down for maintenance.
+\end{enumerate}
+
+\section{JavaScript Object Notation (JSON)}
+JSON is a lightweight data-interchange format that has become the backbone of many web applications. It is simple, readable by humans, and easy for machines to parse and generate, making it a favorite for exchanging data via RESTful APIs and storing information. Although it is based on a subset of JavaScript, JSON is language-independent, making it versatile across various programming environments.
+
+Consider the following example of a JSON object that represents a user's data:
+\begin{lstlisting}
+{
+  "user": {
+    "firstName": "John",
+    "lastName": "Smith",
+    "age": 27
+  }
+}
+\end{lstlisting}
+In this format, the data is structured as key-value pairs. JSON only uses two core concepts: objects and arrays, making it easy to grasp.
+
+A JSON object is an unordered collection of key-value pairs, where each key is a string, and values can be various data types like numbers, strings, booleans, arrays, or even other objects. For example:
+\begin{lstlisting}
+{
+  "WASA": {
+    "name": "Web and Software Architecture",
+    "semester": 1
+  }
+}
+\end{lstlisting}
+An array in JSON is an ordered list of values, where each item can be of any JSON data type. Arrays are enclosed in brackets [] and separated by commas. Here's an example:
+\begin{lstlisting}
+{
+  "wasaWeekdays": ["tuesday", "thursday"]
+}
+\end{lstlisting}
+Let’s take a deeper look at how a more complex JSON structure might look. It includes a number, string, boolean, null value, an array, and another object inside the array:
+\begin{lstlisting}
+{
+  "anObject": {
+    "aNumber": 42,
+    "aString": "This is a string",
+    "aBoolean": true,
+    "nothing": null,
+    "anArray": [
+      1,
+      {"name": "value", "anotherName": 12},
+      "something else"
+    ]
+  }
+}
+\end{lstlisting}
+This shows the flexibility of JSON in handling a wide range of data types in a structured format.
+
+\section{YAML Ain’t Markup Language}
+YAML is a human-readable data serialization format often used for configuration files, data storage, and data exchange. It is valued for its simplicity, as it relies on indentation rather than brackets or braces like JSON. YAML also supports comments, which is a feature missing from JSON. Here's an example:
+\begin{lstlisting}
+user:
+  firstName: John
+  lastName: Smith
+  age: 27
+\end{lstlisting}
+YAML uses a simple syntax where indentation defines structure. Keys are separated from values using colons, and lists (arrays) can be expressed using dashes -. Here's a similar structure to the JSON example:
+\begin{lstlisting}
+anObject:
+  aNumber: 42
+  aString: This is a string
+  aBoolean: true
+  nothing: null
+  anArray:
+    - 1
+    - anotherObject:
+        someName: some value
+        someOtherName: 1234
+    - something else
+\end{lstlisting}
+YAML is also more forgiving when it comes to format: it allows for multiline strings, block literals, and supports both JSON-like inline objects and arrays.
+
+One key advantage of YAML is that it is a superset of JSON. This means that any valid JSON document is also valid YAML. For instance, JSON's use of \{\} for objects and [] for arrays is acceptable in YAML as well:
+\begin{lstlisting}
+anotherArray: [1, 2, 3]
+anotherObject: {"city": "Rome", "country": "Italy"}
+aStringWithColon: "COVID-19: procedure di accesso"
+aNumericString: "0649911"
+\end{lstlisting}
+Additionally, YAML allows for more advanced features, such as multiline strings:
+\begin{lstlisting}
+aLongString: |
+  this string spans
+  more lines
+\end{lstlisting}
+This shows how YAML combines readability with versatility, making it an ideal choice for configuration files or data exchange in human-readable formats.
+
+\section{CORS}
+\subsection*{SOP}
+The Same-Origin Policy, or SOP, is a security mechanism enforced by web browsers to restrict interactions between resources from different origins. It acts as a safeguard, ensuring that malicious scripts from untrusted sources cannot interact with sensitive data from another origin.
+
+\textit{What Defines an Origin?}
+An "origin" is defined as the combination of a URI’s scheme (e.g., \texttt{http} or \texttt{https}), hostname, and port number. For example:
+\begin{itemize}
+    \item \texttt{http://bank.com} and \texttt{https://bank.com} are different origins because of the scheme.
+    \item \texttt{http://bank.com:8080} and \texttt{http://bank.com} are different origins because of the port.
+\end{itemize}
+Imagine a scenario where a user visits a banking website (\texttt{https://bank.com}) that includes the following HTML:
+\begin{minted}{html}
+<!doctype html>
+<html>
+<head>
+    <!-- Head content -->
+</head>
+<body>
+    <!-- Content -->
+    <script src="/script.js"></script>
+</body>
+</html>
+\end{minted}
+In this setup, the script (\texttt{/script.js}) is allowed to interact with the resources hosted on \texttt{https://bank.com}. However, if a malicious script from a different origin (\texttt{https://hackedpartner.com/evil-script.js}) were introduced into the page, SOP would restrict its access to sensitive data like cookies, HTTP authentication tokens, or IndexedDB storage.
+
+SOP ensures that critical components of web applications are protected from cross-origin interactions. These include:
+\begin{itemize}
+    \item Cookies
+    \item HTTP Authentication
+    \item IndexedDB
+    \item Web Storage (e.g., localStorage, sessionStorage)
+    \item DOM manipulation
+\end{itemize}
+By restricting unauthorized access to these components, SOP plays a vital role in maintaining web security.
+
+While SOP is effective, it’s not a complete solution. For example:
+\begin{enumerate}
+    \item \textit{Writes:} Cross-origin writes (e.g., sending a POST request) are typically allowed but may require additional safeguards like CORS.
+    \item \textit{Embedding:} Resources like images or scripts can be embedded from other origins without restrictions.
+    \item \textit{Reads:} Reading responses from cross-origin requests is generally denied.
+\end{enumerate}
+A significant limitation of SOP is its inability to prevent Cross-Site Request Forgery (CSRF) attacks. These occur when malicious websites trick a browser into executing unauthorized actions on another site. To mitigate CSRF risks, tokens or headers are often used in conjunction with SOP.
+
+\subsection*{CORS}
+CORS, or Cross-Origin Resource Sharing (an extension to SOP) is a security feature implemented in web browsers to manage how resources are shared between different origins. It ensures that a web page can only access data from another domain if the target domain explicitly allows it. This mechanism is critical for maintaining web security and preventing unauthorized data access.
+
+An "origin" in this context is defined by the combination of a URI's scheme, hostname, and port number. For example:
+\begin{itemize}
+    \item \texttt{http://www.example.com} and \texttt{https://www.example.com} are different origins because the schemes differ.
+    \item \texttt{http://www.example.com:8080} and \texttt{http://www.example.com} are also different because of the port number.
+\end{itemize}
+CORS comes into play when a script from one origin attempts to access resources on another origin, a practice known as a cross-origin request.
+
+Imagine a scenario where a user agent (typically a web browser) loads a web page from \texttt{http://www.origin1.com}. A script on this page then tries to fetch data from another domain, \texttt{http://www.origin2.com}.
+
+The browser sends a request to \texttt{www.origin2.com}:
+\begin{minted}{html}
+GET / HTTP/1.1
+Host: www.origin2.com    
+\end{minted}
+The key question is whether \texttt{www.origin2.com} will allow a script originating from \texttt{www.origin1.com} to access its data. Without CORS, this request would be blocked due to the browser's same-origin policy.
+
+To determine whether \texttt{www.origin2.com} allows access, the user agent includes an Origin header in the request:
+
+\begin{minted}{html}
+Origin: http://www.origin1.com    
+\end{minted}
+This header informs the target server (\texttt{www.origin2.com}) of the origin making the request. If \texttt{www.origin2.com} permits sharing its resources with \texttt{www.origin1.com}, it responds with the following header:
+\begin{minted}{html}
+Access-Control-Allow-Origin: http://www.origin1.com    
+\end{minted}
+Alternatively, it can use a wildcard (\texttt{*}) to allow access from any origin:
+\begin{minted}{html}
+Access-Control-Allow-Origin: *    
+\end{minted}
+If \texttt{www.origin2.com} does not allow cross-origin access, it will return an error, blocking the script from retrieving the data.
+
+Not all HTTP methods are considered "SAFE." Methods like \texttt{DELETE} are potentially destructive and require stricter handling. If \texttt{www.origin2.com} supports CORS but does not permit a specific operation, it can deny the request and avoid executing the operation.
+
+If the target server (\texttt{www.origin2.com}) does not support CORS, there is a risk that non-SAFE operations (like \texttt{DELETE}) could be executed unintentionally. To mitigate this, browsers implement preflight requests for non-SAFE operations.
+
+Before performing a potentially unsafe operation, the browser sends a preflight request to the target server. This request is an \texttt{OPTIONS} request, asking the server if the operation is allowed. For example:
+\begin{minted}{html}
+OPTIONS / HTTP/1.1
+Host: www.origin2.com
+Origin: http://www.origin1.com
+Access-Control-Request-Method: DELETE    
+\end{minted}
+The server responds with headers that specify whether the requested operation is permitted:
+\begin{minted}{html}
+Access-Control-Allow-Origin: http://www.origin1.com
+Access-Control-Allow-Methods: DELETE    
+\end{minted}
+If the server's response confirms that the operation is allowed, the browser proceeds with the actual request. If not, the operation is blocked, ensuring that potentially harmful actions are not executed.
+
+\subsection*{Types of CORS requests}
+CORS defines two types of requests: simple and preflighted.
+
+A request is considered simple if it meets the following criteria:
+\begin{itemize}
+    \item It uses one of the following HTTP methods: \texttt{GET}, \texttt{HEAD}, or \texttt{POST}.
+    \item Headers are limited to a predefined set, such as \texttt{Accept}, \texttt{Accept-Language}, or \texttt{Content-Type} (restricted to \texttt{application/x-www-form-urlencoded}, \texttt{multipart/form-data}, or \texttt{text/plain}).
+\end{itemize}
+For example, a browser sending a simple request includes the \texttt{Origin} header:
+\begin{minted}{html}
+Origin: https://bank.com    
+\end{minted}
+The server can then respond with:
+\begin{minted}{html}
+Access-Control-Allow-Origin: https://bank.com
+\end{minted}
+This indicates that only \texttt{https://bank.com} is allowed to access the response.
+
+A preflighted request is required for operations that do not meet the criteria for a simple request, such as:
+\begin{itemize}
+    \item Using HTTP methods like \texttt{PUT}, \texttt{DELETE}, or custom headers.
+    \item Accessing non-standard resources or credentials.
+\end{itemize}
+Before making the actual request, the browser sends an \texttt{OPTIONS} request to the server to verify permissions. For example:
+
+\begin{minted}{html}
+OPTIONS /resource HTTP/1.1
+Host: api.example.com
+Origin: https://bank.com
+Access-Control-Request-Method: DELETE    
+\end{minted}
+Server Response:
+\begin{minted}{html}
+Access-Control-Allow-Origin: https://bank.com
+Access-Control-Allow-Methods: DELETE    
+\end{minted}
+If the server allows the operation, the actual request is sent.
+
+When authentication is required, CORS simplifies the process in single-page applications (SPAs). For example, the \texttt{Authorization} header can be used for authentication, eliminating the need for CSRF tokens. Since \texttt{Authorization} triggers a preflight request, the server can verify the request’s legitimacy through CORS configuration.

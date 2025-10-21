@@ -1,0 +1,809 @@
+\chapter{Terza forma normale (3NF)}
+
+\begin{redbar}
+    Dati uno schema di relazione $R$ e un insieme di dipendenze funzionali $F$ su $R$, $R$ è in \textbf{terza forma normale} se:
+    \begin{equation*}
+        \forall X\to A\in F^+, A\neq X
+    \end{equation*}
+    allora, o $A$ appartiene ad una chiave (è primo), oppure $X$ contiene una chiave (è una superchiave).
+\end{redbar}
+
+Abbiamo già notato alcune proprietà delle dipendenze funzionali anche prima di formalizzarle con gli assiomi di Armstrong (vedi Osservazione \ref{oss:dipendenze-funzionali} e Proposizione \ref{prop:dipendenze-funzionali}).
+
+\begin{Example}{Terza forma normale}{}
+    \textit{Sia $R = ABCD$ uno schema e sia $F = \{A \to B, B \to CD\}$ un insieme di dipendenze funzionali su $R$. }
+    
+    Applicando gli assiomi di Armstrong, si ha che:
+    
+    Per riflessività:
+    \begin{equation*}
+        A \subseteq A \implies A \to A \in F^A
+    \end{equation*}
+    Per transitività:
+    \begin{equation*}
+        A \to B, B \to CD \in F^A \implies A \to CD \in F^A
+    \end{equation*}
+    Per unione:
+    \begin{equation*}
+        A \to A, A \to B, A \to CD \in F^A \implies A \to ABCD = R \in F^A
+    \end{equation*}
+    Dunque, siccome $A \to R \in F^A = F^+$ e siccome $A$ non ha sottoinsiemi, allora $A$ è chiave di $R$ (in particolare, $A$ è l'unica chiave di R). Verifichiamo quindi se $R$ sia in 3NF:
+   
+    $A \to B \in F^+$ rispetta la definizione di 3NF, poiché il determinante $A$ è chiave (e quindi anche una superchiave di se stessa). $B \to CD \in F^+$ non è una dipendenza da controllare, poiché $CD$ sono un sottoinsieme di attributi e non un singolo attributo. Tuttavia, per decomposizione abbiamo che $B \to CD \in F^A = F^+ \implies B \to C, B \to D \in F^A = F^+$. Per entrambe si ha che $B$ non è superchiave, poiché $A \not\subseteq B$, mentre $C$ e $D$ non sono primi, poiché $C$, $D \notin A$, dunque concludiamo che $R$ non sia in 3NF.
+\end{Example}
+
+\begin{Example}{Terza forma normale}{}
+    \textit{Sia $R = ABCD$ e sia $F = \{AC \to B, B \to AD\}$ un insieme di dipendenze funzionali su $R$. }
+    
+    Applicando gli assiomi di Armstrong, si ha che:
+    
+    Per riflessività:
+    \begin{gather*}
+        A, C, AC \subseteq AC \implies AC \to A, AC \to C, AC \to AC \in F^A\\
+        B, C, BC \subseteq BC \implies BC \to B, BC \to C, BC \to BC \in F^A        
+    \end{gather*}
+    Per transitività:
+    \begin{gather*}
+        AC \to B, B \to AD \in F^A \implies AC \to AD \in F^A\\
+        BC \to B, B \to AD \in F^A \implies BC \to AD \in F^A
+    \end{gather*}
+    Per unione:
+    \begin{gather*}
+        AC \to C, AC \to B, AC \to AD \in F^A \implies AC \to ABCD = R \in F^A\\
+        BC \to B, BC \to C, BC \to AD \in F^A \implies BC \to ABCD \in F^A
+    \end{gather*}
+    Per aumento:
+    \begin{equation*}
+        AC \to ABCD = R \in F^A \implies ABC \to ABBCD = ABCD = R \in F^A        
+    \end{equation*}
+    Deduciamo quindi che $AC$ e $BC$ siano chiave di $R$, mentre $ABC$ è una superchiave di $R$. Verifichiamo quindi se $R$ sia in 3NF:
+
+    $AC \to B \in F^A = F^+$ rispetta la definizione di 3NF, poiché $AC$ è chiave. $B \to AD \in F^A = F^+$ non va controllato, ma per decomposizione si ha che $B \to A$, $B \to D \in F^A = F^+$. $B \to A \in F^+$ rispetta la definizione di 3NF, poiché $A \in AC$ e dunque primo, mentre $B \to D \in F^+$ non rispetta la definizione di 3NF, poiché né B è superchiave né D è primo, dunque concludiamo che $R$ non sia in 3NF.
+\end{Example}
+
+\begin{Example}{Terza forma normale}{}
+    \textit{Sia $R = ABCD$ uno schema e sia $F = \{AB \to CD, BC \to A, D \to AC\}$ un insieme di dipendenze funzionali su $R$. }
+    
+    In tal caso si ha che $AB$, $BC$ e $BD$ sono chiavi di $R$. Verifichiamo quindi se R sia in 3NF: 
+    
+    $AB \to CD \in F^+$ rispetta la definizione di 3NF, poiché $AB$ è chiave. $BC \to A \in F^+$ rispetta la definizione di 3NF, poiché BC è chiave e A è primo. $D \to AC \in F^+ \implies D \to A, D \to C \in F^+$, i quali rispettano entrambi la definizione di 3NF, poiché $A$ e $C$ sono entrambi primi. Dunque, concludiamo che $R$ sia in 3NF.
+\end{Example}
+
+\section{Dipendenze parziali e transitive}
+\begin{Definition}{Dipendenza parziale}{}
+    Sia $R$ uno schema e sia $F$ un insieme di dipendenze funzionali definite su $R$. Definiamo $X \to A \in F^+$, dove $A \notin X$, come dipendenza parziale su $R$ se:
+    \begin{itemize}
+        \item $A$ non è primo
+        \item $\exists K \subseteq R$ chiave di $R$ tale che $X \subset K$ ($X$ è contenuto in una chiave di $R$)
+    \end{itemize}
+
+\end{Definition}
+
+\begin{Definition}{Dipendenza transitiva}{}
+    Sia $R$ uno schema e sia $F$ un insieme di dipendenze funzionali definite su $R$. Definiamo $X \to A \in F^+$, dove $A \notin X$, come dipendenza transitiva su $R$ se:
+    \begin{itemize}
+        \item $A$ non è primo
+        \item $\forall K \subseteq R$ chiave di $R$ si ha che $X \not\subset K$ e $K - X \neq \emptyset$
+    \end{itemize}
+
+\end{Definition}
+
+\begin{Example}{Dipendenze parziali e transitive}{}
+    \textit{Consideriamo il seguente schema:}
+    \begin{center}
+        \verb|Studente(Matr, CF, Cogn, Nome, DataN, Com, Prov, C#, Tit, Doc, DataE, Voto)|
+    \end{center}
+    La dipendenza funzionale \verb|Matr C#| $\to$ \verb|Cogn| è una conseguenza della dipendenza funzionale \verb|Matr| $\to$ \verb|Cogn| che viene detta dipendenza parziale e si dice che l'attributo \verb|Cogn| dipende parzialmente dalla chiave \verb|Matr C#|.
+
+    La dipendenza funzionale \verb|Matr| $\to$ \verb|Prov| è una conseguenza delle due dipendenze funzionali \verb|Matr| $\to$ \verb|Com| e \verb|Com| $\to$ \verb|Prov|. \verb|Com| $\to$ \verb|Prov| viene detta dipendenza transitiva e si dice che l'attributo \verb|Prov| dipende transitivamente dalla chiave \verb|Matr|.
+\end{Example}
+
+\begin{Thm}{Definizione alternativa di 3NF}{}
+    Siano $R$ uno schema di relazione e $F$ un insieme di dipendenze funzionali su $R$. Uno schema $R$ è in 3NF se e solo se non esistono né dipendenze parziali né dipendenze transitive in $R$.
+    \begin{demonstration}
+        %Se $A$ è parte di una chiave (primo), viene a mancare la prima condizione per avere una dipendenza parziale o transitiva. Invece, se $A$ non è primo (non fa parte di nessuna chiave), allora $X$ è superchiave. In quanto tale può contenere una chiave, ma non essere contenuto propriamente, quindi la dipendenza non può essere parziale. Inoltre, essendo superchiave non può verificarsi che per ogni chiave $K$ di $R$ $X$ non è contenuto propriamente in $K$ e $K-X\neq\emptyset$. Quindi la dipendenza non può essere transitiva.
+        Se non esistono né dipendenze parziali né dipendenze transitive in $R$ supponiamo per assurdo che $R$ non sia in 3NF; in tal caso esiste una dipendenza funzionale $X\to A\in F^+$ t.c. $A$ non è primo e $X$ non è una superchiave. Poiché $X$ non è una superchiave sono possibili due casi:
+        \begin{itemize}
+            \item per ogni chiave $K$ di $R$ $X$ non è contenuto propriamente in $K$ e $K-X\neq\emptyset$; in tal caso $X\to A$ è una dipendenza transitiva su $R$ (contraddizione);
+            \item esiste una chiave $K$ di $R$ tale che $X\subset K$; in tal caso $X\to A$ è una dipendenza parziale su $R$ (contraddizione).
+        \end{itemize}
+    \end{demonstration}
+\end{Thm}
+
+\section{Forma normale di Boyce-Codd}
+\begin{Definition}{Forma normale di Boyce-Codd}{}
+    Una relazione è in forma normale di Boyce-Codd (BCNF, Boyce-Codd Normal Form) quando in essa ogni determinante è una superchiave (ricordiamo che una chiave è anche superchiave). Una relazione che rispetta la forma normale di Boyce-Codd è anche in terza forma normale, ma non è vero l'opposto.
+\end{Definition}
+
+Può non essere possibile decomporre uno schema non BCNF ottenendo sottoschemi BCNF e preservando allo stesso tempo tutte le dipendenze. Ma questo è sempre possibile per la 3NF che è comunque soddisfacente, quindi nel seguito continueremo a prendere in considerazione solo la 3NF.
+
+\section{Chiusura di un insieme di attributi}
+Per il calcolo della chiusura dell'insieme di attributi $X$, denotata con $X^+$, possiamo usare il seguente algoritmo.
+
+\begin{Algoritmo}{Algoritmo per la chiusura di un insieme di attributi}{}\label{algo:chiusura-insieme-attributi}
+Dato un qualsiasi insieme di attributi $X$, sottoinsieme di $R$, è possibile calcolare tutti gli elementi appartenenti a $X^+$:\\\\
+\verb|  begin|\\
+\verb|      Z:=X|\\
+\verb|      S := |$\{$\verb|A|$|$ \verb|Y|$\to$\verb|V|$\in$\verb|F |$\land$\verb| A|$\in$\verb|V |$\land$\verb| Y|$\subseteq$\verb|Z|$\}$\\
+\verb|      while S |$\not\subseteq$\verb| Z do:|\\
+\verb|          Z := Z |$\cup$\verb| S|\\
+\verb|          S := |$\{$\verb|A|$|$ \verb|Y|$\to$\verb|V|$\in$\verb|F |$\land$\verb| A|$\in$\verb|V |$\land$\verb| Y|$\subseteq$\verb|Z|$\}$\\
+\verb|      end|\\
+\verb|      X := Z|\\
+\verb|  end|
+
+Ovvero, si inseriscono in $S$ i singoli attributi che compongono le parti destre di dipendenze in $F$ la cui parte sinistra è contenuta in $Z$. All'inizio $Z$ è proprio $X$, quindi inseriamo gli attributi che sono determinati funzionalmente da $X$; una volta che questi sono entrati in $Z$, da questi ne aggiungiamo altri per transitività. Notiamo come alla fine di ogni iterazione aggiungiamo nuovi attributi a $Z$; l'algoritmo si ferma quando il nuovo insieme $S$ che otteniamo è già contenuto nell'insieme $Z$, cioè quando non possiamo aggiungere nuovi attributi alla chiusura transitiva di $X$.
+\end{Algoritmo}
+
+\begin{Thm}{Algoritmo per la chiusura di un insieme di attributi}{}
+    Sia $R$ uno schema e sia $F$ un insieme di dipendenze funzionali definite su $R$. Dato un qualsiasi insieme di attributi $X \subseteq R$, l'algoritmo per il calcolo della chiusura di un insieme di attributi restituisce $X^+$.
+
+    \begin{demonstration}
+        Indichiamo con $Z_0$ il valore iniziale di $Z$ ($Z_0=X$) e con $Z_i$ ed $S_i$, $i\geq1$, i valori di $Z$ ed $S$ dopo l'i-esima esecuzione del corpo del ciclo; è facile vedere che $Z_i\subseteq Z_{i+1},$ per ogni $i$.
+        
+        Sia $j$ tale che $S_j\subseteq Z_j$ (cioè, $Z_j$ è il valore di $Z$ quando l'algoritmo termina); proveremo che:
+        \begin{equation*}
+            A\in Z_j \iff A\in X^+
+        \end{equation*}
+        \begin{enumerate}
+            \item Dimostriamo quindi per induzione che $Z_j \subseteq X^+$:
+
+        Per il \textit{caso base} ($i = 0$) si ha alla 0-esima iterazione del while (ossia prima di esso) si ha $Z_0 = X \subseteq X^+$;
+
+        L'\textit{ipotesi induttiva} si ha che, per ogni $i$, $Z_i \subseteq X^+$
+
+        Per il \textit{passo induttivo}, sia $A$ un attributo in $Z_i-Z_{i-1}$; deve esistere una dipendenza $Y\to V\in F$ tale che $Y\subseteq Z_{i-1}$ e $A\in V$. Poiché $Y\subseteq Z_{i-1}$, per l'ipotesi induttiva si ha che $Y\subseteq X^+$; pertanto, per il Lemma \ref{lemma:chiusura}, $X\to Y\in F^A$. Poiché $X\to Y\in F^A$ e $Y\to V\in F$, per l'assioma della transitività si ha $X\to V\in F^A$ e quindi, per il Lemma \ref{lemma:chiusura}, $V\subseteq X^+$. Pertanto, per ogni $A\in Z_i-Z_{i-1}$ si ha $A\in X^+$. Da ciò segue, per l'ipotesi induttiva, che $Z_i\subseteq X^+$.
+
+        \item Dimostriamo ora che $X^+ \subseteq Z_j$:
+
+         Sia $X \subseteq R$ e sia $r$ istanza di $R(Z_j , R-Z_j)$ tale che:
+          \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                \hline\multicolumn{8}{|c|}{\Verb|r|}\\
+                \hline\multicolumn{4}{|c|}{$Z_j$} & \multicolumn{4}{|c|}{$R-Z_j$}\\\hline
+                1 & 1 & ... & 1 & 1 & 1 & ... & 1\\
+                1 & 1 & ... & 1 & 0 & 0 & ... & 0\\\hline
+            \end{tabular}
+        \end{center}
+        vogliamo dimostrare che: (a) $r$ è un'istanza legale e (b) $A\in Z_j$.
+        
+        \begin{enumerate}[label=(\alph*)]
+            \item Data una qualunque dipendenza funzionale $V\to W$ in $F$: se $V \not\subset Z_j$ allora le due tuple sono diverse su $V$, quindi la dipendenza è soddisfatta; se $V\subseteq Z_j$ i valori delle due tuple sono uguali e se le due tuple avessero valori diversi su $W$, cioè se $W\cap (R-Z_j)\neq\emptyset$ si avrebbe $S_j\not\subseteq Z_j$ e quindi $Z_j$ non sarebbe il valore finale di $Z$ (contraddizione).
+
+            \item Poiché $r$ è un'istanza legale di $R$ deve soddisfare $X\to A$. Poiché $X = Z_0 \subseteq Z_j$, ne segue che la dipendenza non può essere soddisfatta a vuoto, dunque, l'unica possibilità affinché $X \to A \in F^+$ sia soddisfatta da $r$ è $A \in Z_j$. 
+        \end{enumerate}
+        Dunque, siccome $A \in X^+\implies A \in Z_j$, concludiamo che $X^+ \subseteq Z_j$.
+        \end{enumerate}
+    \end{demonstration}
+\end{Thm}
+
+\begin{Example}{Algoritmo per la chiusura di un insieme di attributi}{}
+    \textit{Dato lo schema di relazione $R = (A, B, C, D, E, H)$ e il seguente insieme di dipendenze funzionali su $F = \{ AB\to CD, EH\to D, D\to H \}$ su $R$, calcolare le chiusure di $A$, $D$ e $AB$.}
+
+    \begin{enumerate}
+        \item Applicando l'algoritmo otteniamo $Z:=A$ e $S=\emptyset$ perché $A$ da solo non determina alcun altro attributo. Dal controllo del while risulta che $\emptyset\subset A$ quindi non entriamo nel ciclo e:
+        \begin{equation*}
+            A^+=A
+        \end{equation*}
+
+        \item Applicando l'algoritmo otteniamo $Z:=D$ e $S:=H$ (per la dipendenza $D\to H$). $H\not\subset D$, quindi viene eseguito il while e $Z$ diventa $Z\cup S=D\cup H=DH$, mentre $S$ rimane $H$. Ora dato che $H\subset DH$ si esce dal ciclo con risultato:
+        \begin{equation*}
+            D^+=DH
+        \end{equation*}
+
+        \item Applicando l'algoritmo otteniamo $Z:=AB$ e $S:=CD$ (per la dipendenza $AB\to CD$). $CD\not\subset AB$, quindi viene eseguito il while e $Z$ diventa $Z\cup S=AB\cup CD=ABCD$, mentre $S$ diventa $CDH$ (per la dipendenza $D\to H$). $CDH\not\subset ABCD$, quindi viene eseguito un altro ciclo con $Z$ che diventa $Z\cup S=ABCD\cup CDH=ABCDH$, mentre $S$ rimane $CDH$ ($EH\to D$ non si può aggiungere a $S$ perché $E\notin Z$). Ora abbiamo che $CDH\subset ABCDH$ quindi segue l'uscita dal ciclo con risultato:
+        \begin{equation*}
+            AB^+=ABCDH
+        \end{equation*}
+    \end{enumerate}
+\end{Example}
+
+\subsection{Identificare le chiavi di uno schema}
+Per identificare le chiavi di uno schema $R$ su cui è definito un insieme di dipendenze funzionali $F$, si utilizza il calcolo della chiusura di un insieme di attributi. Se la chiusura di $X$ contiene $R$, abbiamo identificato una superchiave ma occorre verificare che i suoi sottoinsiemi non determinino tutto $R$.
+
+\begin{Osservation}{Identificare le chiavi di uno schema}{}
+    Per identificare le chiavi di uno schema conviene partire dagli insiemi di attributi con cardinalità maggiore perché, se la loro chiusura non contiene $R$, è inutile calcolare la chiusura dei loro rispettivi sottoinsiemi. Inoltre, gli attributi che non compaiono a destra di nessuna dipendenze funzionale in $F$ dovranno essere sicuramente in ogni chiave.
+\end{Osservation}
+
+\begin{Example}{Identificare le chiavi di uno schema}{}
+    \textit{Dato il seguente schema di relazione $R = (A, B, C, D, E, G, H)$ e il seguente insieme di dipendenze funzionali $F = \{ AB\to D, G\to A, G \to B, H \to E, H \to G, D \to H\}$ determinare le 4 chiavi di $R$.}
+
+    Possiamo fin da subito notare che $AB$, $G$, $D$ e $H$ sono buoni candidati dato che $E$ non determina nessun attributo, ma è determinato da $H$; $C$ non determina nessun attributo ma non è neppure determinato da nessun attributo, quindi sarà in ogni chiave.
+
+    Date queste premesse possiamo calcolare le chiusure dei 4 candidati (controllando che i loro sottoinsiemi non determinano $R$):
+    \begin{align*}
+        &ABC^+=ABCDEGH=R\hspace{1cm}AC^+=AC\hspace{0.5cm}BC^+=BC\\
+        &GC^+=ABCDEGH=R\\
+        &DC^+=ABCDEGH=R\\
+        &HC^+=ABCDEGH=R
+    \end{align*}
+    Per le chiusure $GC^+$, $DC^+$, $HC^+$ è inutile controllare i loro sottoinsiemi dato che $C$ è deve essere in ogni chiave e $G$, $D$ e $H$, presi singolarmente, non determinano $R$.
+\end{Example}
+
+\begin{Example}{Identificare le chiavi di uno schema}{}
+    \textit{Dato il seguente schema di relazione $R = (A, B, C, D, E)$ e il seguente insieme di dipendenze funzionali $F = \{ AB \to C, AC \to B, D \to E \}$ determinare le chiusure di di $ABDE$, $ACDE$, $ABCD$ e dire se sono tutte e tre delle chiavi.}
+
+    Calcolando le chiusure degli insiemi di attributi otteniamo:
+    \begin{align*}
+        &ABDE^+ =ABDEC =R\\
+        &ACDE^+ =ACDEB =R\\
+        &ABCD^+ =ABCDE =R
+    \end{align*}
+
+    In realtà $ABDE$ e $ABCD$ non sono chiavi perché $AB^+ =ABC$, per determinare $R$ mancano $D$ ed $E$, ma aggiungendo $D$ determiniamo anche $E$ (dalla dipendenza $D\to E$); quindi $ABD^+ =ABCDE =R$ è una chiave.
+    Anche $ACDE$ non è una chiave, perché da $(AC)^+ =ABC$ mancano $D$ ed $E$, ma aggiungendo $D$ determiniamo anche $E$ (dalla dipendenza $D\to E$); quindi $ACD^+ =ABCDE =R$ è una chiave.
+\end{Example}
+
+Una volta individuate le chiavi di uno schema di relazione, possiamo determinare se lo schema è in 3NF.
+
+\begin{Example}{Chiavi di uno schema e 3NF}{}
+    \textit{Dato il seguente schema di relazione $R = (A, B, C, D, E, G, H)$ e il seguente insieme di dipendenze funzionali $F = \{ AB\to CD, EH \to D, D \to H \}$ determinare una chiave di $R$, e, sapendo che la chiave è unica, verificare che $R$ non è in 3NF.}
+
+    Analizzando le dipendenze, cominciamo col considerare gli insiemi di attributi che compaiono a  sinistra delle dipendenze stesse e calcoliamone le chiusure utilizzando l'algoritmo studiato:
+    \begin{align*}
+        &AB^+ = \{A,B,C,D,H\}\hspace{-1cm}&AB\mbox{ non è superchiave}\\
+        &EH^+ = \{E,H,D\}\hspace{-1cm}&EH\mbox{ non è superchiave}\\
+        &D^+ = \{D,H\}\hspace{-1cm}&D\mbox{ non è superchiave}
+    \end{align*}
+    A questo punto osserviamo che $G$ non compare mai nelle dipendenze, quindi dovrà far parte sicuramente della chiave dello schema. Inoltre l'attributo $E$ non compare mai a destra delle dipendenze, quindi anche questo attributo non può essere determinato dalla chiave a meno di non farne parte. Osservando che alla chiusura di $AB$ mancano appunto questi due attributi, proviamo a calcolare la chiusura dell'insieme $ABEG$:
+    \begin{equation*}
+        ABEG^+ = \{A,B,E,G,C,D,H\}
+    \end{equation*}
+    Per verificare la minimalità della superchiave trovata, dobbiamo controllare che la chiusura di nessun sottoinsieme di $ABEG$ contenga tutti gli attributi dello schema. In teoria dovremmo calcolare le chiusure di tutti i possibili sottoinsiemi di $ABEG$, in pratica, tenendo conto del fatto che è inutile verificare la chiusura di sottoinsiemi che non contengono $G$, possiamo calcolare solo le chiusure di $ABG$, $BEG$, $AEG$:
+    \begin{align*}
+        &ABG^+ = \{A,B,G,C,D,H\}\hspace{-1cm}&ABG\mbox{ non è superchiave}\\
+        &BEG^+ = \{B,E,G\}\hspace{-1cm}&BEG\mbox{ non è superchiave}\\
+        &AEG^+ = \{A,E,G\}\hspace{-1cm}&AEG\mbox{ non è superchiave}
+    \end{align*}
+    Abbiamo quindi verificato entrambe le condizioni che ci permettono di affermare che $ABEG$ è chiave dello schema dato.
+
+    Trovata la chiave $ABEG$, è sufficiente osservare la presenza anche della sola dipendenza $AB\to CD$ per verificare che R non è in 3NF. Infatti è una dipendenza parziale (la parte sinistra è contenuta propriamente in una chiave), e decomponendola in $AB\to C$ e $AB\to D$, in entrambi i casi l'attributo a destra non è primo e AB non è superchiave).
+\end{Example}
+
+\section{Decomposizione di uno schema}
+\begin{Osservation}{La 3NF non basta}{}\label{oss:3NF-non-basta}
+    Uno schema che non è in 3NF può essere decomposto in un insieme di schemi in 3NF. Ad esempio lo schema $R=ABC$ con l'insieme di dipendenze funzionali $F=\{A\to B, B\to C\}$ non è in 3NF per la presenza in $F^+$ della dipendenza transitiva $B\to C$, dato che la chiave è evidentemente $A$. Quindi $R$ può essere decomposto in:
+    \begin{equation*}
+        R_1=AB\mbox{ con }\{A\to B\}\hspace{1cm}R_2=BC\mbox{ con }\{B\to C\}
+    \end{equation*}
+    oppure
+    \begin{equation*}
+        R_1=AB\mbox{ con }\{A\to B\}\hspace{1cm}R_2=AC\mbox{ con }\{A\to C\}
+    \end{equation*}
+    Entrambi gli schemi sono in 3NF, tuttavia la seconda soluzione non è soddisfacente perché non soddisfa la dipendenza funzionale $B\to C$.
+
+    Consideriamo ora lo schema $R=ABC$ con l'insieme di dipendenze funzionali $F=\{A\to B, C\to B\}$. Lo schema non è in 3NF per la presenza in $F^+$ delle dipendenze parziali $A\to B$ e $C\to B$, dato che la chiave è $AC$ tale schema può essere decomposto in:
+    \begin{equation*}
+        R_1=AB\mbox{ con }\{A\to B\}\hspace{1cm}R_2=BC\mbox{ con }\{C\to B\}.
+    \end{equation*}
+    Tale schema pur preservando tutte le dipendenze in $F^+$ non è soddisfacente perché nel momento in cui si effettua un join per unire le istanze si avrà una perdita di informazioni.
+\end{Osservation}
+
+In conclusione, quando si decompone uno schema per ottenerne uno in 3NF occorre tenere presenti altri due requisiti dello schema decomposto: 
+\begin{itemize}
+    \item deve preservare le dipendenze funzionali che valgono su ogni istanza legale dello schema originario;
+    \item deve permettere di ricostruire, mediante join naturale, ogni istanza legale dello schema originario (senza aggiunta di informazione estranea).
+\end{itemize}
+
+\begin{Definition}{Decomposizione di uno schema di relazione}{}
+    Sia $R$ uno schema di relazione. Una decomposizione di $R$ è una famiglia $\rho=\{R_1, R_2 ,..., R_k\}$ di sottoinsiemi di $R$ che ricopre $R$, ossia tali che:
+    \begin{equation*}
+        R=\bigcup_{i=0}^kR_i
+    \end{equation*}
+    
+    In altre parole, se lo schema $R$ è composto da un certo insieme di attributi, decomporlo significa definire dei sottoschemi che contengono ognuno un sottoinsieme degli attributi di $R$. I sottoschemi possono avere attributi in comune, e la loro unione deve necessariamente contenere tutti gli attributi di $R$.
+\end{Definition}
+
+\subsection{Preservare le dipendenze}
+\begin{Definition}{Equivalenza tra insiemi di dipendenze}{}
+    Sia $R$ uno schema e siano $F$ e $G$ due insiemi di dipendenze funzionali su $R$. Tali insiemi vengono detti equivalenti, indicato come $F\equiv G$, se $F^+=G^+$.
+\end{Definition}
+
+\begin{Lemma}{Equivalenza tra insiemi di dipendenze}{}\label{lemma:equivalenza-dipendenze}
+    Siano $F$ e $G$ due insiemi di dipendenze funzionali. Se $F\subseteq G^+$ allora $F^+\subseteq G^+$.
+    \begin{demonstration}
+        Sia $f \in F^+-F$ (è una dipendenza in $F^+$ che non compare in $F$). Ogni dipendenza funzionale in $F$ è derivabile da $G$ mediante gli assiomi di Armstrong (per l'ipotesi $F$ si trova in $G^+$ e il Teorema \ref{thm:F+=FA} che abbiamo dimostrato afferma che $G^+= G^A$). Sempre per il Teorema \ref{thm:F+=FA} che dimostra che $F^+= F^A$ si ha che $f$ in $F^+$ è derivabile dalle dipendenze in $F$ mediante gli assiomi di Armstrong ($F^A$).
+    \end{demonstration}
+\end{Lemma}
+
+\begin{Definition}{Decomposizioni che preservano le dipendenze}{}
+    Sia $R$ uno schema di relazione, $F$ un insieme di dipendenze funzionali su $R$ e $\rho=\{R_1, R_2,..., R_k\}$ una decomposizione di $R$. Diciamo che $\rho$ preserva $F$ se:
+    \begin{equation*}
+        F\equiv \bigcup^k_{i=1}\pi_{R_i}(F)
+    \end{equation*}
+    dove $\pi_{R_i}(F)=\{X\to Y|X\to Y\in F^+\land XY\subseteq R_i\}$ viene detta proiezione di $F$ su $R_i$, ossia l'insieme di tutte le dipendenze in $F^+$ tali che il determinante e il determinato sono entrambi sotto insiemi di $R_i$.
+\end{Definition}
+
+Verificare se una decomposizione preserva un insieme di dipendenze funzionali $F$ richiede che venga verificata l'equivalenza dei due insiemi di dipendenze funzionali $F$ e $G=\bigcup^k_{i=1}\pi_{R_i}(F)$ e quindi la doppia inclusione $G^+\subseteq F^+$ e che $F^+\subseteq G^+$:
+\begin{enumerate}
+    \item Per come è stato definito $G$, in questo caso, sarà sicuramente $G\subseteq F^+$. Infatti $G=\bigcup^k_{i=1}\pi_{R_i}(F)$, dove $\pi_{R_i}(F)=\{X\to Y|X\to Y\in F^+\land XY\subseteq R_i\}$. Ogni proiezione di $F$ che viene inclusa per definizione in $G$ è un sottoinsieme di $F^+$, quindi $F^+$ contiene $G$ e per il Lemma \ref{lemma:equivalenza-dipendenze} sulle chiusure questo implica che $G^+\subseteq F^+$.
+
+    \item La verifica che $F\subseteq G^+$ (che poi implica che $F^+\subseteq G^+$) può essere fatta con l'algoritmo che segue.
+
+    \begin{Algoritmo}{$F\subseteq G^+$}{}
+        Dato uno schema $R$ e due insiemi $F$ e $G$ di dipendenze funzionali su $R$, il seguente algoritmo determina se $F\subseteq G^+$:\\
+        \verb|  begin|\\
+        \verb|      successo:=true|\\
+        \verb|      for every X |$\to$\verb| Y |$\in$\verb| F|\\
+        \verb|          calcola X|$^+_G$\\
+        \verb|          if Y |$\not\subseteq$\verb| X|$^+_G$\\
+        \verb|              successo:=false|\\
+        \verb|              end|\\
+        \verb|  end|
+
+        E' importante calcolare $X^+_G$ perché per il Lemma \ref{lemma:chiusura} sappiamo che $X\to Y\in G^+\iff Y\subseteq X^+_G$.
+    \end{Algoritmo}
+    Per applicare tale algoritmo durante la verifica della preservazione di $F$, è necessario prima calcolare $F^+$, in modo da poter calcolare $G$ e successivamente ogni $X^+_G$ richiesto per verificare che $F\subseteq G^+$. Tuttavia, siccome il calcolo di $F^+$ richiede tempo esponenziale, è necessario calcolare i vari $X^+_G$ tramite un metodo alternativo.
+
+    \begin{Algoritmo}{Calcolo di $X^+_G$ a partire da $F$}{}\label{algo:calcolo-x+g}
+        Dato uno schema $R$ con decomposizione $\rho=\{R_1,...,R_k\}$, dato un insieme $F$ di dipendenze funzionali su $R$ e posto $X\subseteq R$, con $ G:=\bigcup^k_{i=0}\pi_{R_i}(F)$, il seguente algoritmo calcola $X^+_G$ a partire da $F$:\\
+        \verb|  begin|\\
+        \verb|      Z := X|\\
+        \verb|      S := |$\emptyset$\\
+        \verb|      for i := 1 to k|\\
+        \verb|          S:=S |$\cup$\verb| (Z |$\cap$\verb| R|$_i$\verb|)|$^+_F$ $\cap$\verb| R|$_i$\\
+        \verb|      while S |$\not\subseteq$\verb| Z|\\
+        \verb|          Z := Z |$\cup$\verb| S|\\
+        \verb|          for i := 1 to k|\\
+        \verb|              S:=S |$\cup$\verb| (Z |$\cap$\verb| R|$_i$\verb|)|$^+_F$ $\cap$\verb| R|$_i$\\
+        \verb|      X|$^+_G$\verb| := Z|\\
+        \verb|  end|
+
+        Quindi stiamo raccogliendo gli attributi determinati funzionalmente dalla parte di $Z$ che interseca $R_i$ in base alle dipendenze in $F^+$, e da questi selezioniamo quelli contenuti comunque in $R_i$ (con l'intersezione $\cap R_i$). Partendo da un insieme $X$, stiamo ricostruendo la sua chiusura dalle proiezioni di $F$ che compongono $G$, e da lì iterando (ciclo while) dall'insieme $G^+$. Nel fare questo attraverso l'intersezione con $R_i$ ci assicuriamo che la dipendenza sia valida nel singolo sottoschema.
+    \end{Algoritmo}
+
+    Per verificare se $X\to Y$ è preservata, dobbiamo controllare se $Y$ è contenuto nella copia finale della variabile $Z$.
+
+    \begin{Example}{Calcolo di $X^+_G$ a partire da $F$}{}
+        \textit{Dato il seguente schema di relazione $R = (A, B, C, D)$ e il seguente insieme di dipendenze funzionali $F = \{ AB\to C, D\to C, D\to B, C\to B, D\to A \}$ dire se la decomposizione $\rho = \{ ABC,ABD \}$ preserva le dipendenze in $F$.}
+
+        In base a quanto visto basta verificare che $F\subseteq G^+$ cioè che ogni dipendenza funzionale in $F$ si trova in $G^+$.
+
+        Ricordando la definizione di $G$:
+        \begin{equation*}
+            G:=\bigcup^k_{i=0}\pi_{R_i}(F)\hspace{1cm}\pi_{R_i}(F)=\{X\to Y|X\to Y\in F^+\land XY\subseteq R_i\}
+        \end{equation*}
+        è inutile verificare le dipendenze $X\to Y$ la cui unione $XY$ è contenuta in un sottoschema, perché per definizione fanno già parte di $G$. Quindi siccome $AB\to C$, $C\to B\in \pi_{ABC}(F)\subseteq G\subseteq G^+$, e $D\to B$, $D\to A\in \pi_{ABD}(F)\subseteq G\subseteq G^+$, non è necessario verificare tramite l'algoritmo che queste dipendenze vengono preservate.
+
+        Dunque l'unica dipendenza da verificare è $D\to C$. Applicando l'Algoritmo \ref{algo:calcolo-x+g} per il calcolo di $D^+_G$ otteniamo $Z:=D$ e $S=\emptyset$. Cicliamo sui due sottoschemi $ABC$ e $ABD$:
+        \begin{align*}
+            &S=S\cup(D\cap ABC)^+_F\cap ABC=\emptyset\cup(\emptyset)^+_F\cap ABC=\emptyset\cup\emptyset\cap ABC=\emptyset\\
+            &S=S\cup (D\cap ABD)^+_F\cap ABD=S\cup (D)^+_F\cap ABD= \emptyset\cup DCBA\cap ABD=ABD
+        \end{align*}
+        perché applicando l'Algoritmo \ref{algo:chiusura-insieme-attributi} sulla chiusura di un insieme di attributi abbiamo $(D)^+_F=DCBA$. Ora, essendo $ABD\not\subseteq D$ entriamo nel ciclo while, dove $Z$ diventa $D\cup ABD=ABD$. Nel ciclo for all'interno del while cicliamo sui sottoschemi $ABC$ e $ABD$ e otteniamo:
+        \begin{align*}
+            S=S\cup(ABD\cap ABD)^+_F\cap ABC=S\cup (AB)^+_F\cap ABC=ABD\cup ABC\cap ABC=ABCD
+        \end{align*}\vspace{-0.7cm}
+        \begin{align*}
+            S=S\cup (ABD\cap ABD)^+_F\cap ABD=S\cup (ABD)^+_F\cap ABD=ABCD\cup ABCD\cap ABD=\\ABCD\cup ABD=ABCD
+        \end{align*}
+        perché applicando l'Algoritmo \ref{algo:chiusura-insieme-attributi} sulla chiusura di un insieme di attributi abbiamo $(AB)^+_F=ABC$ e $(ABD)^+_F=ABCD$. Ora, $ABCD\not\subseteq ABD$, quindi rientriamo nel ciclo while con $Z=ABD\cup ABCD=ABCD$ e cicliamo sui sottoschemi $ABC$ e $ABD$:
+        \begin{align*}
+            S=S\cup (ABCD\cap ABC)^+_F\cap ABC=S\cup (ABC)^+_F\cap ABC=ABCD\cup ABC\cap ABC=\\ABCD
+        \end{align*}\vspace{-0.7cm}
+        \begin{align*}
+            S=S\cup (ABCD\cap ABD)^+_F\cap ABD=S\cup (ABD)^+_F\cap ABD=ABCD\cup ABCD\cap ABC=\\ABCD\cup ABC=ABCD
+        \end{align*}
+        Ora $ABCD\subseteq ABCD$ e l'algoritmo si ferma con $Z=(D)^+_G=ABCD$ e poiché $C\in (D)^+_G$ la dipendenza è preservata.
+    \end{Example}
+
+    \begin{Example}{Calcolo di $X^+_G$ a partire da $F$}{}
+        \textit{Dato il seguente schema di relazione $R = (A, B, C, D, E)$ e il seguente insieme di dipendenze funzionali $F = \{AB\to E, B\to CE, ED\to C\}$ dire se la decomposizione $\rho = \{ ABE,CDE \}$ preserva le dipendenze in $F$.}
+
+        In base a quanto visto basta verificare che $F\subseteq G^+$ cioè che ogni dipendenza funzionale in $F$ si trova in $G^+$.
+
+        Dato che $AB\to E\in \pi_{ABE}(F)\subseteq G\subseteq G^+$, e $ED\to C\in \pi_{CDE}(F)\subseteq G\subseteq G^+$, non è necessario verificare tramite l'algoritmo che queste dipendenze vengono preservate.
+
+        Dunque l'unica dipendenza da verificare è $B\to CE$. Applicando l'Algoritmo \ref{algo:calcolo-x+g} per il calcolo di $D^+_G$ otteniamo $Z:=B$ e $S=\emptyset$. Cicliamo sui due sottoschemi $ABE$ e $CDE$:
+        \begin{align*}
+            &S=S\cup(B\cap ABE)^+_F\cap ABE=\emptyset\cup(B)^+_ABE=\emptyset\cup BCE\cap ABE=BE\\
+            &S=BE\cup (B\cap CDE)^+_F\cap CDE=BE\cup (\emptyset)^+_F\cap CDE=BE
+        \end{align*}
+        perché applicando l'Algoritmo \ref{algo:chiusura-insieme-attributi} sulla chiusura di un insieme di attributi abbiamo $(B)^+_F=BCE$. Ora, essendo $BE\not\subseteq B$ entriamo nel ciclo while, dove $Z$ diventa $B\cup BE=BE$. Nel ciclo for all'interno del while cicliamo sui sottoschemi $ABE$ e $CDE$ e otteniamo:
+        \begin{align*}
+            S=BE\cup(BE\cap ABE)^+_F\cap ABE=BE\cup (BE)^+_F\cap ABE=BE\cup BCE\cap ABE=BE
+        \end{align*}\vspace{-1cm}
+        \begin{align*}
+            S=BE\cup (BE\cap CDE)^+_F\cap CDE=S\cup (E)^+_F\cap CDE=BE\cup E\cap CDE=\\BE\cup E=BE
+        \end{align*}
+        perché applicando l'Algoritmo \ref{algo:chiusura-insieme-attributi} sulla chiusura di un insieme di attributi abbiamo $(BE)^+_F=BCE$ e $(E)^+_F=E$. Ora, $BE\subseteq BE$ e l'algoritmo si ferma con $Z=(B)^+_G=BE$ ma poiché $C\notin (B)^+_G$ la dipendenza non è preservata.
+    \end{Example}
+
+    \begin{Thm}{Correttezza dell'algoritmo per il calcolo di $X^+_G$ a partire da $F$}{}
+        Sia $R$ uno schema di relazione, $F$ un insieme di dipendenze funzionali su $R$, $\rho=\{R_1, R_2,..., R_k\}$ una decomposizione di $R$ e $X$ un sottoinsieme di $R$. L'algoritmo per il calcolo di $X^+_G$ a partire da $F$ calcola correttamente $X^+_G$, dove $G=\bigcup^k_{i=1}\pi_{R_i}(F)$.
+
+        \begin{demonstration}
+            Indichiamo con $Z_i$ il valore di $Z$ dopo l'i-esima esecuzione, è facile vedere che $Z_i\subseteq Z_{i+1}$. Sia $Z_f$ il valore di $Z$ quando l'algoritmo termina, proveremo che:
+            \begin{equation*}
+                A\in Z_f\iff A\in X^+_G
+            \end{equation*}
+            Mostriamo per induzione che $Z_i\subseteq X^+_G$:\\
+            Per il \textit{caso base} si ha $Z_0=X\subseteq X^+_G$;\\
+            Per l'\textit{ipotesi induttiva} si ha per ogni $i\in\mathbb{N}$ che $Z_{i-1}\subseteq X^+_G$;\\
+            Per il \textit{passo induttivo}, dato $A\in Z_i-Z_{i-1}$ deve esistere un indice $j$ tale che $A\in(Z_{i-1}\cap R_j)^+_F\cap R_j$ (perché $A$ è stato aggiunto durante nell'i-esima iterazione e non era in $Z_{i-1}$). Poiché $A\in(Z_{i-1}\cap R_j)^+_F$, per il Lemma \ref{lemma:chiusura}, si ha $(Z_{i-1}\cap R_j)\to A\in F^+$. Poiché $(Z_{i-1}\cap R_j)\to A\in F^+$, $A\in R_j$ e $Z_{i-1}\cap R_j\subseteq R_j$, si ha, per la definizione di $G$, che $(Z_{i-1}\cap R_j)\to A\in G$. Per l'ipotesi induttiva (con il Lemma \ref{lemma:chiusura}) si ha $X\to Z_{i-1}\in G^+$, per la regola della decomposizione si ha anche che $X\to (Z_{i-1}\cap R_j)\in G^+$ e, quindi, per l'assioma della transitività ($X\to (Z_{i-1}\cap R_j)\in G^+$, $(Z_{i-1}\cap R_j)\to A\in G^+$), che $X\to A\in G^+$, cioè $A\in X^+_G$. Quindi $Z_i\subseteq X^+_G$.
+        \end{demonstration}
+    \end{Thm}
+\end{enumerate}
+
+\subsection{Join senza perdita}
+Abbiamo sottolineato varie volte che una buona decomposizione deve soddisfare 3 condizioni: ogni sottoschema deve essere in 3NF; la decomposizione deve preservare tutte le dipendenze in $F^+$; la decomposizione deve permettere di ricostruire una istanza legale decomposta senza perdita di informazione (join senza perdita).
+
+\begin{Example}{Join con perdita}{}
+    Consideriamo lo schema $R=ABC$ con l'insieme di dipendenze funzionali $F=\{A\to B, C\to B\}$, lo schema non è in 3NF per la presenza in $F^+$ delle dipendenze parziali $A\to B$ e $C\to B$, dato che la chiave è $AC$. Tale schema può essere decomposto in:
+    \begin{equation*}
+        R_1=AB\mbox{ con }\{A\to B\}\hspace{1cm}R_2=BC\mbox{ con }\{C\to B\}
+    \end{equation*}
+    Tale decomposizione pur preservando tutte le dipendenze in $F^+$ non è soddisfacente. Infatti, considerando l'istanza legale $R$, in base alla decomposizione data, si divide in $R_1$ e $R_2$:
+     \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{$R$}\\\hline
+            \textbf{A} & \textbf{B} & \textbf{C}\\\hline
+            a1 & b1 & c1\\
+            a2 & b1 & c2\\\hline
+        \end{tabular}\hspace{1cm}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{$R_1$}\\\hline
+            \textbf{A} & \textbf{B}\\\hline
+            a1 & b1\\
+            a2 & b1\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|}
+            \hline\multicolumn{2}{|c|}{$R_2$}\\\hline
+            \textbf{B} & \textbf{C}\\\hline
+            b1 & c1\\
+            b1 & c2\\\hline
+        \end{tabular}
+    \end{center}
+    Ora dovrebbe essere possibile ricostruire $R$, invece se si effettua il join delle due istanze legali risultanti dalla decomposizione si ottiene:
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{$R$}\\\hline
+            \textbf{A} & \textbf{B} & \textbf{C}\\\hline
+            a1 & b1 & c1\\
+            a2 & b1 & c2\\
+            a1 & b1 & c2\\
+            a2 & b1 & c1\\\hline
+        \end{tabular}\hspace{1cm}
+    \end{center}
+    con tuple estranee alla realtà di interesse quindi con perdita di informazione.
+\end{Example}
+
+\begin{Definition}{Join senza perdita}{}
+    Sia $R$ uno schema di relazione. Una decomposizione $\rho=\{R_1, R_2,..., R_k\}$ di $R$ ha un join senza perdita se per ogni istanza legale $r$ di $R$ si ha:
+    \begin{equation*}
+        r=\pi_{R_1}(r)\bowtie\pi_{R_2}(r)\bowtie ...\bowtie\pi_{R_k}(r)
+    \end{equation*}
+\end{Definition}
+
+\begin{Thm}{}{}
+    Sia $R$ uno schema di relazione e $\rho=\{R_1, R_2,..., R_k\}$ una decomposizione di $R$. Per ogni istanza legale $r$ di $R$, indicato con $m_\rho(r)=\pi_{R_1}(r)\bowtie\pi_{R_2}(r)\bowtie ...\bowtie\pi_{R_k}(r)$, si ha:
+    \begin{enumerate}[label=(\alph*)]
+        \item $r\subseteq m_\rho (r)$
+        \item $\pi_{R_i}(m_\rho(r))=\pi_{R_i}(r)$
+        \item $m_\rho (m_\rho(r))=m_\rho (r)$
+    \end{enumerate}
+    \begin{demonstration}\phantom{}
+    \begin{enumerate}[label=(\alph*)]
+        \item Data una qualsiasi tupla $t\in r$, si ha che:
+        \begin{equation*}
+            t\in r\implies t\in \{t[R_1]\}\bowtie ...\bowtie\{t[R_k]\}\subseteq\pi_{R_1}(r)\bowtie ...\bowtie\pi_{R_1}(r)=m_\rho (r)
+        \end{equation*}
+
+        \item Poiché $r\subseteq m_\rho (r)$, effettuando una proiezione con $R_i\in\rho$ su entrambe, ne segue che $\pi_{R_i}(r)\subseteq\pi_{R_i}(m_\rho (r))$. Inoltre, per definizione di proiezione, si ha che:
+        \begin{equation*}
+            t_{R_i} \in \pi_{R_i}(m_\rho (r)) \implies \exists t' \in m_\rho (r) | t_{R_i} = t'[R_i]
+        \end{equation*}
+        Infine, per definizione stessa di $m_\rho (r)$, si ha che:
+        \begin{equation*}
+            t' \in m_\rho (r) \implies \exists t_1, . . . , t_k \in r | \forall R_j \in \rho, t_j[R_j] = t'[R_j]
+        \end{equation*}
+        In particolare, quindi, otteniamo che:
+        \begin{equation*}
+            t_{R_i} \in \pi_{R_1}(m_\rho (r)) \implies t_{R_i} = t'[R_i] = t_i[R_i] \in \pi_{R_i}(r) \implies \pi_{R_1}(m_\rho (r)) \subseteq \pi_{R_i}(r)
+        \end{equation*}
+
+        \item Siccome $\pi_{R_i}(r) = \pi_{R_1}(m_\rho (r))$, allora si ha che:
+        \begin{equation*}
+            m_\rho (m_\rho (r)) = \pi_{R_1}(m_\rho (r)) \bowtie ... \bowtie \pi_{R_k}(m_\rho (r)) = \pi_{R_1}(r) \bowtie ... \bowtie \pi_{R_k}(r) = m_\rho (r)
+        \end{equation*}
+        \end{enumerate}
+    \end{demonstration}
+\end{Thm}
+
+Per verificare se la decomposizione data produce un join senza perdita utilizziamo un algoritmo di verifica in tempo polinomiale.
+
+\begin{Algoritmo}{Verifica del join senza perdita in una decomposizione}{}
+    Dato uno schema di relazione $R$, un insieme $F$ di dipendenze funzionali su $R$, una decomposizione $\rho=\{R_1, R_2,...,R_k\}$ di $R$, il seguente algoritmo determina se $\rho$ presenta un join senza perdita.
+
+    Si costruisce una tabella $r$ con $R$ colonne e $\rho$ righe in modo che l'incrocio dell'i-esima riga e della j-esima colonna ha:
+    \begin{equation*}r_{i.j}=
+        \begin{cases}"a_j"\hspace{0.5cm}\mbox{se }A_j\in R_i\\ "b_{ij}"\hspace{0.5cm}\mbox{se }A_j\notin R_i\end{cases}
+    \end{equation*}
+    e si applica il seguente pseuodocodice:\\
+    \verb|  begin|\\
+    \verb|      repeat|\\
+    \verb|          for every X |$\to$\verb| Y |$\in$\verb| F|\\
+    \verb|              if |$t_1[X]=t_2[X]$\verb| and |$t_1[Y]\neq t_2[Y]$\\
+    \verb|                  for every attribute |$A_j\in Y$\\
+    \verb|                      if |$t_1[A_j]="a_j"$\\
+    \verb|                          |$t_2[A_j]:=t_1[A_j]$\\
+    \verb|                      else|\\
+    \verb|                          |$t_1[A_j]:=t_2[A_j]$\\
+    \verb|      until r| ha una riga con tutte "a" \verb| or r| non è cambiato\\
+    \verb|      if r| ha una riga con tutte "a"\\
+    \verb|          |$\rho$ ha un join senza perdita\\
+    \verb|      else|\\
+    \verb|          |$\rho$ non ha un join senza perdita\\
+    \verb|  end|
+
+    Per i nostri scopi, trasformiamo l'istanza iniziale in una istanza legale e per fare questo, dobbiamo fare in modo che tutte le dipendenze in $F$ siano soddisfatte. Allora, ogni volta che troviamo due tuple uguali sugli attributi a sinistra, facciamo in modo che siano uguali anche su quelli a destra. Nel fare questo, diamo la precedenza alle $a$. L'algoritmo di ferma quando tutte le coppie di tuple soddisferanno la condizione che se gli attributi delle parti sinistre delle dipendenze sono uguali, lo sono anche gli attributi delle parti destre, ma questo significa che alla fine $r$ è stata trasformata in un'istanza legale di $R$.
+\end{Algoritmo}
+
+\begin{Example}{Verifica del join senza perdita in una decomposizione}{}
+    \textit{Dato lo schema $R = ABCDE$ con decomposizione $\rho = \{AC, ADE, CDE, AD, B\}$ e con insieme di dipendenze $F = \{C\to D, AB\to E, D\to B\}$, vogliamo verificare se $\rho$ presenti un join senza perdita. }
+    
+    Partiamo costruendo l'istanza di $r$ secondo le regole date:
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline &\textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E}\\\hline
+            \textbf{AC} & a1 & b12 & a3 & b14 & b15\\
+            \textbf{ADE} & a1 & b22 & b23 & a4 & a5\\
+            \textbf{CDE} & b31 & b32 & a3 & a4 & a5\\
+            \textbf{AD} & a1 & b42 & b43 & a4 & b45\\
+            \textbf{B} & b51 & a2 & b53 & b54 & b55\\\hline
+        \end{tabular}\hspace{1cm}
+    \end{center}
+    Effettuiamo quindi la prima iterazione del ciclo: considerando $C\to D \in F$, notiamo che la prima e la terza tupla sono uguali nel determinante $C$, dunque modifichiamo $b14\to a4$ affinché esse siano uguali anche nel determinato $D$; considerando $AB\to E \in F$, notiamo che tale dipendenza è già soddisfatta; considerando $D\to B \in F$, notiamo che la prima (poiché abbiamo già modificato $b14\to a4$), la seconda, la terza e la quarta tupla sono uguali nel determinante $D$, dunque modifichiamo $b22\to b12$, $b32\to b12$ e $b42\to b12$ affinché esse siano uguali anche nel determinato $B$.
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline &\textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E}\\\hline
+            \textbf{AC} & a1 & b12 & a3 & b14$\to$a4 & b15\\
+            \textbf{ADE} & a1 & b22$\to$b12 & b23 & a4 & a5\\
+            \textbf{CDE} & b31 & b32$\to$b12 & a3 & a4 & a5\\
+            \textbf{AD} & a1 & b42$\to$b12 & b43 & a4 & b45\\
+            \textbf{B} & b51 & a2 & b53 & b54 & b55\\\hline
+        \end{tabular}\hspace{1cm}
+    \end{center}
+    Siccome la tabella è stata modificata, effettuiamo un'altra iterazione del ciclo: considerando $C\to D\in F$, notiamo che tale dipendenza è già soddisfatta; considerando $AB\to E\in F$, notiamo la prima, la seconda e la quarta tupla sono uguali nel determinante $AB$, dunque modifichiamo $b15\to a5$ e $b45\to a5$ in modo che siano uguali nel determinato $E$; considerando $D\to B\in F$, notiamo che tale dipendenza è già soddisfatta.
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline &\textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E}\\\hline
+            \textbf{AC} & a1 & b12 & a3 &a4 & b15$\to$a5\\
+            \textbf{ADE} & a1 & b12 & b23 & a4 & a5\\
+            \textbf{CDE} & b31 & b12 & a3 & a4 & a5\\
+            \textbf{AD} & a1 & b12 & b43 & a4 & b45$\to$a5\\
+            \textbf{B} & b51 & a2 & b53 & b54 & b55\\\hline
+        \end{tabular}\hspace{1cm}
+    \end{center}
+    Siccome la tabella è stata modificata, allora effettuiamo un'altra iterazione del ciclo: considerando $C\to D\in F$, notiamo che tale dipendenza è già soddisfatta; considerando $AB\to E\in F$, notiamo che tale dipendenza è già soddisfatta; considerando $D\to B\in F$, notiamo che tale dipendenza è già soddisfatta.
+\begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline &\textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E}\\\hline
+            \textbf{AC} & a1 & b12 & a3 &a4 & a5\\
+            \textbf{ADE} & a1 & b12 & b23 & a4 & a5\\
+            \textbf{CDE} & b31 & b12 & a3 & a4 & a5\\
+            \textbf{AD} & a1 & b12 & b43 & a4 & a5\\
+            \textbf{B} & b51 & a2 & b53 & b54 & b55\\\hline
+        \end{tabular}\hspace{1cm}
+    \end{center}
+    Siccome la tabella non è stata modificata, allora l'algoritmo termina stabilendo che $\rho$ non presenta un join senza perdita, poiché non esiste alcuna riga contenente tutti valori "$a$".
+\end{Example}
+
+\begin{Thm}{Correttezza dell'algoritmo per la verifica del join}{}
+    Sia $R$ uno schema di relazione, $F$ un insieme di dipendenze funzionali su $R$ e $\rho=\{R_1, R_2,...,R_k\}$ una decomposizione di $R$. L'Algoritmo determina che $\rho$ presenta un join senza perdita se e solo se esiste una tupla in $r$ che contiene tutte "$a$" una volta terminato.
+
+    \begin{demonstration}
+        Supponiamo per assurdo che $\rho$ abbia un join senza perdita ($m_\rho (r)= r$) e che quando l'algoritmo termina la tabella $r$ non abbia una tupla con tutte "$a$". La tabella $r$ può essere interpretata come un'istanza legale di $R$ in quanto l'algoritmo termina quando non ci sono più violazioni delle dipendenze in $F$. Poiché nessun simbolo "$a$" che compare nella tabella costruita inizialmente viene mai modificato dall'algoritmo, per ogni $i$, $i=1,...,k$, $\pi_{R_i}(r)$ contiene una tupla con tutte "$a$" (infatti se si proietta l'istanza $r$ sugli attributi di $R_i$, e precisamente nella riga corrispondente al sottoschema $R_i$, si nota come almeno una riga contiene tutte le "$a$") pertanto $m_\rho (r)$ contiene sicuramente una tupla con tutte "$a$" e, quindi, $m_\rho (r)\neq r$ (contraddizione).
+    \end{demonstration}
+\end{Thm}
+
+\subsection{Copertura minimale}
+\begin{Definition}{Copertura minimale}{}
+    Sia $F$ un insieme di dipendenze funzionali. Una copertura minimale di $F$ è un insieme $G$ di dipendenze funzionali equivalente ad $F$ tale che:
+    \begin{itemize}
+        \item per ogni dipendenza funzionale in $G$ la parte destra è un singleton, cioè è costituita da un unico attributo (ogni attributo nella parte destra è non ridondante);
+        \item per nessuna dipendenza funzionale $X\to A$ in $G$ esiste $X'\subset X$ tale che $G\equiv G-\{X\to A\}\cup\{X'\to A\}$ (ogni attributo nella parte sinistra è non ridondante);
+        \item per nessuna dipendenza funzionale $X\to A$ in $G$, $G\equiv G-\{X\to A\}$ (ogni dipendenza è non ridondante).
+    \end{itemize}
+\end{Definition}
+
+\begin{Algoritmo}{Calcolare una copertura minimale}{}
+    Per ogni insieme di dipendenze funzionali $F$ esiste una copertura minimale equivalente ad $F$ che può essere ottenuta in tempo polinomiale in tre passi:
+    \begin{enumerate}
+        \item usando la regola della decomposizione, le parti destre delle dipendenze funzionali vengono ridotte a singleton;
+        \item ogni dipendenza funzionale $A_1A_2...A_{i-1}A_iA_{i+1}...A_n \to A$ in $F$ tale che
+        \begin{equation*}
+            F\equiv F-\{A_1A_2...A_{i-1}A_iA_{i+1}...A_n \to A\}\cup\{A_1A_2...A_{i-1}A_{i+1}...A_n \to A\}
+        \end{equation*}
+        viene sostituita con $A_1A_2...A_{i-1}A_{i+1}...A_n \to A$ (o eliminata se quest'ultima appartiene già a $F$). Questo processo viene ripetuto finché possibile, cioè quando tutti gli attributi delle parti sinistre delle dipendenze funzionali risultano non ridondanti;
+        \item ogni dipendenza funzionale $X \to A$ in $F$ tale che $F\equiv F - \{ X \to A\}$ viene eliminata, in quanto risulta ridondante.
+    \end{enumerate}
+\end{Algoritmo}
+
+\begin{Osservation}{Semplificazione del passo 2}{}
+    Nel passo 2, ogni volta che vogliamo verificare la ridondanza di un attributo nella parte di una dipendenza, assumiamo di indicare con $F$ l'insieme che contiene la dipendenza originaria $A_1A_2...A_{i-1}A_iA_{i+1}...A_n \to A$ e con $G$ l'insieme che contiene al suo posto la dipendenza $A_1A_2...A_{i-1}A_{i+1}...A_n \to A$. Notiamo prima di tutto che i due insiemi differiscono esattamente in una dipendenza ($A_i$), le altre sono uguali, e quindi banalmente appartengono alla chiusura di entrambi gli insiemi. Per stabilire quindi l'equivalenza resta da verificare che:
+    \begin{equation*}
+        A_1A_2...A_{i-1}A_iA_{i+1}...A_n \to A\in G^+ \land A_1A_2...A_{i-1}A_{i+1}...A_n \to A\in F^+
+    \end{equation*}
+    Tuttavia, non è necessario verificare se $A_1A_2...A_{i-1}A_iA_{i+1}...A_n \to A\in G^+$, poiché $A_1A_2...A_{i-1}A_{i+1}...A_n\subset A_1A_2...A_{i-1}A_iA_{i+1}...A_n$ e per riflessività avremo che $A_1A_2...A_{i-1}A_iA_{i+1}...A_n\to A_1A_2...A_{i-1}A_{i+1}...A_n$ e per transitività con $A_1A_2...A_{i-1}A_{i+1}...A_n\to A$ otteniamo $ A_1A_2...A_{i-1}A_iA_{i+1}...A_n\to A$.
+
+    Resta da verificare se $A_1A_2...A_{i-1}A_{i+1}...A_n \to A\in F^+$ e per fare questo usiamo l'Algoritmo \ref{algo:chiusura-insieme-attributi} per verificare se $A \in(A_1A_2...A_{i-1}A_{i+1}...A_n)^+_F$.
+\end{Osservation}
+
+\begin{Osservation}{Semplificazione passo 2}{}
+    Nelle verifiche successive, relative alla riduzione di ulteriori dipendenze nel passo 2, è inutile ricalcolare le chiusure per attributi o gruppi di attributi per i quali tale calcolo sia già stato effettuato.
+
+    Dato per esempio $X$, siccome $(X)^+_F = \{ A | X\to A \in F^+\}$, e siccome il verso della verifica porta a calcolare le chiusure rispetto ad un insieme di dipendenze che è $F$ iniziale oppure un insieme $G$ che è stato già dimostrato equivalente ad $F$, se $X \to A\in F^+$ allora vale anche $X\to A\in G^+$, cioè $(X)^+_F = (X)^+_G$.
+\end{Osservation}
+
+\begin{Osservation}{Semplificazione passo 3}{}
+    Assumiamo di indicare con $F$ l'insieme che contiene la dipendenza $X\to A$, e con $G$ l'insieme in cui tale dipendenza è stata eliminata. Anche in questo caso, i due insiemi differiscono per una sola dipendenza, anzi si verifica che $G\subseteq F$, quindi sappiamo già che $G^+\subseteq F^+$. Resta quindi da verificare che sia $F^+\subseteq G^+$, che sarà sicuramente vero se $F\subseteq G^+$ (per il Lemma \ref{lemma:equivalenza-dipendenze}). In particolare, basta verificare se $X\to A\in G^+$ e cioè se $A\in (X)^+_G$.
+
+    In questo caso però le chiusure di attributi o gruppi di attributi vanno ricalcolate, perché il verso della verifica porta a calcolare le chiusure rispetto ad un insieme di dipendenze che non è stato ancora dimostrato essere equivalente ad $F$.
+
+    Notiamo inoltre che se $X\to A\in F$ ma non esiste $Y\to A\in F$ con $Y\neq X$, allora è inutile provare ad eliminare $X \to A$, in quanto eliminando tale dipendenza non saremmo più in grado di determinare funzionalmente $A$.
+\end{Osservation}
+
+Possono esserci più coperture minimali per un dato insieme di dipendenze funzionali. Usando l'algoritmo si può sempre trovare almeno una copertura minimale per qualunque insieme $F$ di dipendenze. Può anche succedere che $F$ sia già in forma minimale, e quindi non ci sia da fare alcuna riduzione.
+
+\begin{Example}{Copertura minimale}{}
+    \textit{Troviamo la copertura minimale del seguente insieme di dipendenze funzionali $F = \{AB\to CD, C\to E, AB\to E, ABC\to D\}$.}
+
+    \begin{enumerate}
+        \item Prima di tutto, scomponiamo le dipendenze con la regola della decomposizione, ottenendo che:
+        \begin{equation*}
+            F = \{AB\to C, AB\to D, C\to E, AB\to E, ABC\to D\}
+        \end{equation*}
+
+        \item Ora dobbiamo verificare se nelle dipendenze ci sono ridondanze nelle parti sinistre.
+        
+        Consideriamo quindi la dipendenza $AB\to C\in F$ e verifichiamo se $A\to C$, $B\to C\in F^+$, dunque se $C\in A^+_F$ e se $C\in B^+_F$: $A^+_F = A\implies C\notin A^+_F$; $B^+_F = B\implies C\notin B^+_F$ dunque, non possiamo rimpiazzare la dipendenza $AB\to C$. 
+        
+        Procedendo analogamente, verifichiamo che $A\to E$, $B\to E$, $A\to D$, $B\to D\notin F^+$, dunque ne traiamo che $AB\to E$, $AB\to D\in F$ non possano essere rimpiazzate. 
+        
+        Infine, considerando $ABC\to D\in F$, sappiamo già che $AB\to D\in F\subseteq F^+$, dunque tale dipendenza può essere rimpiazzata data $AB\to D$ (e di conseguenza rimossa, poiché già presente in $F$)
+        
+        Al termine dello step 2, quindi, abbiamo che:
+        \begin{equation*}
+            F = \{AB\to C, AB\to D, C\to E, AB\to E\}
+        \end{equation*}
+
+        \item Vediamo ora se questo insieme contiene delle dipendenze ridondanti. 
+        
+        $C$ e $D$ sono determinati rispettivamente solo da $AB\to C$ e $AB\to D$, dunque tali dipendenze non possono essere rimosse. 
+        
+        Considerando $C\to E\in F$, verifichiamo se $E\in C^+_{F-\{C\to E\}}$ affinché $C\to E\in F-\{C\to E\}^+$. Siccome $E\notin C^+_{F-\{C\to E\}} = C$, ne segue che $C\to E$ non possa essere scartata. 
+        
+        Considerando $AB\to E\in F$, verifichiamo se $E\in AB^+_{F-\{AB\to E\}}$ affinché $AB\to E\in F-\{AB\to E\}^+$. Siccome $E\in AB^+_{F-\{AB\to E\}} = ABCDE$, ne segue che $AB\to E$ possa essere scartata.
+    \end{enumerate}
+    Infine, otteniamo che:
+    \begin{equation*}
+        F = \{AB\to C, AB\to D, C\to E\}
+    \end{equation*}
+    è la copertura minimale di $F$.
+\end{Example}
+
+\begin{Example}{Copertura minimale}{}
+    \textit{Troviamo la copertura minimale del seguente insieme di dipendenze funzionali $F = \{BC\to DE, C\to D, B\to D, E\to L, D\to A, BC\to AL\}$}
+
+    \begin{enumerate}
+        \item Prima di tutto, decomponiamo le dipendenze:
+        \begin{equation*}
+            F = \{BC\to D, BC\to E, C\to D, B\to D, E\to L, D\to A, BC\to A, BC\to L\}
+        \end{equation*}
+
+        \item Siccome $BC$ è l'unico determinante su cui potremmo applicare lo step due, calcoliamo $B^+_F = ABD$ e $C^+_F = ACD$, da cui otteniamo che:
+        
+        $BC\to D$ può essere scartata direttamente, poiché sia $B\to D$ sia $C\to D$ sono entrambe già in $F$. 
+        
+        $E\notin B^+_F\implies B\to E\notin F^+$ (e anche $E\notin C^+_F\implies C\to E\in  F^+$), dunque $BC\to E$ non può essere rimpiazzata. 
+        
+        $A\in  B^+_F\implies B\to A\in  F^+$ e $A\in  C^+_F\implies C\to A\in  F^+$, dunque $BC\to A$ può essere rimpiazzata sia da $B\to A$ sia da $C\to A$ (dunque, in base alla scelta, otterremo due coperture minimali diverse). Nel nostro caso, sceglieremo $B\to A$. 
+        
+        Siccome $L\notin B^+_F\implies B\to L\notin F^+$ e siccome $L\notin C^+_F\implies C\to L\notin F^+$, la dipendenza $BC\to L$ non può essere rimpiazzata.
+        
+        Al termine dello step 2, quindi, abbiamo che:
+        \begin{equation*}
+            F = \{BC\to E, C\to D, B\to D, E\to L, D\to A, B\to A, BC\to L\}
+        \end{equation*}
+
+        \item Procediamo quindi con lo step 3:
+        
+    Siccome $E$ è determinato solo da $BC\to E$, allora non possiamo scartare tale dipendenza.
+    
+    Considerando $C\to D$, si ha che $D\notin C^+_{F-\{C\to D\}} = C \iff  C\to D\notin F-\{C\to D\}^+$, dunque $C\to D$ non può essere scartata.
+    
+    Considerando $B\to D$, si ha che $D\notin B^+_{F-\{B\to D\}} = BA \iff  B\to D\notin F-\{B\to D\}^+$, dunque $B\to D$ non può essere scartata.
+    
+    Considerando $E\to L$, si ha che $L\notin E^+_{F-\{E\to L\}} = E \iff  E\to L\notin F-\{E\to L\}^+$, dunque $E\to L$ non può essere scartata.
+    
+    Considerando $D\to A$, si ha che $A\notin D^+_{F-\{D\to A\}} = D \iff  D\to A\notin F-\{D\to A\}^+$, dunque $D\to A$ non può essere scartata.
+    
+    Considerando $B\to A$, si ha che $A\in  B^+_{F-\{B\to A\}} = BDA \iff  B\to A\in F-\{B\to A\}^+$, dunque $B\to A$ può essere scartata.
+    
+    Considerando $BC\to L$, si ha che $L\in  BC^+_{F-\{B\to A,BC\to L\}} = BCEDLA \iff BC\to L\in F-\{B\to A, BC\to D\}^+$, dunque $BC\to L$ può essere scartata.
+    \end{enumerate}
+    Infine, otteniamo che:
+    \begin{equation*}
+        F = \{BC\to E, C\to D, B\to D, E\to L, D\to A\}
+    \end{equation*}
+    è la copertura minimale.
+\end{Example}
+
+\subsection{Algoritmo di decomposizione}
+
+\begin{Algoritmo}{Algoritmo di decomposizione}{}
+    Dato uno schema $R$ e un insieme $F$, che è una copertura minimale di dipendenze funzionali su $R$, il seguente algoritmo calcola in tempo polinomiale una decomposizione $\rho$ di $R$ tale che ogni sottoschema è in 3NF e $\rho$ preserva $F$:
+
+    \verb|  begin|\\
+    \verb|      S:=|$\emptyset$\\
+    \verb|      for every A| $\in$ \verb|R| $|$ A non è coinvolto in nessuna dipendenza funzionale in F\\
+    \verb|          S := S| $\cup$ \verb|{A}|\\
+    \verb|      if S|$ \neq$ $\emptyset$\\
+    \verb|          R := R - S|\\
+    \verb|          |$\rho$\verb| := | $\rho$ $\cup$ \verb|{S}|\\
+    \verb|      if| esiste una dipendenza funzionale in F che coinvolge tutti gli attributi in R\\
+    \verb|          |$\rho$ \verb|:=| $\rho$ $\cup$ \verb|{R}|\\
+    \verb|      else|\\
+    \verb|          for every X| $\to$ \verb|A| $\in$ \verb|F|\\
+    \verb|              |$\rho$ \verb|:=| $\rho$ $\cup$ \verb|{XA}|\\
+    \verb|  end|
+\end{Algoritmo}
+
+\begin{Proposition}{Ottenere una buona decomposizione}{}
+    Sia R uno schema di relazione ed $F$ un insieme di dipendenze funzionali su $R$, che è una copertura minimale. L'Algoritmo di decomposizione permette di calcolare in tempo polinomiale una decomposizione $\rho$ di $R$ tale che: (1) $\rho$ preserva $F$; (2) ogni schema di relazione in $\rho$ è in 3NF.
+
+    \begin{demonstration}\phantom{}
+        \begin{enumerate}
+            \item Sia $G=\bigcup^k_{i=1} \pi_{R_i}(F)$. Poiché per ogni dipendenza funzionale $X\to A\in F$ si ha che $XA\in\rho$ si ha che questa dipendenza di $F$ sarà sicuramente in $G$, quindi $G\supseteq F$ e, quindi $G^+\supseteq F^+$. L'inclusione $G^+\subseteq F^+$ è banalmente verificata in quanto, per definizione, $G\subseteq F^+$.
+
+            \item Analizziamo i diversi casi che si possono presentare: 
+            \begin{enumerate}
+                \item Se $S\in\rho$, ogni attributo in $S$ fa parte della chiave e quindi, banalmente, $S$ è in 3NF; 
+            \item Se $R\in\rho$ esiste una dipendenza funzionale in $F$ che coinvolge tutti gli attributi in $R$. Poiché $F$ è una copertura minimale tale dipendenza avrà la forma $R-A\to A$; poiché $F$ è una copertura minimale, non ci può essere una dipendenza funzionale $X\to A$ in $F^+$ tale che $X\subset R-A$ e, quindi, $R-A$ è chiave in $R$. Sia $Y\to B$ una qualsiasi dipendenza in $F$; se $B=A$ allora, poiché $F$ è una copertura minimale, $Y=R-A$ (cioè, $Y$ è una superchiave); se $B\neq A$ allora $B\in R-A$ e quindi $B$ è primo;
+            \item Se $XA\in\rho$, poiché $F$ è una copertura minimale, non ci può essere una dipendenza funzionale $X'\to A$ in $F^+$ tale che $X'\subset X$ e, quindi, $X$ è chiave in $XA$. Sia $Y\to B$ una qualsiasi dipendenza in $F$ tale che $YB\subseteq XA$; se $B=A$ allora, poiché $F$ è una copertura minimale, $Y=X$ (cioè, Y è una superchiave); se $B\neq A$ allora $B\in X$ e quindi $B$ è primo.
+            \end{enumerate}
+        \end{enumerate}
+    \end{demonstration}
+\end{Proposition}
+
+\begin{Example}{Algoritmo di decomposizione}{}
+    \textit{Consideriamo lo schema $R = ABCDEH$ e l'insieme di dipendenze $F = \{AB\to CD, C\to E, AB\to E, ABC\to D\}$.}
+
+     Prima di tutto, verifichiamo l'unicità della chiave dello schema: troviamo prima l'intersezione
+     \begin{equation*}
+         ABEH\cap ABCDH\cap ABCDH\cap ABCEH = ABH
+     \end{equation*}
+     e vediamo se la chiusura dell'intersezione coincide con $R$:
+    \begin{equation*}
+        ABH^+ = ABCDEH = R
+    \end{equation*}
+    Poiché $ABH$ è l'unica chiave di $R$, notiamo subito che tale schema non è in 3NF, poiché la dipendenza $C\to E$ viola la condizione richiesta in quanto $C$ non è una superchiave ed $E$ non è un primo. Cerchiamo quindi una copertura minimale di $F$, in modo da poter utilizzare l'algoritmo di decomposizione.
+
+    Decomponiamo tutte le dipendenze di $F$:
+    \begin{equation*}
+        F = \{AB\to C, AB\to D, C\to E, AB\to E, ABC\to D\}
+    \end{equation*}
+    Cerchiamo i determinanti ridondanti:\\
+    $A\to C, B\to C \notin F^+$ poiché $C \notin A^+_F = A$ e $C \notin B^+_F$, dunque $AB\to C$ non può essere ridotta; $A\to D, B\to D \notin F^+$ poiché $D \notin A^+_F = A$ e $D \notin B^+_F$, dunque $AB\to D$ non può essere ridotta; $A\to E, B\to E \notin F^+$ poiché $E \notin A^+_F = A$ e $E \notin B^+_F$, dunque $AB\to E$ non può essere ridotta; $AB\to D, C\to D \in F \implies AB\to D, C\to D \in F^+$, dunque $ABC\to D$ può essere ridotta sia in $AB\to D$ sia in $C\to D$ e dunque scartata poiché entrambe sono già in $F$. 
+    
+    L'insieme di dipendenze senza determinanti ridondanti quindi sarà:
+    \begin{equation*}
+        F = \{AB\to C, AB\to D, C\to E, AB\to E\}
+    \end{equation*}
+    Cerchiamo quindi le dipendenze ridondanti:\\
+    $C$ e $D$ sono determinati solo da $AB\to C$ e $AB\to D$, dunque non possono essere rimosse; Considerando $C\to E$, si ha che $E \notin D^+_{F-\{C\to E\}} = C \iff C\to E \notin F-\{C\to E\}^+$, dunque $C\to E$ non può essere scartata; Considerando $AB\to E$, si ha che $E \in AB^+_{F -\{AB\to E\}} = ABCDE \iff AB\to E \in F - \{AB\to E\}^+$, dunque $AB\to E$ può essere scartata.
+
+    La copertura minimale di $F$ quindi sarà:
+    \begin{equation*}
+        F = \{AB\to C, AB\to D, C\to E\}
+    \end{equation*}
+
+    A questo punto, possiamo applicare l'algoritmo di decomposizione:\\
+    L'attributo $H$ non compare in alcuna dipendenza, dunque $S := \{H\}$. Siccome $S = \{H\}\neq\emptyset$, allora $R := R - S = ABCDEH - H = ABCDE$ e $\rho := \rho \cup S = \{H\}$. Siccome $\nexists X\to A \in F | X \cup A = R = ABCDE$, allora entriamo nel ciclo for, dunque $\rho := \rho \cup \{ABC, ABD, CE\} = \{H, ABC, ABD, CE\}$. La decomposizione $\rho$ ottenuta preserva $F$ e tutti i suoi sottoschemi sono in 3NF. Infine, affinché $\rho$ sia una buona decomposizione, dunque presenti anche un join senza perdita, è sufficiente aggiungere un sottoschema composto dalla chiave $ABH$ alla decomposizione $\rho$.
+    
+    Dunque, una buona decomposizione di $R$ con copertura minimale $F = \{AB\to C, AB\to D, C\to E\}$ risulta essere:
+    \begin{equation*}
+        \rho = \{H, ABC, ABD, CE, ABH\}
+    \end{equation*}
+\end{Example}

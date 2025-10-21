@@ -1,0 +1,156 @@
+\chapter{Modello relazionale}
+Il \textit{modello relazionale} è basato sulla nozione di matematica di relazione. Le relazioni si traducono in maniera naturale in tabelle, dove dati e relazioni diverse sono rappresentati come valori.
+Nel modello relazionale, ogni oggetto è rappresentato con un record (o \textit{tupla}) e le informazioni di interesse sono i campi del record. Una tabella (o \textit{istanza}) è un insieme di record di tipo omogeneo e uno \textit{schema} è un insieme di attributi che descrivono gli oggetti di cui vogliamo raccogliere le informazioni. Le n-uple rappresentano ogni singolo oggetto dove viene assegnato un valore a ognuno degli attributi che sono stati definiti per descriverlo.
+
+\begin{Example}{Database relazionale}{}
+    
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{\textit{Studenti}}\\\hline
+             \textbf{Matricola} & \textbf{Cognome} & \textbf{Nome} & \textbf{Data di nascita}\\\hline
+            276545 & Smith & Mary & 25/11/1980\\
+            485745 & Black & Anna & 23/04/1981\\
+            200768 & Verdi & Paolo & 12/02/1981\\
+            587614 & Smith & Lucy & 10/10/1980\\
+            937653 & Brown & Mavis & 01/12/1980\\\hline
+        \end{tabular}\\
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Corsi}}\\\hline
+            \textbf{Codice} & \textbf{Titolo} & \textbf{Tutor}\\\hline
+            01 & Physics & Grant\\
+            03 & Chemistry & Beale\\
+            04 & Chemistry & Clark\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Esame}}\\\hline
+            \textbf{Stud} & \textbf{Voto} & \textbf{Corso}\\\hline
+            276545 & C & 01\\
+            276545 & B & 04\\
+            937653 & B & 01\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    
+    Notiamo che un esame è un oggetto che di per se non ha senso se non ci sono uno studente e un corso di cui ha sostenuto l'esame. La relazione, espressa dall'oggetto esame, tra lo studente e il corso è resa possibile attraverso i valori \verb|Stud| e \verb|Corso|.
+\end{Example}
+
+ Il vantaggio di utilizzare uno schema relazionale è che ci permette di avere sia l'indipendenza fisica che quella logica. Con indipendenza fisica si intende che il livello logico e quello esterno sono indipendenti da quello fisico. In questo modo una relazione è utilizzata nello stesso modo qualunque sia la sua realizzazione fisica e la realizzazione fisica può cambiare senza che debbano essere modificati i programmi. Con indipendenza logica si intende che il livello esterno è indipendente da quello logico, quindi aggiunte o modifiche alle viste non richiedono modifiche al livello logico e modifiche allo schema logico che lascino inalterato lo
+schema esterno sono trasparenti.
+
+\begin{Definition}{Dominio}{}
+    Un \textit{dominio} è un insieme possibilmente infinito di valori.
+
+    Siano $D_1,D_2,.....D_k$ domini, non necessariamente distinti, il prodotto cartesiano di tali domini, denotato da $D_1 x D_2 x..... x D_k$, è l'insieme:
+    \begin{equation*}
+        \{(v_1, v_2, ....., v_k) | v_1\in D_1, v_2\in D_2, ..... v_k\in D_k\}
+    \end{equation*}
+
+    Una relazione matematica è un qualsiasi sottoinsieme del prodotto cartesiano di uno o più domini e una relazione che è sottoinsieme del prodotto cartesiano di $k$ domini si dice di grado $k$. Gli elementi di una relazione sono detti tuple (oppure n-uple) e il numero di tuple di una relazione è la sua cardinalità. Le tuple di una relazione sono tutte distinte (almeno per un valore) ... dai vincoli sugli insiemi.
+
+    \begin{example}
+        Con $D_1=\{a,b\}$ e $D_2=\{x,y,z\}$ si ha:
+        \begin{equation*}
+            D_1xD_2=\{(a,x),(a,y),(a,z),(b,x),(b,y),(b,z),\}
+        \end{equation*}
+        Una relazione $r\subseteq D_1xD_2$ ad esempio $\{(a,x),(a,z),(b,y)\}$ è una relazione di grado 2 con cardinalità 3 e tuple $(a,x),(a,z),(b,y)$.
+    \end{example}
+\end{Definition}
+
+\begin{Notation}{}{}
+    $r$ è una relazione di grado $k$, $t$ è una tupla di $r$, $i$ è un numero intero nell'insieme $\{1,...,k\}$ e $t[i]$ indica la i-esima componente di $t$.
+    \begin{example}\phantom{}
+        \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline 0 & a\\\hline 
+            0 & c\\\hline 
+            1 & b\\\hline 
+        \end{tabular}
+    \end{center}
+    Se $r=\{(0,a), (0,c),(1,b)\}$, $t=(0,a)$ è una tupla di $r$, $t[2]=a$, $t[1] = 0$, $t[1,2] = (0, a)$.
+    \end{example}
+\end{Notation}
+
+Un attributo è definito da un nome $A$ e dal dominio dell'attributo $dom(A)$. Sia $R$ un insieme di attributi, un'ennupla su $R$ è una funzione definita su $R$ che associa ad ogni attributo $A$ in $R$ un elemento di $dom(A)$. Se $t$ è un'ennupla su $R$ ed $A$ è un attributo in $R$, allora con $t(A)$ indicheremo il valore assunto dalla funzione $t$ in corrispondenza dell'attributo $A$. L'insieme di attributi di una relazione è detto schema e uno schema di relazione $R(A_1,A_2,...,A_k)$ è invariante nel tempo e descrive la struttura dei nostri dati. L'istanza di una relazione con schema $R(X)$ contiene i valori attuali, che possono cambiare anche molto rapidamente nel tempo. Nel modello relazionale i riferimenti fra dati in relazioni diverse sono rappresentati per mezzo di valori dei domini che compaiono nelle ennuple. 
+
+I valori \verb|null| rappresentano mancanza di informazione o il fatto che l'informazione non è applicabile, e sono valori polimorfi che non appartengo a nessun dominio ma possono sostituire i valori in qualsiasi dominio.
+
+\section{Vincoli di integrità}
+\begin{redbar}
+    Un \textbf{vincolo di integrità} è una proprietà che deve essere soddisfatta da ogni istanza della base di dati, quindi è legata al suo schema. I vincoli descrivono proprietà specifiche del campo di applicazione, e quindi delle informazioni ad esso relative modellate attraverso la base di dati. Una istanza di base di dati è corretta se soddisfa tutti i vincoli di integrità associati al suo schema.
+\end{redbar}
+
+\begin{Example}{}{}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline\multicolumn{4}{|c|}{\textit{Esami}}\\\hline
+            \textbf{Studente} & \textbf{Voto} & \textbf{Lode} & \textbf{Corso}\\\hline
+            276545 & \colorbox{orange}{32} & & 01\\
+            276545 & 30 & si & 02\\
+            787643 & 27 & \colorbox{orange}{si} & 03\\
+            739430 & 24 & & 04\\\hline
+        \end{tabular}
+        \begin{tabular}{|c|c|c|}
+            \hline\multicolumn{3}{|c|}{\textit{Studenti}}\\\hline
+            \textbf{Matricola} & \textbf{Cognome} & \textbf{Nome}\\\hline
+            276545 & Rossi & Mario\\
+            \colorbox{orange}{787643} & Neri & Piero\\
+            \colorbox{orange}{787643} & Bianchi & Luca\\\hline
+        \end{tabular}
+        %\captionof{table}{Esempio di database relazionale}
+        %\label{tab:esempio-db-realazionale}
+        \bigskip
+    \end{center}
+    \verb|(Voto |$\geq$\verb| 18) AND (Voto |$\leq$\verb| 30)| è un vincolo di dominio; \verb|(Voto = 30) OR NOT (Lode| \verb|= "si")| è un vincolo di tupla; \verb|Matricola unique| è un vincolo tra tuple della stessa relazione; \verb|Studente| \verb|references| \verb|Studenti.Matricola| è un vincolo tra valori in tuple di relazioni diverse.
+\end{Example}
+
+\section{Chiavi}
+Le tuple di una relazione devono poter essere identificate univocamente.
+\begin{redbar}
+    Una \textbf{chiave} di una relazione è un attributo o insieme di attributi che identifica univocamente una tupla.
+\end{redbar}
+
+Quindi un insieme $X$ di attributi di una relazione $R$ è una chiave di $R$ se soddisfa le seguenti condizioni: 
+\begin{enumerate}
+    \item Per ogni istanza di $R$, non esistono due tuple distinte $t_1$ e $t_2$ che hanno gli stessi valori per tutti gli attributi in $X$, cioè tali che $t_1[X] = t_2[X]$;
+    \item Nessun sottoinsieme proprio di $X$ soddisfa la condizione 1.
+\end{enumerate}
+
+Una relazione potrebbe avere anche più chiavi alternative e si sceglie quella più usata o quella composta da un numero minore di attributi come chiave primaria che non può essere nulla. Le chiavi consentono di mettere in relazione i dati in tabelle diverse.
+
+Un vincolo di integrità referenziale (foreign key) esige che porzioni di informazione in relazioni diverse sono correlate attraverso valori di chiave. Ovvero, se una relazione fa riferimento al valore di un attributo o di un insieme di attributi che dovrebbe comparire in una seconda relazione, dobbiamo assicurarci che ciò avvenga realmente. Quindi un vincolo di integrità referenziale fra gli attributi
+$X$ di una relazione $R_1$ e un'altra relazione $R_2$ impone ai valori su $X$ in $R_1$  di comparire come valori della chiave primaria di $R_2$.
+
+\section{Dipendenze funzionali}
+\begin{redbar}
+    Una \textbf{dipendenza funzionale} stabilisce un particolare legame semantico tra due insiemi non-vuoti di attributi $X$ e $Y$ appartenenti ad uno schema $R$. Tale vincolo si scrive $X\to Y$ e si legge $X$ determina $Y$.    
+\end{redbar}
+
+\begin{Example}{Dipendenze funzionali}{}
+    \textit{Supponiamo di avere uno schema di relazione} \verb|Voli|(\verb|CodiceVolo|, \verb|Giorno|, \verb|Pilota|, \verb|Ora|) \textit{con i seguenti vincoli:}
+    \begin{itemize}
+        \item[-] \textit{Un volo con un certo codice parte sempre alla stessa ora;}
+        \item[-] \textit{Esiste un solo volo con un dato pilota, in un dato giorno ad una data ora;}
+        \item[-] \textit{C'è un solo pilota di un dato volo in un dato giorno.}
+    \end{itemize}
+    Questi vincoli appensa descritti corrispondono alle dipendenze funzionali:
+    \begin{itemize}
+        \item[-] \verb|CodiceVolo| $\to$ \verb|Ora|
+        \item[-] \verb|{Giorno, Pilota, Ora}| $\to$ \verb|CodiceVolo|
+        \item[-] \verb|{CodiceVolo, Giorno}| $\to$ \verb|Pilota|
+    \end{itemize}
+\end{Example}
+
+Diremo che una relazione $r$ con schema $R$ soddisfa la dipendenza funzionale $X\to Y$ se:
+\begin{enumerate}
+    \item la dipendenza funzionale $X\to Y$ è applicabile ad $R$, nel senso che sia $X$ sia il $Y$ sono sottoinsiemi di $R$;
+    \item le ennuple in $r$ che concordano su $X$ concordano anche su $Y$, cioè per ogni coppia di ennuple $t_1$ e $t_2$ in $r$:
+    \begin{equation*}
+        t_1[X] = t_2[X] \implies t_1[Y] = t_2[Y]
+    \end{equation*}
+\end{enumerate}
+
+\begin{osservation}
+    L'impicazione significa che se le tuple sono uguali su $X$, allora devono essere uguali anche su $Y$. Questo vuol dire che se non ci sono tuple uguali su $X$ la condizione è comunque verificata.
+\end{osservation}
