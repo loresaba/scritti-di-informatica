@@ -22,5 +22,3 @@ Thank you for choosing to read these books and good luck with your studies!
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
