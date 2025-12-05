@@ -1,0 +1,211 @@
+\chapter{Bandit Algorithm}
+Imagine you’re an agent that repeatedly chooses among several actions. After each choice you get a numeric reward that tells you how well that choice worked. The tricky part is that the reward you see depends on the action you chose. If you always pick the action that looks best now, you might miss an action that’s actually better but hasn’t been tried enough.
+
+That tension — should I try something new to learn more about it (explore), or should I stick with what already seems best to get reward right now (exploit)? — is the exploration–exploitation trade-off.
+
+\section{K-armed bandit}
+Think of a row of $k$ slot machines ($k$ “arms”) sitting at a casino (see Figure \ref{fig:k-armed-bendit}). Each arm, when pulled, yields a reward drawn from an unknown but fixed probability distribution associated with that arm. The distributions are stationary (they don’t change over time), but you don’t know their means.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/k-armed-bandit.png}
+    \caption{K-armed bandit.}
+    \label{fig:k-armed-bendit}
+\end{figure}
+
+At each time step $t$ you choose one arm $A_t$. The environment returns a reward $R_t$ drawn from that arm’s distribution. Your objective is to maximize the total (or expected total) reward accumulated over a number of steps — for example over 1000 plays.
+
+This problem isolates the exploration/exploitation question: you must decide which arms to sample to learn their quality, while trying to collect as much reward as possible.
+
+To decide which action is best we need a way to rank actions. For each action $a$ there is a true action-value $q_*(a)$: the expected reward when action $a$ is selected. In symbols, 
+\begin{equation*}
+    q_*(a)=E[R_t|A_t=a],
+\end{equation*}
+that is, the mean of the reward distribution for arm $a$. If you knew all $q_*(a)$, the best action is simply the one with the largest $q_*(a)$.
+But you don’t know those means, so you must estimate them from samples.
+
+\section{Estimating action values}
+A simple and commonly used estimator for an action’s value is the sample average of the rewards you got from that action so far.
+
+Formally, define an indicator $1_{{Ai=a}}$ which equals 1 when the action at time $i$ was $a$, and 0 otherwise. Then the sample-average estimate at time $t$ is
+\begin{equation*}
+    Q_t(a)=\frac{\sum_{i=1}^{t-1}R_i 1_{{A_i=a}}}{\sum_{i=1}^{t-1} 1_{{A_i=a}}}.
+\end{equation*}
+This reads: add up all rewards received when you took action $a$ prior to time $t$, and divide by the number of times you took $a$. If you have never taken action $a$ yet (the denominator is zero), a common convention is to set $Q_t(a)=0$ or some other default value.
+
+Intuitively, by the law of large numbers, as the number of times you sample an action grows, its sample average $Q_t(a)$ will converge to the true mean $q_*(a)$, assuming stationarity.
+
+A computationally convenient incremental form of the same update is useful in practice. If an action $a$ has been selected $n$ times so far and its current estimate is $Q_n$, then after seeing a new reward $R$ for that action you can update:
+\begin{equation*}
+    Q_{n+1}=Q_n+\frac{1}{n}(R-Q_n).    
+\end{equation*}
+This formula updates the average without keeping the whole history.
+
+An arm’s rewards could follow many distributions: Bernoulli (0/1 success), binomial, uniform, Gaussian, etc. Whatever the distribution, 
+$q_*(a)$ is its mean. The particular distribution matters for the spread and variance of observed rewards, but the central object for decision-making is always the mean.
+
+\section{How to pick an action}
+Given current estimates $Q_t(a)$, how should the agent select an action at time $t$? There are three simple, conceptually different approaches we’ll discuss: random selection, greedy selection, and $\epsilon$-greedy selection.
+
+\subsection{Random selection}
+Choose an action uniformly at random. This guarantees exploration but ignores your knowledge; it’s usually not a good long-term strategy since it doesn’t exploit promising actions.
+
+\subsection{Greedy selection}
+Pick the action with the highest estimated value:
+\begin{equation*}
+    A_t = argmax_a Q_t(a).
+\end{equation*}
+Greedy selection exploits current knowledge fully: it always picks the currently best-estimated action. The trouble is it may get stuck on a suboptimal action because it never tries others once it thinks one is best.
+
+When there is a tie for highest estimate, ties are typically broken arbitrarily (often uniformly at random among the maximizers). That means when all $Q$ values are equal (e.g., at the very start), a “greedy” choice can look random because the maximizers include all actions.
+
+t\subsection{$\epsilon$-greedy selection}
+This simple method mixes greedy exploitation with random exploration. With probability $1-\epsilon$ pick the greedy action (the action with the current largest $Q_t$); with probability $\epsilon$ pick an action uniformly at random among all $k$ actions. This guarantees occasional exploration but usually exploits.
+
+\begin{equation*}
+    A_t = \begin{cases}
+        argmax_a Q_t(a) & 1 - \epsilon\\
+        a \sim Uniform(\{a_1...a_k\}) & \epsilon
+    \end{cases}
+\end{equation*}
+As the number of steps grows and each action is sampled enough, the sample averages $Q_t(a)$ converge to $q_*(a)$ (for stationary problems). But choosing a sensible exploration policy while learning still matters a lot in finite time.
+
+%Many sophisticated algorithms for bandits and reinforcement learning make assumptions (e.g., stationarity, certain priors) that may not hold in real applications. Rather than worrying about complex optimality guarantees that depend on those assumptions, it’s useful to understand simple, robust strategies for balancing exploration and exploitation, because even a little exploration usually performs much better than pure exploitation.
+
+\begin{Exercise}{$\epsilon$-greedy selection}{}
+\textit{In $\epsilon$-greedy action selection, for the case of two actions and $\epsilon= 0.5$, what is the probability that the greedy action is
+selected?}
+
+With probability $1-\epsilon$ we exploit, so the greedy action is chosen then. That is $1-\epsilon=1-0.5=0.5$.
+
+With probability $\epsilon$ we explore, i.e., we choose uniformly among the two actions. Given exploration, the probability of selecting the greedy action is $\frac{1}{2}$.
+
+So the probability of selecting the greedy action during exploration is $\epsilon\times\frac{1}{2}=0.5\times 0.5=0.25$.
+
+Add exploitation and exploration contributions: $0.5+0.25=0.75$.
+
+So the greedy action is selected with probability $0.75$.
+\end{Exercise}
+
+\begin{Exercise}{$\epsilon$-greedy selection}{}
+Consider a k-armed bandit problem with $k = 4$ actions, denoted 1, 2, 3, and 4. Consider applying to this problem a bandit algorithm using $\epsilon$-greedy action selection, sample-average action-value estimates, and initial estimates of $Q_1(a) = 0$, for all $a$.
+Suppose the initial sequence of actions and rewards is
+\begin{align*}
+& A_1 = 1 \hspace{.5cm} R_1 = 1\\
+& A_2 = 2 \hspace{.5cm} R_2 = 1\\
+& A_3 = 2 \hspace{.5cm} R_3 = 2\\
+& A_4 = 2 \hspace{.5cm} R_4 = 2\\
+& A_5 = 3 \hspace{.5cm} R_5 = 0
+\end{align*}
+On some of these time steps the $\epsilon$ case may have occurred, causing an action to be selected at random. On which time steps did this definitely occur? On which time steps could this possibly have occurred?
+
+\begin{itemize}
+    \item First, compute the $Q$ estimates after each step. Start with all $Q=0$.
+    \item After $A_1=1$,$R_1=1$ action 1 has been taken once and yielded reward 1, so its sample average is $1/1=1.0$. Actions 2, 3, 4 are still 0. So $Q$ becomes: $Q(1)=1$, $Q(2)=0$, $Q(3)=0$, $Q(4)=0$.
+    \item After $A_2=2$,$R_2=1$ action 2 now has one sample of reward 1, so $Q(2)=1/1=1.0$. The others remain as before: $Q(1)=1$, $Q(2)=1$, $Q(3)=0$, $Q(4)=0$.
+    \item After $A_3=2$,$R_3=2$ action 2 now has two samples, rewards 1 and 2. So $Q(2)=\frac{1+2}{2}=\frac{3}{2}=1.5$. Thus estimates:  $Q(1)=1.0$, $Q(2)=1.5$, $Q(3)=0$, $Q(4)=0$.
+    \item After $A_4=2$, $R_4=2$ action 2 now has three rewards: 1,2,2. So $Q(2)=\frac{5}{3}\approx 1.666$. Estimates: $Q(1)=1.0$, $Q(2)=1.666$, $Q(3)=0$, $Q(4)=0$.
+    \item After $A_5=3$, $R_5=0$ action 3 now has one sample of 0. So $Q(3)=0/1=0$. Final estimates after the five steps are: $Q(1)=1.0$, $Q(2)=1.666$, $Q(3)=0$, $Q(4)=0$.
+\end{itemize}
+Now reason about which steps must have been exploration. A time step must have been an $\epsilon$-exploration step if the chosen action at that time was not a greedy action given the estimates immediately before that selection.
+
+\begin{itemize}
+    \item Time step 1 ($A_1 = 1$): all $Q$ values were equal (all zero). The greedy set is all actions (tie). Selecting action 1 could be the greedy choice (tie-break among all). So $A_1$ could be greedy or could be exploration — we cannot say for sure.
+    \item Time step 2 ($A_2 = 2$) the estimates were $Q(1)=1.0$ and $Q(2)=Q(3)=Q(4)=0$. The greedy action was action 1 (unique maximizer). Yet the actual choice at time 2 was action 2. Choosing a non-greedy action when there is a unique greedy action can only happen during exploration. Therefore, step 2 definitely was an $\epsilon$-exploration step.
+    \item Time step 3 ($A_3 = 2$): estimates were $Q(1)=1.0$, $Q(2)=1.0$, $Q(3)=Q(4)=0$. Now the greedy set contains actions 1 and 2 (a tie). Choosing action 2 could have been the exploitation choice (resolving the tie in favor of action 2), or it could have been exploration. So step 3 could have been exploration but does not have to be.
+    \item Time step 4 ($A_4 = 2$): estimates were $Q(1)=1.0$, $Q(2)=1.5$, others 0. Here action 2 is uniquely greedy. Choosing action 2 could be exploitation or could still happen during exploration (exploration can happen and by chance pick the greedy action). So we cannot say step 4 was definitely exploration; it could have been exploration but need not be.
+    \item Time step 5 ($A_5 = 3$): estimates were $Q(1)=1.0$, $Q(2)=1.666$, $Q(3)=0$, $Q(4)=0$. The unique greedy action was action 2, yet the action taken was action 3. That can only happen if the algorithm was exploring. So step 5 definitely was an $\epsilon$-exploration step.
+\end{itemize}
+
+So the definite exploration steps are steps 2 and 5. Steps 1, 3, and 4 could have been exploration but might also have been greedy choices depending on tie-breaking or chance during exploration.
+\end{Exercise}
+
+\section{How to estimate action values}
+\subsection{Incremental trick}
+Suppose you concentrate on one particular action and you want to track its value. Let $R_i$ be the reward you get the $i$-th time you pick this action. Let $Q_n$ be your estimate of that action’s value right before the $n$-th time you pick it. (That means $Q_n$ is based on the first $n-1$ observed rewards for that action.)
+
+The straightforward sample average after observing $n$ rewards is
+\begin{equation*}
+    Q_{n+1} = \frac{1}{n}\sum_{i=1}^nR_i.
+\end{equation*}
+But you don’t want to recompute the whole sum every time. There’s an elegant incremental form that updates the average using just the previous estimate and the new reward. Start from the two averages:
+\begin{itemize}
+    \item the old average: $Q_n=\frac{1}{n-1}\sum_{i=1}^{n-1}R_i$ (remember this is before seeing $R_n$),
+    \item the new average after seeing $R_n$: $Q_{n+1}=\frac{1}{n}\sum_{i=1}^nR_i$.
+\end{itemize}
+Now write the new sum as the old sum plus the new reward:
+\begin{equation*}
+    \sum_{i=1}^nR_i =\sum_{i=1}^{n-1}R_i+R_n.    
+\end{equation*}
+Divide both sides by $n$:
+\begin{equation*}
+    Q_{n+1} = \frac{1}{n}\left(\sum_{i=1}^{n-1}R_i+R_n\right).
+\end{equation*}
+Replace the old sum by $(n-1)Q_n$, because $\sum_{i=1}^{n-1}R_i=(n-1)Q_n$. That gives
+\begin{equation*}
+    Q_{n+1} = \frac{1}{n}((n-1)Q_n+R_n).
+\end{equation*}
+Distribute $1/n$ and regroup:
+\begin{equation*}
+    Q_{n+1} = \frac{n-1}{n}Q_{n}+\frac{1}{n}R_n = Q_n+\frac{1}{n}(R_n-Q_n).
+\end{equation*}
+This last form is the incremental update. It says: take the old estimate, add a fraction $1/n$ of the prediction error $R_n-Q_n$. Intuitively, the error tells you how surprised you were by the new reward and the fraction $1/n$ shrinks as you have more samples so newer observations change the average less.
+
+Note that this formula is valid even for $n=1$. If $Q_1$ (the estimate before the first selection) is defined as 0 or some initial value, then after seeing $R_1$ you get $Q_2=Q_1+(1/1)(R_1-Q_1)=R_1$, which is exactly the average of the one observed reward.
+
+Here’s a simple recipe you can implement in code. It uses the incremental update above to maintain action-value estimates and $\epsilon$-greedy selection to balance exploration and exploitation.
+
+\begin{lstlisting}[mathescape]
+Initialize, for all action a = 1 to k:
+    Q[a] <- 0
+    N[a] <- 0
+
+For each time step t = 1, 2, ...:
+    A <- with probability $1 - \epsilon$:
+            choose action $A_t$ = $argmax_a$ Q[a]
+         with probability $\epsilon$:
+            choose action $A_t$ uniformly at random 
+
+    R <- bandit(A)
+    N(A) <- N(A) + 1
+    Q(A) <- Q(A) + $\frac{1}{N(A)}$ * [R - Q(A)]
+\end{lstlisting}
+A few practical notes about this code. The choice of $\epsilon$ controls how often you force exploration; a small $\epsilon$ means mostly exploit. \texttt{N[a]} is the count of times action $a$ has been selected; that count defines the step size $1/n$ in the sample-average update. Ties in $argmax$ are typically resolved uniformly, which can be important at the start when many $Q$'s are equal.
+
+\subsection{Stationary vs nonstationary problems}
+The sample-average method and the $1/n$ step size are ideal when the underlying reward distributions are stationary — that is, the arms’ distributions do not change over time. Under stationarity, the sample average converges to the true mean by the law of large numbers.
+
+But often the world is not stationary. Imagine the doctor example. Maybe treatment $B$ works better in winter because of seasonal symptoms, while treatment $A$ works better in summer. If those underlying success probabilities change with time, averaging every reward equally (so that old data forever has the same weight as recent data) makes the agent slow to adapt.
+
+To handle changing conditions you want more weight on recent observations. One easy way is to use a constant step size in the incremental update instead of the diminishing $1/n$.
+
+Replace the $1/n$ term by a constant $\alpha\in[0,1]$. After taking an action and seeing reward $R_n$, update as
+\begin{equation*}
+    Q_{n+1}=Q_n+\alpha [R_n-Q_n].    
+\end{equation*}
+This is the same structure as before, but now the learning rate $\alpha$ does not shrink over time. The effect is that recent rewards keep shifting the estimate a fixed fraction of the current error; older rewards get exponentially discounted.
+
+You can expand the update to see the effective weights on past rewards. Start from 
+\begin{equation*}
+    Q_{n+1}=(1-\alpha)Q_n+\alpha R_n    
+\end{equation*}
+and unroll back:
+\begin{equation*}
+    Q_{n+1}=(1-\alpha)^nQ_1+\alpha\sum_{i=1}^n(1-\alpha)^{n-i}R_i.    
+\end{equation*}
+So the weight on reward $R_i$ is $\alpha(1-\alpha)n-i$, an exponentially decaying factor depending on how old that reward is. The older the reward, the smaller its influence. That’s exactly what you want when the world may have shifted and recent evidence is more relevant.
+
+Choose $\alpha$ based on how quickly you want to adapt: large $\alpha$ means fast adaptation (but more variance), small $\alpha$ means slower but smoother updates.
+
+\subsection{Optimistic initial values}
+This is a neat trick that encourages exploration even if you always choose greedily. Start with artificially high initial estimates for all actions; because observed rewards will typically be lower than the initial optimistic values, the agent becomes “disappointed” and tries other actions until their estimates come down.
+
+Instead of starting every $Q[a]$ at zero, set them all to a high number. The idea is that early on, every action looks great, so a greedy policy will try different actions to see which ones really deliver. When an action disappoints (observed reward lower than the optimistic initial value), its estimate falls and the policy tries others.
+
+Suppose there are three treatments, rewards are either 1 for success or 0 for failure (Bernoulli), and we pick a constant step size $\alpha=0.5$ for simplicity. Set each initial estimate to $Q_1(a)=2$ (very optimistic, since actual rewards are only 0 or 1).
+
+Pick some sequence of actions and rewards and watch the updates. If you pick action $A$ first and observe $R_1=1$, then $Q_2(A)=Q_1(A)+\alpha(R_1-Q_1(A))=2+0.5(1-2)=2-0.5=1.5$. So after one success the estimate dropped from 2 to 1.5. If you then pick a different action $B$ and it yields $R_2=0$, that action’s estimate goes from 2 to $Q_2(B)=2+0.5(0-2)=2-1=1$.
+
+Because all actions started very high, the greedy policy (which always picks the current argmax) will cycle through actions until the initial optimism is corrected by actual rewards. That produces natural exploration even without explicit $\epsilon$ randomness.
+
+Optimistic initial values are especially attractive when rewards are deterministic or low-variance and you want to encourage early exploration: the agent behaves greedily but still samples each action because each one initially looks promising.
