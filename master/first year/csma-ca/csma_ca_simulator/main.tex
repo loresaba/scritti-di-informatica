@@ -1,0 +1,110 @@
+\documentclass[a4]{book}
+% PACCHETTI
+\usepackage[a4paper, left=3cm,right=3cm]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{changepage}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{amsthm}
+\usepackage{amsmath,blkarray}
+\usepackage{amsfonts}
+\tcbuselibrary{listings,breakable}
+\usepackage{mathtools}
+\usepackage{chemarrow}
+\usepackage{mathrsfs}
+\usepackage{environ}
+\tcbuselibrary{skins}
+\tcbuselibrary{theorems}
+\usepackage{xparse}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{multirow}
+% Font
+\usepackage{mathpazo}
+% Immagini
+\usepackage{graphicx, wrapfig} 
+\usepackage{caption} 
+\usepackage{adjustbox}
+\graphicspath{ {./images/} }
+% Collegamenti ipertestuali
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    }
+
+
+\lstdefinestyle{CStyle}{
+  language=C,                         % Linguaggio
+  basicstyle=\ttfamily\small, % Font monospaziato
+  keywordstyle=\color{blue},         % Parole chiave (es. int, void)
+  commentstyle=\color{gray},         % Commenti (// o /* */)
+  stringstyle=\color{red},           % Stringhe (tra virgolette)
+  numbers=left,                      % Numeri di riga a sinistra
+  numberstyle=\scriptsize\color{gray},     % Stile numeri di riga
+  stepnumber=1,                      % Mostra tutti i numeri di riga
+  numbersep=10pt,                    % Spazio tra codice e numeri
+  tabsize=2,                         % Ampiezza dei tab
+  breaklines=true,                   % Va a capo automaticamente
+  breakatwhitespace=false,
+  showstringspaces=false,
+  %frame=single                       % Cornice intorno al codice
+}
+
+\lstdefinestyle{mypython}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  stringstyle=\color{orange},
+  commentstyle=\color{gray},
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  tabsize=4,
+  captionpos=b,
+  numbers=left,
+  numberstyle=\tiny\color{gray}
+}
+
+% --------------------------------------------- %
+
+% Code style
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{darkred}{RGB}{139,0,0}
+\definecolor{darkyellow}{RGB}{204,153,0}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    numbers=left,
+    numberstyle=\scriptsize\color{gray},
+}
+
+% Font size of figure smaller than normal size:
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+%\captionsetup[table]{font=small}
+
+%\usepackage{setspace} % double spacing
+\linespread{1.2}
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\begin{document}
+
+\include{title}
+\newpage
+\tableofcontents
+\include{chapters/introduction}
+\include{chapters/design_and_impl}
+\include{chapters/experimental-results}
+\include{chapters/conclusion}
+
+\end{document}

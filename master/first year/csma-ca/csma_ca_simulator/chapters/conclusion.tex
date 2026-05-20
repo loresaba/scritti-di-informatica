@@ -1,0 +1,19 @@
+\chapter{Conclusion}
+This work presented the design and implementation of a time-driven simulator for the CSMA/CA protocol, focusing on the optimization of the Contention Window (CW) through autonomous Reinforcement Learning techniques. The analysis compared a standard backoff approach against an adaptive agent using an $\epsilon$-greedy bandit algorithm. The experimental results highlighted how the introduction of autonomy allows the network to better adapt to varying node densities and traffic conditions.
+
+\section{Limitations}
+
+The current version of the simulator introduces some simplifications that should be addressed to achieve a more realistic simulation:
+\begin{itemize}
+    \item \textbf{Pseudorandom Generation:} The simulator utilizes the standard C \texttt{rand()} function for backoff counter selection and node placement. These functions are not cryptographically strong and that can bias the stochastic behavior of backoff selections and node positioning in very long simulation run.
+    \item \textbf{Simplified Physical Layer:} The communication model permits a transmissions between nodes if they are within a fixed RANGE. This ignores realistic propagation effects such as path loss and multi-path, which are critical in urban environments.
+    \item \textbf{Static Topology:} In the current implementation, nodes are assigned random coordinates at the start but remain stationary throughout the simulation. This prevents the analysis of dynamic topology changes like in dronet.
+\end{itemize}
+
+\section{Future Developments}
+Starting from the results achieved, several extensions can be implemented to enhance the simulator's depth and realism:
+\begin{itemize}
+    \item \textbf{Advanced Reinforcement Learning:} Future versions could replace the $\epsilon$-greedy bandit with more advanced algorithms like Q-Learning. These would allow the nodes to consider a larger state space (e.g., current queue size, estimated number of neighbors) rather than just immediate rewards.
+    \item \textbf{3D Environment:} To better simulate Unmanned Aerial Vehicles (UAVs), the 2D grid could be expanded into a 3D grid.
+    \item \textbf{Energy Consumption Analysis:} For autonomous sensors and drones, battery life is as critical as throughput. Future versions should include an energy model that tracks the cost of sensing, transmitting, and receiving.
+\end{itemize}

@@ -1,0 +1,20 @@
+\chapter{Introduction}
+The evolution of wireless communication technologies—from Wireless Sensor Networks (WSNs) to the Internet of Things (IoT)—has led to an increasing complexity in managing shared access to the transmission medium. This report describes the design and implementation of a simulator and it focuses on evaluating and improving the CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance) protocol through the introduction of learning-based mechanisms.
+
+\section{Context}
+Wireless networks often operate in shared frequency bands where multiple nodes must contend for channel access. The standard CSMA/CA protocol, widely used in technologies like Wi-Fi, relies on a distributed backoff procedure to avoid collisions: when a node detects a busy channel, it waits for a random period determined by its Contention Window (CW).
+
+However, in dynamic environments with varying traffic loads and node number, static contention window can lead to inefficiencies. If the CW is too small, the probability of collisions increases; if it is too large, the channel remains idle for long periods.
+
+\section{Motivations}
+The necessity of optimizing MAC protocols arises from the demand for autonomy in modern networks. An autonomous network should be capable of adapt its internal parameters in real-time based on environmental feedback rather than relying on human intervention or fixed rules.
+
+Reinforcement Learning (RL) provides a robust tool for introducing this intelligence. By treating the selection of the contention window as a decision-making problem, nodes can learn to optimize their behavior to maximize throughput and minimize collisions.
+
+\section{Contributions}
+This work analyze and evaluate MAC protocols through a custom simulator. The main contributions are:
+\begin{itemize}
+    \item A simulation environment that models node interactions, packet transmissions, and collision in a monitored area.
+    \item Implementation of an adaptive mechanism where nodes use an $\epsilon$-greedy strategy to pick their contention window from a set of available actions based on past rewards.
+    \item A comparison between the standard CSMA/CA protocol against the RL-based adaptive approach across multiple simulation runs.
+\end{itemize}
