@@ -1,0 +1,316 @@
+\section{Introduction}
+
+This project uses a modern property-based fuzzing approach to find logical and stateful bugs in Solidity smart contracts. Instead of writing a small number of example unit tests with specific inputs, you declare general properties (\textit{invariants}) that the contract must always satisfy and then let an automated tool generate large numbers of sequences of transactions with many different inputs, searching for sequences that cause any property to fail. This is the core of property-based fuzzing.
+
+%Traditional unit tests verify that a function returns an expected value for a small set of explicit inputs. They usually fail to explore large spaces of interactions and corner cases.
+Fuzzing is an automated random input generation: the fuzzer repeatedly calls functions with randomly chosen input values, trying to make the program crash or behave incorrectly.
+
+This technique is particularly effective for smart contracts, which are stateful and interact with external callers and other contracts over time. Here, many vulnerabilities do not arise from a single function call, but from specific sequences of interactions that gradually move the contract into an invalid state. In this context, property-based fuzzing explores complex behaviors and detects bugs that traditional testing methods often miss.
+
+\subsection{Echidna}
+Echidna (\href{https://github.com/crytic/echidna}{https://github.com/crytic/echidna}) is a property-based fuzzer for Ethereum smart contracts. It is designed with Solidity in mind and implements several features effective for contract testing:
+\begin{itemize}
+    \item \textit{ABI-driven test-generation.} Echidna inspects the contract ABI and uses that to generate sequences of transactions.  
+    
+    \item \textit{Property hooks.} Echidna expects the developer to provide one or more boolean functions whose names start with the prefix \texttt{echidna\_}. 
+    This naming convention allows Echidna to distinguish invariants from regular contract logic.
+    Each such function represents a property that should always hold and returns \texttt{true} when the property is satisfied. If any of these functions evaluates to \texttt{false} during execution, Echidna reports the corresponding input sequence as a counterexample.
+    
+    \item \textit{Sequences of calls.} Echidna generates sequences of function calls (transactions) across the same contract instance, exploring how different sequences affect its state.
+    
+    \item \textit{Integration with the Ethereum.} Echidna executes smart contract transactions: it can create addresses and call other contracts as part of its testing process.
+\end{itemize}
+
+Each \texttt{echidna\_} function is intended to encode a single invariant that captures a property of the contract. To properly define and execute these properties I followed the following steps:
+\begin{enumerate}
+    \item Implement the logic and add \texttt{echidna\_} functions encoding the critical properties.
+    \item Run Echidna inside a Docker container with the following commands:
+    \begin{lstlisting}
+docker run -it -v $(pwd):/src ghcr.io/crytic/echidna/echidna 
+cd /src 
+echidna Taxpayer.sol --contract TestTaxpayer 
+echidna Lottery.sol --contract TestLottery
+    \end{lstlisting}
+    After that Echidna compiles the source and starts fuzzing.
+    \item If Echidna finds a property violation, it reports the failure and gives a counterexample (a short sequence of function calls and arguments that reproduce the failure).
+    \item Analyze the counterexample to understand the root cause, then modify the contract.
+    \item Finally, rerun Echidna to confirm that the invariant now holds and that no counterexample can be found after the fix.
+\end{enumerate}
+
+\section{Part 1 — Marriage invariants}
+The \texttt{Taxpayer.sol} contract stores basic personal information for on-chain “people,” including age, spouse, parents, and a tax allowance. I introduced the following invariants:
+
+\begin{itemize}
+    \item \texttt{echidna\_simmetric\_marriage()} Marriage is a symmetric relationship. If one side stores the other but the other side does not, the system is in an inconsistent state.
+
+    \begin{lstlisting}
+function echidna_simmetric_marriage() public view returns (bool) {
+    if (spouse != address(0)) {
+        if (!isValidTaxpayer(spouse)) return true;
+        return Taxpayer(spouse).spouse() == address(this);
+    }
+    return true;    
+}
+    \end{lstlisting}
+    
+    \item \texttt{echidna\_marriage\_status()} The boolean variable \texttt{isMarried} must reflect whether a spouse pointer is set. Here the two representations of the same concept (a boolean flag and a pointer) must stay consistent. If they diverge, code that use only one of them can behave incorrectly.
+
+    \begin{lstlisting}
+ function echidna_marriage_status() public view returns (bool) {
+    if (spouse != address(0)) {
+        return isMarried == true;
+    } else {
+        return isMarried == false;
+    }
+}
+    \end{lstlisting}
+    
+    \item \texttt{echidna\_no\_self\_marriage()} A contract must never record itself as its own spouse. Functions that iterate over spouse relationships, or assume two distinct parties, can break or behave incorrectly if the two parties are identical.
+    \item \texttt{echidna\_spouse\_is\_valid\_taxpayer()} 
+    The spouse address must correspond to a deployed contract that implements the \texttt{Taxpayer} interface. This prevents later calls that treat the spouse as a \texttt{Taxpayer} from invoking unexpected behavior.  
+    \item \texttt{echidna\_no\_self\_parent()} A contract must never record itself as its own parent.
+    \item \texttt{echidna\_parents\_distinct()} If the contract stores two parent pointers, they must not be equal one to the other.
+\end{itemize}
+
+The screenshot in Figure \ref{fig:marriage-invariants-before-fix} is the captured output from the failing Echidna run. It shows two failures:
+\begin{itemize}
+    \item \texttt{echidna\_marriage\_status: FAILED! with ReturnFalse}.
+    Call sequence in minimized counterexample: \texttt{TestTaxpayer.marry(0x0)}. Echidna found a sequence where spouse became \texttt{0x0} but \texttt{isMarried} was left set to true.
+\item \texttt{echidna\_simmetric\_marriage: FAILED! with ErrorRevert}.
+    Call sequence in minimized counterexample: \texttt{TestTaxpayer.marry(0xdeadbeef)}. The contract attempted to set a non-contract address as spouse or otherwise caused an inconsistent state.
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/pass1-failed.png}
+    \caption{Echidna marriage invariants before the fix.}
+    \label{fig:marriage-invariants-before-fix}
+\end{figure}
+The \texttt{marry(address new\_spouse)} implementation in the original file simply did:
+\begin{lstlisting}
+  spouse = new_spouse;
+  isMarried = true;
+\end{lstlisting}
+with no checks. This allows setting spouse to \texttt{address(0)} or to a non-contract address, which later functions attempt to call. Also here we are not ensuring the spouse's record is updated symmetrically.
+The function \texttt{divorce()} also simply set:
+\begin{lstlisting}
+  spouse = address(0);
+  isMarried = false;    
+\end{lstlisting}
+with no attempt to update the spouse's state.
+
+Because of these Echidna was able to construct tiny sequences that left the contract in an inconsistent state.
+To resolve the problems I applied these modifications:
+\begin{itemize}
+    \item Introduce \texttt{isValidTaxpayer(address addr)} helper that encapsulates every low-level check you want to run before treating an address as a \texttt{Taxpayer} contract. It rejects the zero address immediately, it confirms there is deployed code at the address and it exercises a lightweight, read-only \texttt{Taxpayer} probe.
+    \item Redesign \texttt{marry(new\_spouse)} so that it enforces several checks and then attempts to establish the relationship on both sides:
+    \begin{itemize}
+        \item The proposed spouse must not be the zero address.
+        \item The caller must not already be married.
+        \item The proposed spouse must not be the contract itself.
+        \item The proposed spouse must pass \texttt{isValidTaxpayer} so you only accept real \texttt{Taxpayer} contracts.
+        \item The proposed spouse must either be unmarried or already point at the caller.
+    \end{itemize}
+
+\item Redesign \texttt{divorce()} to be explicit about the precondition and symmetry when divorcing.
+To safely divorce a marriage first, the contract updates its own state immediately by clearing the spouse pointer and setting \texttt{isMarried} to \texttt{false}. Performing changes before any external calls prevents attacks from a malicious spouse contract that might attempt to re-enter while the contract still appears married.
+Once the local state has been safely cleared, the function attempts to contact the spouse: the function invokes the corresponding \texttt{divorce()} to ensure that the relationship is symmetrically removed. If this external call fails the local state remains consistent.
+
+\item Rather than having one contract change another contract’s internal allowance variable, I introduced a \texttt{receiveAllowance(uint change)} on every \texttt{Taxpayer} that serves as the entry point for receiving allowance transfers.
+
+\begin{lstlisting}
+function receiveAllowance(uint change) public {
+    // Only my spouse can send me allowance.
+    require(msg.sender == spouse, "Only spouse can transfer allowance");
+    require(spouse != address(0), "Must have valid spouse");
+    tax_allowance = tax_allowance + change;
+}
+\end{lstlisting}
+
+So now 
+\texttt{transferAllowance(change)} calls the spouse’s \texttt{receiveAllowance(change)} instead of directly change its internal fields;
+\texttt{receiveAllowance(change)} only accepts allowance increases or decreases from the spouse, and it performs any necessary validation internally.
+This eliminates situations where one contract force-writes into another’s state and keeps each contract responsible for its own invariants.
+\end{itemize}
+
+The results in Figure \ref{fig:marriage-invariants-after-fix} show the marriage-related invariants now pass.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/pass1-success.png}
+    \caption{Echidna marriage invariants after the fix.}
+    \label{fig:marriage-invariants-after-fix}
+\end{figure}
+
+\section{Part 2 — Tax allowance invariants}
+The tax system in the \texttt{Taxpayer} contract implements a per-person income tax allowance (deduction):
+\begin{itemize}
+    \item Every person has a default tax allowance of 5000 (\texttt{DEFAULT\_ALLOWANCE}).
+    \item Married persons can shift allowances between them, as long as the sum of their allowances remains the same.
+\end{itemize}
+
+The invariant \texttt{echidna\_tax\_allowance()} ensures that single taxpayers always retain the minimum base allowance. For married couples, it enforces conservation of the total allowance, assuming the initial baseline is $2\times$ defaults.
+
+\begin{lstlisting}
+function echidna_tax_allowance() public view returns (bool) {
+    if (spouse != address(0)) {
+        uint256 myAllowance = tax_allowance;
+        uint256 spouseAllowance = Taxpayer(spouse).getTaxAllowance();
+        
+        return (myAllowance + spouseAllowance) == (2 * DEFAULT_ALLOWANCE);
+    } else {
+        return tax_allowance >= DEFAULT_ALLOWANCE;
+    }
+}
+\end{lstlisting}
+
+As already said, allowance receipt was isolated by introducing \texttt{receiveAllowance(uint change)}, which can only be called by the contract’s spouse.
+
+After applying the changes described above, Echidna reports that all allowance invariants hold. No counterexamples were found during fuzzing, as illustrated in Figure~\ref{fig:tax-allowance-invariants-results}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/pass2-success.png}
+    \caption{Echidna tax allowance invariants after the fix.}
+    \label{fig:tax-allowance-invariants-results}
+\end{figure}
+
+\section{Part 3 — Age-aware invariants}
+The government introduced a rule: people aged 65 or older must have a higher tax allowance of 7000 (\texttt{ALLOWANCE\_OAP}) instead of the default 5000 (\texttt{DEFAULT\_ALLOWANCE}). Earlier rules still apply: spouses may transfer allowance among themselves but the total allowance must remain correct.
+For this part I added:
+\begin{itemize}
+    \item \texttt{receivedLotteryBonus} Here we need to distinguish a taxpayer who received an absolute allowance of 7000 from the Lottery from one who automatically reached 65 and therefore became eligible for 7000. This flag helps the invariants reason about the history of the account (e.g., to avoid double counting when someone receives an award then turns 65).
+    
+    \item In \texttt{haveBirthday()}, when an individual reaches age 65 and has not previously received a lottery bonus, the contract automatically increases \texttt{tax\_allowance} by \texttt{ALLOWANCE\_OAP - DEFAULT\_ALLOWANCE}.
+    This ensures that taxpayers automatically receive the senior allowance on his 65th birthday.
+
+    \begin{lstlisting}
+function haveBirthday() public {
+    age++;
+    if (age == 65 && !receivedLotteryBonus) {
+        tax_allowance = tax_allowance + (ALLOWANCE_OAP - DEFAULT_ALLOWANCE);
+    }
+}
+    \end{lstlisting}
+    
+    \item Function \texttt{setTaxAllowance()} is now used exclusively to allow the Lottery to assign an absolute allowance. Previously many contracts could call \texttt{setTaxAllowance} and produce writes that could break invariants.
+    
+    \item \texttt{echidna\_total\_allowance\_preserved\_age()} When age-based rules are considered, the minimum allowance is computed based on whether each individual is 65 or older. For married couples, the sum of the actual allowances must equal the sum of the age-based minimums. For single taxpayers, the allowance must be at least their age-based minimum.
+
+    This invariant refines the default-based rule by adding older-age allowances. It prevents the system from reducing total allowances below the legally required age-based minimums.
+
+    \begin{lstlisting}
+function echidna_total_allowance_preserved_age() public view returns (bool) {
+    uint myMin = age >= 65 ? ALLOWANCE_OAP : DEFAULT_ALLOWANCE;
+
+    if (isMarried && spouse != address(0) && isValidTaxpayer(spouse)) {
+        Taxpayer sp = Taxpayer(spouse);
+        uint spMin = sp.getAge() >= 65 ? ALLOWANCE_OAP : DEFAULT_ALLOWANCE;
+
+        uint totalMin = myMin + spMin;
+        uint total = tax_allowance + sp.getTaxAllowance();
+        return total == totalMin;
+    } else {
+        return tax_allowance >= myMin;
+    }
+}
+    \end{lstlisting}
+
+    \item \texttt{echidna\_allowance\_never\_zero()} The tax allowance must always satisfy \texttt{tax\_allowance > 0}.  This guards against bugs that might zero out allowances, which would violate fundamental assumptions of the tax system.
+
+    \item \texttt{echidna\_lottery\_bonus\_consistency()} and  \texttt{echidna\_senior\_minimum\_allowance()} These invariants impose additional constraints related to lottery-awarded allowances and senior minimum allowances. In particular, they account for interactions with the \texttt{Lottery} contract, which can assign a fixed allowance of 7000 via \texttt{setTaxAllowance}.
+
+    With these special cases, the invariants ensure that external interactions (such as lottery rewards) do not violate global allowance consistency or age-based minimum requirements.
+    \item \texttt{echidna\_senior\_minimum\_allowance()}: Ensures single seniors have at least the senior minimum.
+\end{itemize}
+
+After the changes I ran Echidna with the new age-aware invariants and receive back the results showed in Figure \ref{fig:age-aware-invariants-after-fix}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/pass3-success.png}
+    \caption{Echidna age-aware invariants after the fix.}
+    \label{fig:age-aware-invariants-after-fix}
+\end{figure}
+
+\section{Part 4 — Lottery invariants}
+The Lottery contract implements a periodic lottery where participating taxpayers can win an increased allowance (7000) for a round.
+A common lottery is:
+\begin{enumerate}
+    \item \texttt{startLottery()} sets \texttt{startTime}, \texttt{revealTime} and \texttt{endTime}.
+    \item \texttt{commit(bytes32 y)} participants register \texttt{y = keccak256(x)} where \texttt{x} is their secret value.
+    \item \texttt{reveal(uint256 rev)} participants reveal \texttt{x} and the contract checks \texttt{keccak256(x)} corresponds to  \texttt{commits[msg.sender]} and records the revealed \texttt{x}.
+    \item \texttt{endLottery()} after the end phase, computes the winner as \texttt{j = (x1 + ... + xn) \% n} and sets that winner’s allowance to 7000.
+\end{enumerate}
+
+Knowing that, I added the following:
+\begin{itemize}
+    \item \texttt{isValidTaxpayer(address addr)} Implemented a local check inside \texttt{Lottery.sol} to make sure addresses recorded as participants are deployed \texttt{Taxpayer} contracts. When the lottery picks a winner it invokes \texttt{Taxpayer(...).setTaxAllowance(7000)}. So if the chosen entry is not a valid \texttt{Taxpayer}, the call may revert or cause undefined behavior.
+    
+    \item \texttt{proxy\_commit(uint256 val)} A helper that computes \texttt{bytes32} hash. Echidna picks raw numeric values as fuzz inputs; we provide a helper that computes the commitment locally and calls commit with the correct hash, following the guidance in the assignment \textit{“craft input to the commit function by first computing \texttt{keccak256} on the echidna testing input”}.
+
+    \begin{lstlisting}
+function proxy_commit(uint256 val) public {
+    bytes32 hash = keccak256(abi.encode(val));
+    this.commit(hash);
+}
+    \end{lstlisting}
+
+    \item \texttt{hasRevealed} is used to track participation/reveals and to prevent duplicates or double-reveals. Contracts must ensure a participant cannot appear more than once in the revealed array, because duplicates could bias the winner selection.
+
+    \item \texttt{echidna\_no\_duplicates\_in\_reveal()} The revealed array must not contain duplicate addresses. (To avoid gas explosion we limit checks to the first 10 entries.)
+
+\begin{lstlisting}
+function echidna_no_duplicates_in_reveal() public view returns (bool) {
+    uint limit = revealed.length;
+    if (limit > 10) limit = 10;
+
+    for (uint i = 0; i < limit; i++) {
+        for (uint j = i + 1; j < limit; j++) {
+            if (revealed[i] == revealed[j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+\end{lstlisting}
+    
+    \item \texttt{echidna\_state\_reset\_correctly()} \texttt{endLottery()} computes the total (sum of revealed values), selects winner and set its allowance. Then it resets \texttt {startTime}, \texttt{revealTime} and \texttt{endTime} to zero. To avoid leaving stale state, this invariant check that when \texttt{startTime} is zero (meaning no active lottery), the revealed array is empty and \texttt{hasRevealed} flags are not left set.
+
+\begin{lstlisting}
+function echidna_state_reset_correctly() public view returns (bool) {
+    if (startTime == 0) {
+        if (revealed.length != 0) return false;
+
+        uint checkLimit = revealed.length > 10 ? 10 : revealed.length;
+        for (uint i = 0; i < checkLimit; i++) {
+            if (hasRevealed[revealed[i]]) return false;
+        }
+    }
+    return true;
+}
+\end{lstlisting}
+
+    \item \texttt{echidna\_revealed\_are\_taxpayers()} Every address in revealed must pass \texttt{isValidTaxpayer}. This prevents crashes when \texttt{endLottery()} calls \texttt{setTaxAllowance} on the winner.
+
+    \item \texttt{echidna\_reveal\_requires\_commit()} Every participant recorded in revealed must have a non-zero commit and must be marked as revealed in \texttt{hasRevealed}.
+
+    \item \texttt{echidna\_valid\_timeline()} Ensures that if \texttt{startTime > 0} then \texttt{revealTime > startTime} and \texttt{endTime > revealTime}.
+
+    \item \texttt{echidna\_revealed\_flag\_consistent()} Checks that every address in revealed must have \texttt{hasRevealed} true.
+\end{itemize}
+
+After adding the invariants and the helper functions, Echidna’s showed the invariants passing (see Figure \ref{fig:lottery-invariants-after-fix})
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/pass4-success.png}
+    \caption{Echidna lottery invariants after the fix.}
+    \label{fig:lottery-invariants-after-fix}
+\end{figure}
+
+\section{Conclusion}
+This project demonstrates how property-based fuzzing with Echidna can be used to reason about the correctness of smart contracts that encode real-world policies. We expressed the intended behavior of the system as invariants and let Echidna automatically search for sequences of transactions that could violate them.
+
+This project shows the value of property-based fuzzing for smart contracts: invariants force developers to define the system behavior, fuzzing discovers the bugs, and the Echidna counterexamples guide the code fixes. So, in this context, Echidna provides a powerful tool for improving the reliability and security of Ethereum smart contracts before deployment.
