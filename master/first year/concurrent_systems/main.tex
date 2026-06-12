@@ -1,0 +1,163 @@
+\documentclass[a4]{book}
+% PACCHETTI
+\usepackage[a4paper, left=3cm,right=3cm]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{changepage}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{amsthm}
+\usepackage{amsmath,blkarray}
+\usepackage{amsfonts}
+\tcbuselibrary{listings,breakable}
+\usepackage{mathtools}
+\usepackage{chemarrow}
+\usepackage{mathrsfs}
+\usepackage{environ}
+\tcbuselibrary{skins}
+\tcbuselibrary{theorems}
+\usepackage{xparse}
+\usepackage{imakeidx}
+\usepackage{varwidth}
+\usepackage{amssymb}
+% Font
+\usepackage{mathpazo}
+% Immagini
+\usepackage{graphicx, wrapfig} 
+\usepackage{caption} 
+\usepackage{adjustbox}
+\graphicspath{ {./images/} }
+% Stile dei teoriemi
+\newtheoremstyle{mystyle}
+  {0.5em} % Spazio sopra
+  {0.5em} % Spazio sotto
+  {}      % Formato del corpo del testo
+  {}      % Rientro del corpo del testo
+  {\bfseries} % Formato dell'intestazione
+  {.}     % Punteggiatura dopo l'intestazione
+  {0.5em} % Spazio tra l'intestazione e il corpo del testo
+  {}
+\theoremstyle{mystyle}
+\newtheorem*{example}{Example}
+\newtheorem*{thm}{Theorem}
+\newtheorem*{definition}{Definition}
+\newtheorem*{exercise}{Exercise}
+\newtheorem*{question}{Question}
+\newtheorem*{osservation}{Osservation}
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{demonstration}{Demonstration}
+\newtheorem*{corollary}{Corollary}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{terminology}{Terminology}
+\newtheorem*{property}{Property}
+% Collegamenti ipertestuali
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    }
+% Headers and footers
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}}
+\pagestyle{fancy}
+\fancyhead[LE, RO]{\thepage}
+\fancyhead[RE]{\leftmark}
+\fancyhead[LO]{\itshape{\rightmark}}
+\fancyfoot{}
+\newcommand{\setpagelayout}{
+    \ifodd\value{page}
+        \newgeometry{top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm}
+    \else
+        \newgeometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=3cm}
+    \fi
+}
+
+% BOX-STYLE
+\tcbset{
+  boxstyle/.style={
+    enhanced,
+    boxrule=0.9pt,
+    colframe=#1!50!black,
+    colback=white,%#1!5,
+    arc=1mm,
+    coltitle=#1!50!black,
+    fonttitle=\bfseries,
+    attach boxed title to top left={yshift=-0.50mm, xshift=5mm},
+    varwidth boxed title=0.93\linewidth,
+    boxed title style={
+        skin=enhancedfirst jigsaw,
+        size=small,
+        arc=1mm,
+        bottom=0mm,
+        interior style={fill=none, top color=#1!30!white, bottom color=#1!20!white},
+    },
+    breakable,
+  }
+}
+
+% RED-BOX
+\definecolor{myred}{HTML}{CC122D}
+\newtcolorbox{redbox}[1][]{%
+    boxstyle=red,
+    title={#1},
+}
+
+% RED-BAR
+\newenvironment{redbar}{
+    \tcolorbox[colframe=myred, boxrule=0.8pt, boxsep=2pt, leftrule=7pt, colback=white
+    ]
+}{\endtcolorbox}
+
+% CIRCLE-NUMBER
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1pt, font=\scriptsize] (char) {#1};}}
+
+% THEOREM
+\NewTcbTheorem[number within=section]{Definition}{Definition}{boxstyle=blue,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Example}{Example}{boxstyle=green,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Exercise}{Exercise}{boxstyle=green,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Thm}{Theorem}{boxstyle=red,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Lemma}{Lemma}{boxstyle=orange,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Corollario}{Corollary}{boxstyle=orange,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Proposition}{Proposition}{boxstyle=red,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Osservation}{Osservation}{boxstyle=orange,separator sign dash}{th}
+\NewTcbTheorem[number within=section]{Demonstration}{Demonstration}{boxstyle=blue,separator sign dash}{th}
+
+% Code style
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{darkred}{RGB}{139,0,0}
+\definecolor{darkyellow}{RGB}{204,153,0}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    numbers=left,
+    numberstyle=\scriptsize\color{gray},
+}
+
+% Index
+\makeindex
+
+% ########################################
+% ############ BEGIN DOCUMENT ############
+% ########################################
+\begin{document}
+
+\frontmatter
+\include{TitlePage.tex}
+\setpagelayout
+\mainmatter
+\fancyhead[RE]{\itshape{\leftmark}}
+\include{Chapters/preface}
+\tableofcontents
+\include{Chapters/part1}
+\include{Chapters/part2}
+
+\printindex
+\addcontentsline{toc}{chapter}{Index}
+\end{document}
